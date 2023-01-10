@@ -16,6 +16,14 @@ const Menu = styled.div`
   font-size: 20px;
 `;
 
+const onClickLogin = () => {
+  window.location.href = '/login';
+};
+
+const onClickSignup = () => {
+  window.location.href = '/signup/select-account';
+};
+
 function Navbar() {
   return (
     <div
@@ -39,8 +47,8 @@ function Navbar() {
         </div>
       </div>
       <div style={{ display: 'flex', alignItems: 'center', marginRight: '30px' }}>
-        <Menu>로그인</Menu>
-        <Menu>회원가입</Menu>
+        <Menu onClick={onClickLogin}>로그인</Menu>
+        <Menu onClick={onClickSignup}>회원가입</Menu>
       </div>
     </div>
   );
