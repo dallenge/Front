@@ -1,4 +1,4 @@
-import { FcTodoList } from 'react-icons/fc';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 const Logo = styled.div`
@@ -8,6 +8,7 @@ const Logo = styled.div`
   display: flex;
   align-items: center;
   padding: 20px;
+  cursor: pointer;
 `;
 
 const Menu = styled.div`
@@ -25,6 +26,7 @@ const onClickSignup = () => {
 };
 
 function Navbar() {
+  const navigate = useNavigate();
   return (
     <div
       style={{
@@ -36,8 +38,10 @@ function Navbar() {
       }}
     >
       <div style={{ display: 'flex' }}>
-        <Logo>
-          <div>Dallenge</div>
+        <Logo onClick={() => navigate('/')}>
+          <div>
+            <span style={{ color: 'var(--color-dark-blue)' }}>D</span>allenge
+          </div>
         </Logo>
         <div style={{ display: 'flex', alignItems: 'center', marginLeft: '30px' }}>
           <Menu>목록</Menu>
@@ -47,8 +51,8 @@ function Navbar() {
         </div>
       </div>
       <div style={{ display: 'flex', alignItems: 'center', marginRight: '30px' }}>
-        <Menu onClick={onClickLogin}>로그인</Menu>
-        <Menu onClick={onClickSignup}>회원가입</Menu>
+        <Menu onClick={() => navigate('/login')}>로그인</Menu>
+        <Menu onClick={() => navigate('/signup/select-account')}>회원가입</Menu>
       </div>
     </div>
   );

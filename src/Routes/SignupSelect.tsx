@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { RiKakaoTalkFill } from 'react-icons/ri';
 import { FcGoogle } from 'react-icons/fc';
@@ -39,13 +40,7 @@ const SingupDiv = styled.div`
 `;
 
 export default function SignupSelect() {
-  const onClickLogin = () => {
-    window.location.href = '/login';
-  };
-
-  const onClickSignupEmail = () => {
-    window.location.href = '/signup/user-email';
-  };
+  const navigate = useNavigate();
 
   return (
     <div>
@@ -119,7 +114,13 @@ export default function SignupSelect() {
           </div>
         </div>
         <div style={{ display: 'inline-block', marginTop: '25px', width: '80%' }}>
-          <EmailSignup onClick={onClickSignupEmail}>이메일로 가입하기</EmailSignup>
+          <EmailSignup
+            onClick={() => {
+              navigate('/signup/user-email');
+            }}
+          >
+            이메일로 가입하기
+          </EmailSignup>
           <div style={{ marginTop: '30px', fontSize: '13px', fontWeight: '600' }}>이미 델린지 회원이신가요?</div>
           <DivHover
             style={{
@@ -129,7 +130,13 @@ export default function SignupSelect() {
               marginTop: '10px',
             }}
           >
-            <SingupDiv onClick={onClickLogin}>로그인 하러가기</SingupDiv>
+            <SingupDiv
+              onClick={() => {
+                navigate('/login');
+              }}
+            >
+              로그인 하러가기
+            </SingupDiv>
           </DivHover>
         </div>
       </Container>
