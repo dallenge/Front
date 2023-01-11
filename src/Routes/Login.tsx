@@ -2,6 +2,7 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { RiKakaoTalkFill } from 'react-icons/ri';
 import { FcGoogle } from 'react-icons/fc';
+import { useNavigate } from 'react-router';
 
 const LoginContainer = styled.div`
   text-align: center;
@@ -52,6 +53,8 @@ const SignupDiv = styled.div`
 `;
 
 export default function Login() {
+  const navigate = useNavigate();
+
   const [id, setId] = useState('');
   const [pw, setPw] = useState('');
 
@@ -61,10 +64,6 @@ export default function Login() {
 
   const onChangePw = (e: any) => {
     setPw(e.target.value);
-  };
-
-  const onClickSignup = () => {
-    window.location.href = '/signup/select-account';
   };
 
   return (
@@ -148,7 +147,7 @@ export default function Login() {
               marginTop: '10px',
             }}
           >
-            <SignupDiv onClick={onClickSignup}>델린지 회원가입 하기</SignupDiv>
+            <SignupDiv onClick={() => navigate('/signup/select-account')}>델린지 회원가입 하기</SignupDiv>
           </DivHover>
         </div>
       </LoginContainer>
