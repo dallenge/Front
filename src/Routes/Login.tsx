@@ -58,11 +58,26 @@ export default function Login() {
   const [id, setId] = useState('');
   const [pw, setPw] = useState('');
 
+  const [idError, setIdError] = useState(false);
+  const [pwError, setPwError] = useState(false);
+
   const onChangeId = (e: any) => {
+    const emailRegex =
+      /^(([^<>()\[\].,;:\s@"]+(\.[^<>()\[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
+    if (!e.target.value || emailRegex.test(e.target.value)) {
+      setIdError(false);
+    } else {
+      setIdError(true);
+    }
     setId(e.target.value);
   };
 
   const onChangePw = (e: any) => {
+    if (!e.target.value || e.target.value.length >= 8) {
+      setPwError(false);
+    } else {
+      setPwError(true);
+    }
     setPw(e.target.value);
   };
 
@@ -74,7 +89,10 @@ export default function Login() {
         <div style={{ marginTop: '20px' }}>
           <div>
             <Input type="text" placeholder="아이디를 입력해주세요" autoSave="off" onChange={onChangeId}></Input>
+            {idError && <ValidationView text={'이메일 형식에 맞게 입력해 주세요'} onChange={onChangeId} />}
+
             <Input type="password" placeholder="비밀번호를 입력해주세요" autoSave="off" onChange={onChangePw}></Input>
+            {pwError && <ValidationView text={'비밀번호를 8자 이상 입력해주세요'} />}
           </div>
           <div style={{ marginTop: '13px' }}>
             <Button style={{ background: 'var(--color-blue)', color: 'white' }}>로그인</Button>
@@ -154,3 +172,13 @@ export default function Login() {
     </div>
   );
 }
+
+const ValidationView = (props: any) => {
+  return (
+    <div style={{ marginTop: '4px', marginBottom: '30px' }}>
+      <div style={{ padding: '0 14px', fontSize: '13px', color: '#F00001', fontWeight: '600', float: 'left' }}>
+        🔥{props.text}
+      </div>
+    </div>
+  );
+};
