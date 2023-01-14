@@ -16,15 +16,6 @@ const Menu = styled.div`
   margin-left: 40px;
   font-size: 20px;
 `;
-
-const onClickLogin = () => {
-  window.location.href = '/login';
-};
-
-const onClickSignup = () => {
-  window.location.href = '/signup/select-account';
-};
-
 function Navbar() {
   const navigate = useNavigate();
   return (
