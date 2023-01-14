@@ -51,10 +51,16 @@ export default function SingupEmail() {
   const [idError, setIdError] = useState(false);
   const [pwError, setPwError] = useState(false);
   const [checkPwError, setCheckPwError] = useState(false);
+  const [nameError, setNameError] = useState(false);
   const SIGNUP_MESSAGE = MESSAGE.SIGNUP_MESSAGE;
 
   const signUp = async (event: React.ChangeEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    if (!isDisbaled) {
+      return alert('입력하지 않은 정보가 있는지 다시 확인해주세요');
+    }
+
     const data = JSON.stringify({
       email: id,
       password: pw,
@@ -82,7 +88,7 @@ export default function SingupEmail() {
       });
   };
 
-  const onChangeId = (e: any) => {
+  const onChangeId = (e: React.ChangeEvent<HTMLInputElement>) => {
     const emailRegex =
       /^(([^<>()\[\].,;:\s@"]+(\.[^<>()\[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
     if (!e.target.value || emailRegex.test(e.target.value)) {
@@ -93,7 +99,7 @@ export default function SingupEmail() {
     setId(e.target.value);
   };
 
-  const onChangePw = (e: any) => {
+  const onChangePw = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.value || e.target.value.length >= 8) {
       setPwError(false);
     } else {
@@ -110,9 +116,19 @@ export default function SingupEmail() {
     }
   };
 
-  const onChangeName = (e: any) => {
+  const onChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const nameRegex = /^(?=.*[a-z0-9가-힣])[a-z0-9가-힣]{2,16}$/;
+    if (!e.target.value || (e.target.value.length > 1 && nameRegex.test(e.target.value))) {
+      // 닉네임 길이는 2자 이상으로
+      setNameError(false);
+    } else {
+      setNameError(true);
+    }
     setName(e.target.value);
   };
+
+  let isDisbaled =
+    id.length > 0 && pw.length > 0 && name.length > 0 && !idError && !pwError && !checkPwError && !nameError;
 
   return (
     <div>
@@ -157,6 +173,8 @@ export default function SingupEmail() {
               autoSave="off"
               onChange={onChangeName}
             ></Input>
+            {nameError && <ValidationView text={SIGNUP_MESSAGE.SHORT_USERNAME} />}
+
             <div style={{ marginTop: '30px', fontWeight: '600' }}>모든 내용 입력을 완료하셨나요?</div>
             <SignupButton type="submit">가입하기</SignupButton>
           </div>
