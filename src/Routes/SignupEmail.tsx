@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import styled from 'styled-components';
+import MESSAGE from '../Constant/Constant';
 
 const Container = styled.div`
   text-align: center;
@@ -44,6 +45,7 @@ export default function SingupEmail() {
   const [idError, setIdError] = useState(false);
   const [pwError, setPwError] = useState(false);
   const [checkPwError, setCheckPwError] = useState(false);
+  const SIGNUP_MESSAGE = MESSAGE.SIGNUP_MESSAGE;
 
   const onChangeId = (e: any) => {
     const emailRegex =
@@ -85,29 +87,29 @@ export default function SingupEmail() {
         <div style={{ fontSize: '28px', lineHeight: '30px', fontWeight: '700' }}>회원가입</div>
         <div style={{ marginTop: '30px' }}>
           <div style={{ float: 'left', fontWeight: '600' }}>이메일(아이디)</div>
-          <Input type="text" placeholder="이메일 주소를 입력해주세요" autoSave="off" onChange={onChangeId}></Input>
-          {idError && <ValidationView text={'이메일 형식에 맞게 입력해 주세요'} onChange={onChangeId} />}
+          <Input type="text" placeholder={SIGNUP_MESSAGE.PRESS_EMAIL} autoSave="off" onChange={onChangeId}></Input>
+          {idError && <ValidationView text={SIGNUP_MESSAGE.WRONG_EMAIL} onChange={onChangeId} />}
 
           <div>
             <div style={{ marginTop: '20px', float: 'left', fontWeight: '600' }}>비밀번호</div>
-            <Input type="password" placeholder="비밀번호를 입력해주세요" autoSave="off" onChange={onChangePw}></Input>
-            {pwError && <ValidationView text={'비밀번호를 8자 이상 입력해주세요'} />}
+            <Input
+              type="password"
+              placeholder={SIGNUP_MESSAGE.PRESS_PASSWORD}
+              autoSave="off"
+              onChange={onChangePw}
+            ></Input>
+            {pwError && <ValidationView text={SIGNUP_MESSAGE.SHORT_PASSWORD} />}
 
             <Input
               type="password"
-              placeholder="다시 한 번 비밀번호를 입력해주세요"
+              placeholder={SIGNUP_MESSAGE.PRESS_PASSWORD_AGAIN}
               autoSave="off"
               onChange={onChangeCheckPw}
             ></Input>
-            {checkPwError && <ValidationView text={'비밀번호가 일치하지 않습니다'} />}
+            {checkPwError && <ValidationView text={SIGNUP_MESSAGE.WRONG_PASSWORD} />}
           </div>
           <div style={{ marginTop: '20px', float: 'left', fontWeight: '600' }}>이름(닉네임)</div>
-          <Input
-            type="text"
-            placeholder="델린저들에게 불릴 닉네임을 입력해주세요"
-            autoSave="off"
-            onChange={onChangeName}
-          ></Input>
+          <Input type="text" placeholder={SIGNUP_MESSAGE.PRESS_USERNAME} autoSave="off" onChange={onChangeName}></Input>
           <div style={{ marginTop: '30px', fontWeight: '600' }}>모든 내용 입력을 완료하셨나요?</div>
           <SingupDiv style={{ marginTop: '10px' }}>가입하기</SingupDiv>
         </div>
