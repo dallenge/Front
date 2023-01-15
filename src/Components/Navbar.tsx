@@ -14,7 +14,8 @@ const Logo = styled.div`
 const Menu = styled.div`
   cursor: pointer;
   margin-left: 40px;
-  font-size: 20px;
+  font-size: 18px;
+  font-weight: 600;
 `;
 function Navbar() {
   const navigate = useNavigate();
@@ -29,11 +30,7 @@ function Navbar() {
       }}
     >
       <div style={{ display: 'flex' }}>
-        <Logo onClick={() => navigate('/')}>
-          <div>
-            <span style={{ color: 'var(--color-dark-blue)' }}>D</span>allenge
-          </div>
-        </Logo>
+        <Logo onClick={() => navigate('/')}>Dallenge</Logo>
         <div style={{ display: 'flex', alignItems: 'center', marginLeft: '30px' }}>
           <Menu>목록</Menu>
           <Menu>등록</Menu>
@@ -42,6 +39,13 @@ function Navbar() {
         </div>
       </div>
       <div style={{ display: 'flex', alignItems: 'center', marginRight: '30px' }}>
+        <Menu style={{ marginTop: '3px' }}>
+          <img
+            style={{ height: '16px', marginRight: '3px', marginTop: '-4px' }}
+            src="https://cdn-icons-png.flaticon.com/512/149/149852.png"
+          />
+          검색
+        </Menu>
         <Menu onClick={() => navigate('/login')}>로그인</Menu>
         <Menu onClick={() => navigate('/signup/select-account')}>회원가입</Menu>
       </div>

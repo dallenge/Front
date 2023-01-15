@@ -5,7 +5,7 @@ import Home from './Routes/Home';
 import Login from './Routes/Login';
 import SignupSelect from './Routes/SignupSelect';
 import SingupEmail from './Routes/SignupEmail';
-import Profile from './Routes/Profile';
+import Mypage from './Routes/Mypage';
 
 function App() {
   return (
@@ -16,7 +16,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup/select-account" element={<SignupSelect />} />
         <Route path="/signup/user-email" element={<SingupEmail />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/my-page" element={<Mypage />} />
       </Routes>
     </div>
   );

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import styled from 'styled-components';
-import MESSAGE from '../Constant/Constant';
+import CONSTANT_INFO from '../Constant/Constant';
 import URL from '../Url';
 
 const Container = styled.div`
@@ -52,7 +52,7 @@ export default function SingupEmail() {
   const [pwError, setPwError] = useState(false);
   const [checkPwError, setCheckPwError] = useState(false);
   const [nameError, setNameError] = useState(false);
-  const SIGNUP_MESSAGE = MESSAGE.SIGNUP_MESSAGE;
+  const SIGNUP_MESSAGE = CONSTANT_INFO.SIGNUP_MESSAGE;
 
   const signUp = async (event: React.ChangeEvent<HTMLFormElement>) => {
     event.preventDefault();

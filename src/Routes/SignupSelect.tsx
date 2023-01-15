@@ -32,6 +32,7 @@ background: var(--color-blue);
 `;
 
 const SingupDiv = styled.div`
+  font-weight: 600;
   &:hover {
     cursor: pointer;
     transition: all 0.2s ease-in-out;

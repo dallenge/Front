@@ -2,7 +2,7 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { RiKakaoTalkFill } from 'react-icons/ri';
 import { FcGoogle } from 'react-icons/fc';
-import { useNavigate } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 
 const LoginContainer = styled.div`
   text-align: center;
@@ -83,7 +83,7 @@ export default function Login() {
 
   return (
     <div>
-      <div style={{ marginTop: '100px' }}></div>
+      <div style={{ marginTop: '70px' }}></div>
       <LoginContainer>
         <div style={{ fontSize: '30px', lineHeight: '40px', fontWeight: '700' }}>로그인</div>
         <div style={{ marginTop: '20px' }}>

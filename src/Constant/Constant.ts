@@ -1,4 +1,4 @@
-class MESSAGE {
+class CONSTANT_INFO {
   static SIGNUP_MESSAGE = {
     PRESS_EMAIL: '이메일 주소를 입력해주세요',
     WRONG_EMAIL: '이메일 형식에 맞게 입력해 주세요',
@@ -9,6 +9,15 @@ class MESSAGE {
     PRESS_USERNAME: '델린저들에게 불릴 닉네임을 입력해주세요',
     SHORT_USERNAME: '다시 입력하거나 2자 이상 입력해주세요',
   };
+
+  static CHECKBOX_IMAGE_URL = {
+    CHECK_YES_URL: 'https://cdn-icons-png.flaticon.com/512/60/60726.png',
+    CHECK_NO_URL: 'https://cdn-icons-png.flaticon.com/512/61/61218.png',
+  };
+
+  static TOGLE_IMAGE_URL = {
+    TOGLE_IMAGE_URL: 'https://cdn-icons-png.flaticon.com/512/482/482634.png',
+  };
 }
 
-export default MESSAGE;
+export default CONSTANT_INFO;
