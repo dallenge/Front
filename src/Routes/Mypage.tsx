@@ -3,8 +3,7 @@ import styled from 'styled-components';
 import Progressbar from '../Components/Progressbar';
 import CONSTANT_INFO from '../Constant/Constant';
 
-const CHECKBOX_IMAGE_URL = CONSTANT_INFO.CHECKBOX_IMAGE_URL;
-const TOGLE_IMAGE_URL = CONSTANT_INFO.TOGLE_IMAGE_URL;
+const IMAGE_URL = CONSTANT_INFO.IMAGE_URL;
 
 const Container = styled.div`
   text-align: left;
@@ -200,9 +199,9 @@ const ChallengeItem = ({
           </div>
           <div onClick={onClickCheck} style={{ display: 'inline-block', marginRight: '20px', marginTop: '8px' }}>
             {isChecked ? (
-              <img style={{ width: '50px' }} src={CHECKBOX_IMAGE_URL.CHECK_YES_URL} />
+              <img style={{ width: '50px' }} src={IMAGE_URL.CHECK_YES_URL} />
             ) : (
-              <img style={{ width: '50px' }} src={CHECKBOX_IMAGE_URL.CHECK_NO_URL} />
+              <img style={{ width: '50px' }} src={IMAGE_URL.CHECK_NO_URL} />
             )}
           </div>
         </div>
@@ -214,9 +213,9 @@ const ChallengeItem = ({
           style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
         >
           {isOpen ? (
-            <TogleImageUp src={TOGLE_IMAGE_URL.TOGLE_IMAGE_URL} />
+            <TogleImageUp src={IMAGE_URL.TOGLE_IMAGE_URL} />
           ) : (
-            <TogleImageDown src={TOGLE_IMAGE_URL.TOGLE_IMAGE_URL} />
+            <TogleImageDown src={IMAGE_URL.TOGLE_IMAGE_URL} />
           )}
         </div>
       </ChallengeBox>

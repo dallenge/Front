@@ -10,13 +10,11 @@ class CONSTANT_INFO {
     SHORT_USERNAME: '다시 입력하거나 2자 이상 입력해주세요',
   };
 
-  static CHECKBOX_IMAGE_URL = {
+  static IMAGE_URL = {
     CHECK_YES_URL: 'https://cdn-icons-png.flaticon.com/512/60/60726.png',
     CHECK_NO_URL: 'https://cdn-icons-png.flaticon.com/512/61/61218.png',
-  };
-
-  static TOGLE_IMAGE_URL = {
     TOGLE_IMAGE_URL: 'https://cdn-icons-png.flaticon.com/512/482/482634.png',
+    SPREAD_MENU_SWITCH_IMAGE_URL: 'https://cdn-icons-png.flaticon.com/512/748/748063.png',
   };
 }
 
