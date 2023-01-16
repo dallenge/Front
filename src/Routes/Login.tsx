@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import { RiKakaoTalkFill } from 'react-icons/ri';
 import { FcGoogle } from 'react-icons/fc';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import URL from '../Url';
 
 const LoginContainer = styled.div`
   text-align: center;
@@ -81,6 +83,29 @@ export default function Login() {
     setPw(e.target.value);
   };
 
+  const doLogin = async () => {
+    const data = JSON.stringify({
+      email: id,
+      password: pw,
+    });
+
+    const config = {
+      method: 'post',
+      url: `${URL}/login`,
+      data: data,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    await axios(config)
+      .then(() => {
+        navigate('/');
+      })
+      .catch((err) => {
+        alert('로그인 실패');
+      });
+  };
   return (
     <div>
       <div style={{ marginTop: '70px' }}></div>
@@ -95,7 +120,9 @@ export default function Login() {
             {pwError && <ValidationView text={'비밀번호를 8자 이상 입력해주세요'} />}
           </div>
           <div style={{ marginTop: '13px' }}>
-            <Button style={{ background: 'var(--color-blue)', color: 'white' }}>로그인</Button>
+            <Button style={{ background: 'var(--color-blue)', color: 'white' }} onClick={doLogin}>
+              로그인
+            </Button>
           </div>
           <div style={{ marginTop: '4px' }}>
             <DivHover
