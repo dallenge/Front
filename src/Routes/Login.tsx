@@ -91,7 +91,7 @@ export default function Login() {
 
     const config = {
       method: 'post',
-      url: `${URL}/login`,
+      url: `${URL}/user/login`,
       data: data,
       headers: {
         'Content-Type': 'application/json',
