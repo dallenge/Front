@@ -99,11 +99,13 @@ export default function Login() {
     };
 
     await axios(config)
-      .then(() => {
+      .then((res) => {
         navigate('/');
+        localStorage.clear();
+        localStorage.setItem('token', res.data.token);
       })
       .catch((err) => {
-        alert('로그인 실패');
+        alert(JSON.parse(err.request.response).message);
       });
   };
   return (
