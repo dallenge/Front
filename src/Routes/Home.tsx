@@ -5,6 +5,7 @@ const Card = styled.div<{ backgroundColor: string }>`
   height: 90vh;
   background-color: ${(props) => props.backgroundColor};
 `;
+
 function Home() {
   return (
     <div>

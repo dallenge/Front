@@ -30,6 +30,7 @@ export default function Navbar() {
   const navigate = useNavigate();
 
   const [isSwitchOpen, setIsSwitchOpen] = useState<boolean>(false);
+  const [userName, setUserName] = useState<string>('김도은');
   return (
     <div
       style={{
@@ -57,16 +58,24 @@ export default function Navbar() {
           />
           검색
         </Menu>
-        <Menu onClick={() => navigate('/login')}>로그인</Menu>
-        <Menu onClick={() => navigate('/signup/select-account')}>회원가입</Menu>
-        <span style={{ marginLeft: '50px', marginRight: '20px' }} onClick={() => setIsSwitchOpen(!isSwitchOpen)}>
-          {isSwitchOpen ? (
-            <SwitchCloseImg style={{ transform: 'rotate(180deg)' }} src={SPREAD_MENU_SWITCH_IMAGE_URL} />
-          ) : (
-            <SwitchCloseImg src={SPREAD_MENU_SWITCH_IMAGE_URL} />
-          )}
-        </span>
-        {isSwitchOpen && <SpreadMenu />}
+        {!localStorage.getItem('token') ? (
+          <div style={{ display: 'flex', alignItems: 'center', marginRight: '30px' }}>
+            <Menu onClick={() => navigate('/login')}>로그인</Menu>
+            <Menu onClick={() => navigate('/signup/select-account')}>회원가입</Menu>
+          </div>
+        ) : (
+          <div>
+            <span style={{ marginLeft: '50px', marginRight: '20px' }} onClick={() => setIsSwitchOpen(!isSwitchOpen)}>
+              {userName}님
+              {isSwitchOpen ? (
+                <SwitchCloseImg style={{ transform: 'rotate(180deg)' }} src={SPREAD_MENU_SWITCH_IMAGE_URL} />
+              ) : (
+                <SwitchCloseImg src={SPREAD_MENU_SWITCH_IMAGE_URL} />
+              )}
+            </span>
+            {isSwitchOpen && <SpreadMenu />}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -125,7 +134,14 @@ const SpreadMenu = () => {
         <SpreadDiv>회원정보 수정</SpreadDiv>
       </Layer>
       <Layer>
-        <SpreadDiv>로그아웃</SpreadDiv>
+        <SpreadDiv
+          onClick={() => {
+            localStorage.clear();
+            window.location.reload();
+          }}
+        >
+          로그아웃
+        </SpreadDiv>
       </Layer>
     </SpreadMenuBox>
   );
