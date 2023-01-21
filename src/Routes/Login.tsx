@@ -103,6 +103,8 @@ export default function Login() {
         navigate('/');
         localStorage.clear();
         localStorage.setItem('token', res.data.token);
+        localStorage.setItem('userName', res.data.userName);
+        localStorage.setItem('userId', res.data.userId);
       })
       .catch((err) => {
         alert(JSON.parse(err.request.response).message);

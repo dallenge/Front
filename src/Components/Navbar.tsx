@@ -30,7 +30,6 @@ export default function Navbar() {
   const navigate = useNavigate();
 
   const [isSwitchOpen, setIsSwitchOpen] = useState<boolean>(false);
-  const [userName, setUserName] = useState<string>('김도은');
   return (
     <div
       style={{
@@ -66,7 +65,7 @@ export default function Navbar() {
         ) : (
           <div>
             <span style={{ marginLeft: '50px', marginRight: '20px' }} onClick={() => setIsSwitchOpen(!isSwitchOpen)}>
-              {userName}님
+              {localStorage.getItem('userName')}님
               {isSwitchOpen ? (
                 <SwitchCloseImg style={{ transform: 'rotate(180deg)' }} src={SPREAD_MENU_SWITCH_IMAGE_URL} />
               ) : (
