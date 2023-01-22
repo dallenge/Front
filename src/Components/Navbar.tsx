@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import CONSTANT_INFO from '../Constant/Constant';
 
@@ -18,11 +18,17 @@ const Menu = styled.div`
   margin-left: 40px;
   font-size: 18px;
   font-weight: 600;
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 const SwitchCloseImg = styled.img`
-  width: 18px;
+  width: 23px;
   margin-left: 20px;
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 export default function Navbar() {
@@ -31,6 +37,16 @@ export default function Navbar() {
 
   const [isSwitchOpen, setIsSwitchOpen] = useState<boolean>(false);
   const [userName, setUserName] = useState<string>('김도은');
+
+  interface SetOpenFunc {
+    (): void;
+  }
+
+  const setOpen: SetOpenFunc = () => {
+    // 자식 컴포넌트에게 넘겨줄 함수
+    setIsSwitchOpen(!isSwitchOpen);
+  };
+
   return (
     <div
       style={{
@@ -64,16 +80,22 @@ export default function Navbar() {
             <Menu onClick={() => navigate('/signup/select-account')}>회원가입</Menu>
           </div>
         ) : (
-          <div>
-            <span style={{ marginLeft: '50px', marginRight: '20px' }} onClick={() => setIsSwitchOpen(!isSwitchOpen)}>
-              {userName}님
-              {isSwitchOpen ? (
-                <SwitchCloseImg style={{ transform: 'rotate(180deg)' }} src={SPREAD_MENU_SWITCH_IMAGE_URL} />
-              ) : (
-                <SwitchCloseImg src={SPREAD_MENU_SWITCH_IMAGE_URL} />
-              )}
+          <div style={{ display: 'flex' }}>
+            <span>
+              <Menu style={{ marginLeft: '50px', marginRight: '20px' }} onClick={() => navigate('/my-page')}>
+                {userName}님
+              </Menu>
             </span>
-            {isSwitchOpen && <SpreadMenu />}
+            {isSwitchOpen ? (
+              <SwitchCloseImg
+                onClick={() => setIsSwitchOpen(!isSwitchOpen)}
+                style={{ transform: 'rotate(180deg)' }}
+                src={SPREAD_MENU_SWITCH_IMAGE_URL}
+              />
+            ) : (
+              <SwitchCloseImg onClick={() => setIsSwitchOpen(!isSwitchOpen)} src={SPREAD_MENU_SWITCH_IMAGE_URL} />
+            )}
+            {isSwitchOpen && <SpreadMenu setOpen={setOpen} />}
           </div>
         )}
       </div>
@@ -115,7 +137,12 @@ const Line = styled.div`
   background: rgb(200, 200, 200);
 `;
 
-const SpreadMenu = () => {
+interface SetOpenFunc {
+  (): void;
+}
+
+const SpreadMenu = ({ setOpen }: { setOpen: SetOpenFunc }) => {
+  const navigate = useNavigate();
   return (
     <SpreadMenuBox>
       <Layer>
@@ -131,7 +158,14 @@ const SpreadMenu = () => {
         <Line></Line>
       </Layer>
       <Layer>
-        <SpreadDiv>회원정보 수정</SpreadDiv>
+        <SpreadDiv
+          onClick={() => {
+            navigate('/my-page/modify/profile-edit');
+            setOpen(); // 페이지 이동하면 스프레드 메뉴 닫히도록
+          }}
+        >
+          회원정보 수정
+        </SpreadDiv>
       </Layer>
       <Layer>
         <SpreadDiv
