@@ -106,11 +106,11 @@ export default function Navbar() {
 const SpreadMenuBox = styled.div`
   padding: 15px;
   position: absolute;
-  z-index: 99;
+  z-index: 999;
   width: 240px;
   height: 250px;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
-  background: rgba(219, 226, 239, 0.3);
+  background: #ffffff;
   right: 40px;
   top: 110px;
 `;
