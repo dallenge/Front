@@ -87,8 +87,8 @@ export default function Mypage() {
   ];
   // -------------------------------------------
 
-  const [total, setTotal] = useState(myChallengeList.length);
-  const [completed, setCompleted] = useState(0); // 완료한 개수 데이터베이스에서 주고받고....
+  const [total, setTotal] = useState<number>(myChallengeList.length);
+  const [completed, setCompleted] = useState<number>(0); // 완료한 개수 데이터베이스에서 주고받고....
 
   const [checkedArr, setCheckedArr] = useState<Array<number>>([]);
 
@@ -164,6 +164,12 @@ export default function Mypage() {
   );
 }
 
+const CursorDiv = styled.div`
+  &:hover {
+    cursor: pointer;
+  }
+`;
+
 const ChallengeItem = ({
   id,
   title,
@@ -197,18 +203,17 @@ const ChallengeItem = ({
             <TitleDiv>{title}</TitleDiv>
             <div style={{ fontSize: '14px', marginTop: '5px', fontWeight: '600' }}>{content}</div>
           </div>
-          <div onClick={onClickCheck} style={{ display: 'inline-block', marginRight: '20px', marginTop: '8px' }}>
+          <CursorDiv onClick={onClickCheck} style={{ display: 'inline-block', marginRight: '20px', marginTop: '8px' }}>
             {isChecked ? (
               <img style={{ width: '50px' }} src={IMAGE_URL.CHECK_YES_URL} />
             ) : (
               <img style={{ width: '50px' }} src={IMAGE_URL.CHECK_NO_URL} />
             )}
-          </div>
+          </CursorDiv>
         </div>
         <div
           onClick={() => {
             setIsOpen(!isOpen);
-            console.log(`${id}번 토글 눌림`);
           }}
           style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
         >
