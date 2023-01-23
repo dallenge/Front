@@ -30,10 +30,10 @@ function Home() {
           <div style={{ fontSize: '20px', color: 'black', fontWeight: 'bold' }}>사람들에게 공유하세요!</div>
         </div>
       </Card>
-      <Card background="var(--color-white)" height="50vh">
+      <Card background="white" height="50vh">
         카테고리 넣을 위치입니다.
       </Card>
-      <Card background="white" height="600px">
+      <Card background="var(--color-white)" height="600px">
         <div style={{ width: '100vw', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
           <div style={{ fontSize: '20px', fontWeight: '600' }}>인기 챌린지</div>
           <div style={{ width: '100%', display: 'flex', marginTop: '50px', justifyContent: 'space-around' }}>
@@ -51,17 +51,15 @@ function PopularChallenge() {
   return (
     <div
       style={{
-        height: '400px',
+        height: '500px',
         width: '300px',
-        border: ' 1px solid black',
-        background: ' var(--color-sky)',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'flex-start',
         padding: '10px',
       }}
     >
-      <div style={{ height: '200px', width: '280px', background: 'white', border: '1px solid black' }}></div>
+      <div style={{ height: '250px', width: '280px', background: 'var(--color-sky)', borderRadius: '10px' }}></div>
       <div style={{ marginTop: '20px' }}>인기 챌린지 입니다.</div>
     </div>
   );
