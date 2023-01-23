@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import CONSTANT_INFO from '../Constant/Constant';
+import Searchbar from './Searchbar';
 
 const Logo = styled.div`
   font-size: 40px;
@@ -33,9 +34,11 @@ const SwitchCloseImg = styled.img`
 
 export default function Navbar() {
   const SPREAD_MENU_SWITCH_IMAGE_URL = CONSTANT_INFO.IMAGE_URL.SPREAD_MENU_SWITCH_IMAGE_URL;
+  const SEARCH_IMAGE_URL = CONSTANT_INFO.IMAGE_URL.SEARCH_IMAGE_URL;
   const navigate = useNavigate();
 
   const [isSwitchOpen, setIsSwitchOpen] = useState<boolean>(false);
+  const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
   const [userName, setUserName] = useState<string>('김도은');
 
   interface SetOpenFunc {
@@ -68,11 +71,15 @@ export default function Navbar() {
       </div>
       <div style={{ display: 'flex', alignItems: 'center', marginRight: '30px' }}>
         <Menu style={{ marginTop: '3px' }}>
-          <img
-            style={{ height: '16px', marginRight: '3px', marginTop: '-4px' }}
-            src="https://cdn-icons-png.flaticon.com/512/149/149852.png"
-          />
-          검색
+          <div
+            onClick={() => {
+              setIsSearchOpen(!isSearchOpen);
+              setIsSwitchOpen(false);
+            }}
+          >
+            <img style={{ height: '16px', marginRight: '3px', marginTop: '-4px' }} src={SEARCH_IMAGE_URL} />
+            검색
+          </div>
         </Menu>
         {!localStorage.getItem('token') ? (
           <div style={{ display: 'flex', alignItems: 'center', marginRight: '30px' }}>
@@ -93,12 +100,19 @@ export default function Navbar() {
                 src={SPREAD_MENU_SWITCH_IMAGE_URL}
               />
             ) : (
-              <SwitchCloseImg onClick={() => setIsSwitchOpen(!isSwitchOpen)} src={SPREAD_MENU_SWITCH_IMAGE_URL} />
+              <SwitchCloseImg
+                onClick={() => {
+                  setIsSwitchOpen(!isSwitchOpen);
+                  setIsSearchOpen(false);
+                }}
+                src={SPREAD_MENU_SWITCH_IMAGE_URL}
+              />
             )}
             {isSwitchOpen && <SpreadMenu setOpen={setOpen} />}
           </div>
         )}
       </div>
+      {isSearchOpen ? <Searchbar /> : null}
     </div>
   );
 }

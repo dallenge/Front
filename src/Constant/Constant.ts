@@ -15,6 +15,7 @@ class CONSTANT_INFO {
     CHECK_NO_URL: 'https://cdn-icons-png.flaticon.com/512/61/61218.png',
     TOGLE_IMAGE_URL: 'https://cdn-icons-png.flaticon.com/512/482/482634.png',
     SPREAD_MENU_SWITCH_IMAGE_URL: 'https://cdn-icons-png.flaticon.com/512/748/748063.png',
+    SEARCH_IMAGE_URL: 'https://cdn-icons-png.flaticon.com/512/149/149852.png',
   };
 }
 
