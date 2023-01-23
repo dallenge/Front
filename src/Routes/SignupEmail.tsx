@@ -44,14 +44,14 @@ const SignupButton = styled.button`
 
 export default function SingupEmail() {
   const navigate = useNavigate();
-  const [id, setId] = useState('');
-  const [pw, setPw] = useState('');
-  const [name, setName] = useState('');
+  const [id, setId] = useState<string>('');
+  const [pw, setPw] = useState<string>('');
+  const [name, setName] = useState<string>('');
 
-  const [idError, setIdError] = useState(false);
-  const [pwError, setPwError] = useState(false);
-  const [checkPwError, setCheckPwError] = useState(false);
-  const [nameError, setNameError] = useState(false);
+  const [idError, setIdError] = useState<boolean>(false);
+  const [pwError, setPwError] = useState<boolean>(false);
+  const [checkPwError, setCheckPwError] = useState<boolean>(false);
+  const [nameError, setNameError] = useState<boolean>(false);
   const SIGNUP_MESSAGE = CONSTANT_INFO.SIGNUP_MESSAGE;
 
   const signUp = async (event: React.ChangeEvent<HTMLFormElement>) => {
@@ -139,14 +139,7 @@ export default function SingupEmail() {
           <div style={{ marginTop: '30px' }}>
             <div style={{ float: 'left', fontWeight: '600' }}>이메일(아이디)</div>
             <Input type="text" placeholder={SIGNUP_MESSAGE.PRESS_EMAIL} autoSave="off" onChange={onChangeId}></Input>
-            {idError && (
-              <ValidationView
-                text={SIGNUP_MESSAGE.WRONG_EMAIL}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  onChangeCheckPw(e);
-                }}
-              />
-            )}
+            {idError && <ValidationView text={SIGNUP_MESSAGE.WRONG_EMAIL} />}
 
             <div>
               <div style={{ marginTop: '20px', float: 'left', fontWeight: '600' }}>비밀번호</div>
@@ -184,10 +177,10 @@ export default function SingupEmail() {
   );
 }
 
-const ValidationView = (props: any) => {
+const ValidationView = ({ text }: { text: string }) => {
   return (
     <div style={{ marginTop: '4px', marginBottom: '10px' }}>
-      <div style={{ padding: '0 14px', fontSize: '13px', color: '#F00001', fontWeight: '600' }}>🔥{props.text}</div>
+      <div style={{ padding: '0 14px', fontSize: '13px', color: '#F00001', fontWeight: '600' }}>🔥{text}</div>
     </div>
   );
 };

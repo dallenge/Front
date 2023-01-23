@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const Container = styled.div`
@@ -36,7 +35,6 @@ const NaviActive = styled.div`
 
 export default function Modify({ active }: { active: String }) {
   const navigate = useNavigate();
-  // const [active, setActive] = useState('profile'); // profile or password or withdrawal
 
   return (
     <Container>
