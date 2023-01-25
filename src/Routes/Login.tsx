@@ -105,6 +105,7 @@ export default function Login() {
         localStorage.setItem('token', res.data.token);
         localStorage.setItem('userName', res.data.userName);
         localStorage.setItem('userId', res.data.userId);
+        localStorage.setItem('email', id);
       })
       .catch((err) => {
         alert(JSON.parse(err.request.response).message);

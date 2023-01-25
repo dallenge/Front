@@ -62,11 +62,13 @@ export default function ProfileEdit() {
       <Container>
         <div style={{ marginTop: '50px' }}>
           <Text style={{ fontSize: '18px' }}>아이디(이메일 주소)</Text>
-          <Text style={{ color: 'rgb(80, 80, 80)', marginTop: '10px' }}>xxxx@test.com</Text>
+          <Text style={{ color: 'rgb(80, 80, 80)', marginTop: '10px' }}>
+            {localStorage.getItem('email')?.toString()}
+          </Text>
         </div>
         <div style={{ marginTop: '45px' }}>
           <Text style={{ fontSize: '18px' }}>닉네임</Text>
-          <Input value={'기존 닉네임 들어감'}></Input>
+          <Input value={localStorage.getItem('userName')?.toString()}></Input>
         </div>
         <div style={{ marginTop: '50px' }}>
           <Text style={{ fontSize: '18px' }}>자기소개</Text>
