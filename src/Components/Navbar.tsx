@@ -39,7 +39,6 @@ export default function Navbar() {
 
   const [isSwitchOpen, setIsSwitchOpen] = useState<boolean>(false);
   const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
-  const [userName, setUserName] = useState<string>('김도은');
 
   interface SetOpenFunc {
     (): void;
@@ -90,7 +89,7 @@ export default function Navbar() {
           <div style={{ display: 'flex' }}>
             <span>
               <Menu style={{ marginLeft: '50px', marginRight: '20px' }} onClick={() => navigate('/my-page')}>
-                {userName}님
+                {localStorage.getItem('userName')}님
               </Menu>
             </span>
             {isSwitchOpen ? (
