@@ -125,7 +125,9 @@ export default function Mypage() {
           </div>
           <div style={{ display: 'inline-block', height: '140px', padding: '10px 30px' }}>
             <div style={{ display: 'flex' }}>
-              <div style={{ fontSize: '28px', fontWeight: '600', display: 'inline-block' }}>강성욱 님</div>
+              <div style={{ fontSize: '28px', fontWeight: '600', display: 'inline-block' }}>
+                {localStorage.getItem('userName')} 님
+              </div>
               <div style={{ padding: '8px 30px', display: 'inline-block' }}>
                 {/* <EditButton>프로필 수정</EditButton> */}
               </div>
