@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import Modify from '../Components/Modify';
+import { AiFillCamera } from 'react-icons/ai';
 
 const Container = styled.div`
   text-align: left;
@@ -55,20 +56,67 @@ const Textarea = styled.textarea`
   }
 `;
 
+const Image = styled.img`
+  border-radius: 40px;
+  width: 80px;
+`;
+
+const Hover = styled.span`
+  &:hover {
+    cursor: pointer;
+  }
+`;
+
 export default function ProfileEdit() {
+  const photoInput = useRef<HTMLInputElement>(null);
+  const [imgFile, setImgFile] = useState<any>('');
+
+  const handleClick = () => {
+    if (photoInput.current) photoInput.current.click();
+  };
+
+  const saveImgFile = (e: React.ChangeEvent) => {
+    if (photoInput.current) {
+      if (photoInput.current.files) {
+        const file = photoInput.current.files[0];
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onloadend = () => {
+          setImgFile(reader.result);
+        };
+      }
+    }
+  };
+
   return (
     <div>
       <Modify active={'profile'} />
       <Container>
         <div style={{ marginTop: '50px' }}>
           <Text style={{ fontSize: '18px' }}>아이디(이메일 주소)</Text>
-          <Text style={{ color: 'rgb(80, 80, 80)', marginTop: '10px' }}>
-            {localStorage.getItem('email')?.toString()}
-          </Text>
+          <Text style={{ color: 'rgb(80, 80, 80)', marginTop: '10px' }}>{localStorage.getItem('email')}</Text>
         </div>
-        <div style={{ marginTop: '45px' }}>
-          <Text style={{ fontSize: '18px' }}>닉네임</Text>
-          <Input value={localStorage.getItem('userName')?.toString()}></Input>
+        <div style={{ marginTop: '45px', display: 'flex' }}>
+          <div style={{ display: 'inline-block' }}>
+            <Image src={imgFile ? imgFile : `https://cdn-icons-png.flaticon.com/512/4645/4645949.png`}></Image>
+            <Hover onClick={handleClick}>
+              <input
+                type="file"
+                accept="image/jpg, image/jpeg, image/png"
+                onChange={saveImgFile}
+                ref={photoInput}
+                style={{ display: 'none' }}
+              />
+              <AiFillCamera
+                size="30"
+                style={{ position: 'absolute', marginTop: '50px', marginLeft: '-20px' }}
+              ></AiFillCamera>
+            </Hover>
+          </div>
+          <div style={{ display: 'inline-block', marginLeft: '20px' }}>
+            <Text style={{ fontSize: '18px' }}>닉네임</Text>
+            <Input style={{ width: '300px' }} value={`${localStorage.getItem('userName')}`}></Input>
+          </div>
         </div>
         <div style={{ marginTop: '50px' }}>
           <Text style={{ fontSize: '18px' }}>자기소개</Text>
