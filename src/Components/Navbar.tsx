@@ -62,7 +62,13 @@ export default function Navbar() {
       <div style={{ display: 'flex' }}>
         <Logo onClick={() => navigate('/')}>Dallenge</Logo>
         <div style={{ display: 'flex', alignItems: 'center', marginLeft: '30px' }}>
-          <Menu>목록</Menu>
+          <Menu
+            onClick={() => {
+              navigate('/postlist');
+            }}
+          >
+            목록
+          </Menu>
           <Menu>등록</Menu>
           <Menu>추천받기</Menu>
           <Menu>베스트리뷰</Menu>

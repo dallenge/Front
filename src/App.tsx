@@ -1,4 +1,4 @@
-import './App.css';
+import './CSS/App.css';
 import { Routes, Route } from 'react-router-dom';
 import Navbar from './Components/Navbar';
 import Home from './Routes/Home';
@@ -8,6 +8,7 @@ import SingupEmail from './Routes/SignupEmail';
 import Mypage from './Routes/Mypage';
 import Modify from './Components/Modify';
 import ProfileEdit from './Routes/ProfileEdit';
+import PostList from './Routes/PostList';
 import PwEdit from './Routes/PwEdit';
 import Withdrawal from './Routes/Withdrawal';
 
@@ -21,6 +22,7 @@ function App() {
         <Route path="/signup/select-account" element={<SignupSelect />} />
         <Route path="/signup/user-email" element={<SingupEmail />} />
         <Route path="/my-page" element={<Mypage />} />
+        <Route path="/postlist" element={<PostList />} />
         {/* <Route path="my-page/modify" element={<Modify />} /> */}
         <Route path="/my-page/modify/profile-edit" element={<ProfileEdit />} />
         <Route path="/my-page/modify/password-edit" element={<PwEdit />} />
