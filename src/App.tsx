@@ -22,6 +22,7 @@ function App() {
         <Route path="/signup/select-account" element={<SignupSelect />} />
         <Route path="/signup/user-email" element={<SingupEmail />} />
         <Route path="/my-page" element={<Mypage />} />
+        <Route path="/postlist" element={<PostList />} />
         <Route path="/my-page/modify/profile-edit" element={<ProfileEdit />} />
         <Route path="/my-page/modify/password-edit" element={<PwEdit />} />
         <Route path="/my-page/modify/withdrawal" element={<Withdrawal />} />
