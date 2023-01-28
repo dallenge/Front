@@ -29,7 +29,7 @@ const PostBox = styled.div`
   border-radius: 10px;
 `;
 
-export default function PostList() {
+export default function ChallengeList() {
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'center', margin: '50px' }}>

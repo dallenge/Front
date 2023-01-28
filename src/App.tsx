@@ -8,7 +8,8 @@ import SingupEmail from './Routes/SignupEmail';
 import Mypage from './Routes/Mypage';
 import Modify from './Components/Modify';
 import ProfileEdit from './Routes/ProfileEdit';
-import PostList from './Routes/PostList';
+import ChallengeList from './Routes/ChallengeList';
+import CreateChallenge from './Routes/CreateChallenge';
 import PwEdit from './Routes/PwEdit';
 import Withdrawal from './Routes/Withdrawal';
 
@@ -22,7 +23,8 @@ function App() {
         <Route path="/signup/select-account" element={<SignupSelect />} />
         <Route path="/signup/user-email" element={<SingupEmail />} />
         <Route path="/my-page" element={<Mypage />} />
-        <Route path="/postlist" element={<PostList />} />
+        <Route path="/challengelist" element={<ChallengeList />} />
+        <Route path="/createchallenge" element={<CreateChallenge />} />
         {/* <Route path="my-page/modify" element={<Modify />} /> */}
         <Route path="/my-page/modify/profile-edit" element={<ProfileEdit />} />
         <Route path="/my-page/modify/password-edit" element={<PwEdit />} />

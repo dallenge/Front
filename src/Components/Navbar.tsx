@@ -64,12 +64,18 @@ export default function Navbar() {
         <div style={{ display: 'flex', alignItems: 'center', marginLeft: '30px' }}>
           <Menu
             onClick={() => {
-              navigate('/postlist');
+              navigate('/challengelist');
             }}
           >
             목록
           </Menu>
-          <Menu>등록</Menu>
+          <Menu
+            onClick={() => {
+              navigate('/createchallenge');
+            }}
+          >
+            등록
+          </Menu>
           <Menu>추천받기</Menu>
           <Menu>베스트리뷰</Menu>
         </div>
