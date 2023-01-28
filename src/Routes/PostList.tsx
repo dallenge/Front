@@ -1,4 +1,4 @@
-import '../CSS/PostList.css';
+import '../css/PostList.css';
 import styled from 'styled-components';
 
 const CategoryBtn = styled.div`
