@@ -3,6 +3,10 @@ import styled from 'styled-components';
 import Modify from '../Components/Modify';
 import { AiFillCamera } from 'react-icons/ai';
 
+import '../CSS/ProfileEdit.css';
+import axios from 'axios';
+import URL from '../Url';
+
 const Container = styled.div`
   text-align: left;
   justify-content: center;
@@ -33,16 +37,12 @@ const Input = styled.input`
 
 const Button = styled.button`
   border: 1px solid var(--color-sky);
-  background: rgba(63, 114, 175, 0.1);
+  // background: rgba(63, 114, 175, 0.1);
   width: 120px;
   line-height: 40px;
   border-radius: 6px;
   font-weight: bold;
   font-size: 16px;
-  &:hover {
-    transition: all 0.2s ease-in-out;
-    background: rgba(63, 114, 175, 0.3);
-  }
 `;
 
 const Textarea = styled.textarea`
@@ -68,8 +68,15 @@ const Hover = styled.span`
 `;
 
 export default function ProfileEdit() {
+  const USERNAME = localStorage.getItem('userName');
+  const INFO = '기존 자기소개 들어감';
+  const IMGFILE = ''; // 서버에서 받은 기존 이미지 파일이 들어감
+
   const photoInput = useRef<HTMLInputElement>(null);
-  const [imgFile, setImgFile] = useState<any>('');
+  const [userName, setNickname] = useState<string>(`${USERNAME}`);
+  const [info, setInfo] = useState<string>(`${INFO}`);
+  const [imgFile, setImgFile] = useState<any>(`${IMGFILE}`);
+  const [view, setView] = useState<any>('');
 
   const handleClick = () => {
     if (photoInput.current) photoInput.current.click();
@@ -79,11 +86,53 @@ export default function ProfileEdit() {
     if (photoInput.current) {
       if (photoInput.current.files) {
         const file = photoInput.current.files[0];
+        setImgFile(file);
+
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onloadend = () => {
-          setImgFile(reader.result);
+          setView(reader.result);
         };
+      }
+    }
+  };
+
+  const onClickEdit = async () => {
+    if (!userName || !info) {
+      return alert('입력하지 않은 내용이 있는지 확인해 주세요');
+    } else {
+      const confirm = window.confirm('입력한 내용으로 프로필을 수정합니다');
+      if (confirm) {
+        const dataSet = {
+          userName: userName,
+          password: '12345678', // 테스트 코드
+          info: info,
+        };
+
+        const formData = new FormData();
+        formData.append('requestUpdateUser', new Blob([JSON.stringify(dataSet)], { type: 'application/json' }));
+        formData.append('userImgFile', imgFile);
+
+        console.log(imgFile);
+
+        const config = {
+          method: 'post',
+          url: `${URL}/user/${localStorage.getItem('userId')}`,
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: 'Bearer ' + localStorage.getItem('token'),
+          },
+          data: formData,
+        };
+
+        // 이미지 파일 없이 post 요청 보내면 500 에러
+        await axios(config)
+          .then((res) => {
+            alert('프로필이 변경되었습니다.');
+            localStorage.setItem('userName', userName);
+            window.location.reload();
+          })
+          .catch((err) => console.trace(err));
       }
     }
   };
@@ -98,7 +147,7 @@ export default function ProfileEdit() {
         </div>
         <div style={{ marginTop: '45px', display: 'flex' }}>
           <div style={{ display: 'inline-block' }}>
-            <Image src={imgFile ? imgFile : `https://cdn-icons-png.flaticon.com/512/4645/4645949.png`}></Image>
+            <Image src={view ? view : `https://cdn-icons-png.flaticon.com/512/4645/4645949.png`}></Image>
             <Hover onClick={handleClick}>
               <input
                 type="file"
@@ -115,15 +164,20 @@ export default function ProfileEdit() {
           </div>
           <div style={{ display: 'inline-block', marginLeft: '20px' }}>
             <Text style={{ fontSize: '18px' }}>닉네임</Text>
-            <Input style={{ width: '300px' }} value={`${localStorage.getItem('userName')}`}></Input>
+            <Input onChange={(e) => setNickname(e.target.value)} style={{ width: '300px' }} value={userName}></Input>
           </div>
         </div>
         <div style={{ marginTop: '50px' }}>
           <Text style={{ fontSize: '18px' }}>자기소개</Text>
-          <Textarea value={'기존 자기소개 들어감'}></Textarea>
+          <Textarea onChange={(e) => setInfo(e.target.value)} value={`${info}`}></Textarea>
         </div>
         <div style={{ marginTop: '80px' }}>
-          <Button>수정하기</Button>
+          <Button
+            className={userName === USERNAME && info === INFO ? 'disable-edit' : 'able-edit'}
+            onClick={onClickEdit}
+          >
+            수정하기
+          </Button>
         </div>
       </Container>
     </div>

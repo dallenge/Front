@@ -1,0 +1,14 @@
+.disable-edit {
+  background-color: rgb(111, 111, 111);
+  color: rgb(195, 195, 195);
+  pointer-events: none;
+}
+
+.able-edit {
+  background: rgba(63, 114, 175, 0.1);
+}
+
+.able-edit:hover {
+  transition: all 0.2s ease-in-out;
+  background: rgba(63, 114, 175, 0.3);
+}

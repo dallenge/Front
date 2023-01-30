@@ -56,6 +56,11 @@ export default function Modify({ active }: { active: String }) {
           ) : (
             <NaviBtn onClick={() => navigate('/my-page/modify/profile-edit')}>프로필 수정</NaviBtn>
           )}
+          {active === 'challengeEdit' ? (
+            <NaviActive>진행 챌린지 편집</NaviActive>
+          ) : (
+            <NaviBtn onClick={() => navigate('/my-page/modify/progress-challenge-edit')}>진행 챌린지 편집</NaviBtn>
+          )}
           {active === 'password' ? (
             <NaviActive>비밀번호 변경</NaviActive>
           ) : (
