@@ -103,6 +103,7 @@ export default function Login() {
         navigate('/');
         localStorage.clear();
         localStorage.setItem('token', res.data.token);
+        localStorage.setItem('expire', (Date.now() + 7200000).toString());
         localStorage.setItem('userName', res.data.userName);
         localStorage.setItem('userId', res.data.userId);
         localStorage.setItem('email', id);

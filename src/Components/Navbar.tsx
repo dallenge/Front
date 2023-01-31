@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import CONSTANT_INFO from '../Constant/Constant';
@@ -39,6 +39,10 @@ export default function Navbar() {
 
   const [isSwitchOpen, setIsSwitchOpen] = useState<boolean>(false);
   const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (Date.now() >= Number(localStorage.getItem('expire'))) localStorage.clear();
+  });
 
   interface SetOpenFunc {
     (): void;

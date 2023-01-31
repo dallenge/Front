@@ -13,13 +13,13 @@ const Card = styled.div<{ background: string; height: string }>`
 function Home() {
   return (
     <div>
-      <Card background="url('/main.jpg')" height="80vh">
+      <Card background="url('/main.jpg')" height="90vh">
         <div
           style={{
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'flex-start',
-            margin: '150px',
+            margin: '200px',
             color: 'black',
             fontSize: '70px',
           }}
