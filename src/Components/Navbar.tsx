@@ -49,6 +49,11 @@ export default function Navbar() {
     setIsSwitchOpen(!isSwitchOpen);
   };
 
+  const closeBar = () => {
+    setIsSwitchOpen(false);
+    setIsSearchOpen(false);
+  };
+
   return (
     <div
       style={{
@@ -63,8 +68,7 @@ export default function Navbar() {
         <Logo
           onClick={() => {
             navigate('/');
-            setIsSwitchOpen(false);
-            setIsSearchOpen(false);
+            closeBar();
           }}
         >
           Dallenge
@@ -73,8 +77,7 @@ export default function Navbar() {
           <Menu
             onClick={() => {
               navigate('/challengelist');
-              setIsSwitchOpen(false);
-              setIsSearchOpen(false);
+              closeBar();
             }}
           >
             목록
@@ -82,24 +85,21 @@ export default function Navbar() {
           <Menu
             onClick={() => {
               navigate('/createchallenge');
-              setIsSwitchOpen(false);
-              setIsSearchOpen(false);
+              closeBar();
             }}
           >
             등록
           </Menu>
           <Menu
             onClick={() => {
-              setIsSwitchOpen(false);
-              setIsSearchOpen(false);
+              closeBar();
             }}
           >
             추천받기
           </Menu>
           <Menu
             onClick={() => {
-              setIsSwitchOpen(false);
-              setIsSearchOpen(false);
+              closeBar();
             }}
           >
             베스트리뷰
@@ -114,7 +114,11 @@ export default function Navbar() {
               setIsSwitchOpen(false);
             }}
           >
-            <img style={{ height: '16px', marginRight: '3px', marginTop: '-4px' }} src={SEARCH_IMAGE_URL} />
+            <img
+              style={{ height: '16px', marginRight: '3px', marginTop: '-4px' }}
+              alt="search-img"
+              src={SEARCH_IMAGE_URL}
+            />
             검색
           </div>
         </Menu>
@@ -149,7 +153,7 @@ export default function Navbar() {
           </div>
         )}
       </div>
-      {isSearchOpen ? <Searchbar /> : null}
+      {isSearchOpen ? <Searchbar closeBar={closeBar} /> : null}
     </div>
   );
 }

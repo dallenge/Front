@@ -1,5 +1,8 @@
 import styled from 'styled-components';
+import React, { useState, useRef, useEffect } from 'react';
 import CONSTANT_INFO from '../Constant/Constant';
+import { useNavigate } from 'react-router-dom';
+import SearchPage from '../Routes/SearchPage';
 
 const SearchbarDiv = styled.div`
   display: inline-block;
@@ -37,14 +40,49 @@ const BottomDiv = styled.div`
   background-color: rgb(0, 0, 0);
 `;
 
-export default function Searchbar() {
+interface Props {
+  closeBar(): void;
+}
+
+export default function Searchbar({ closeBar }: Props) {
   const SEARCH_IMAGE_URL = CONSTANT_INFO.IMAGE_URL.SEARCH_IMAGE_URL;
+
+  const navigate = useNavigate();
+  const [searchText, setSearchText] = useState<string>('');
+
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      onClickSearch();
+    }
+  };
+
+  const onClickSearch = () => {
+    if (!searchText) {
+      alert('검색어를 입력해주세요');
+    } else {
+      // <SearchPage searchText={searchText} />;
+      navigate(`/search?search=${searchText}`);
+      closeBar();
+    }
+  };
+
   return (
     <SearchbarDiv>
       <div style={{ height: '150px' }}>
         <div style={{ height: '40px' }}></div>
-        <Input placeholder="관심있는 챌린지를 검색해보세요!"></Input>
-        <Image src={SEARCH_IMAGE_URL} />
+        <Input
+          placeholder="관심있는 챌린지명을 검색해보세요!"
+          onKeyUp={handleKeyPress}
+          ref={inputRef}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchText(e.target.value)}
+        ></Input>
+        <Image onClick={onClickSearch} src={SEARCH_IMAGE_URL} />
       </div>
       <BottomDiv></BottomDiv>
     </SearchbarDiv>
