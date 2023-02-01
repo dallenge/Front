@@ -60,11 +60,21 @@ export default function Navbar() {
       }}
     >
       <div style={{ display: 'flex' }}>
-        <Logo onClick={() => navigate('/')}>Dallenge</Logo>
+        <Logo
+          onClick={() => {
+            navigate('/');
+            setIsSwitchOpen(false);
+            setIsSearchOpen(false);
+          }}
+        >
+          Dallenge
+        </Logo>
         <div style={{ display: 'flex', alignItems: 'center', marginLeft: '30px' }}>
           <Menu
             onClick={() => {
               navigate('/challengelist');
+              setIsSwitchOpen(false);
+              setIsSearchOpen(false);
             }}
           >
             목록
@@ -72,12 +82,28 @@ export default function Navbar() {
           <Menu
             onClick={() => {
               navigate('/createchallenge');
+              setIsSwitchOpen(false);
+              setIsSearchOpen(false);
             }}
           >
             등록
           </Menu>
-          <Menu>추천받기</Menu>
-          <Menu>베스트리뷰</Menu>
+          <Menu
+            onClick={() => {
+              setIsSwitchOpen(false);
+              setIsSearchOpen(false);
+            }}
+          >
+            추천받기
+          </Menu>
+          <Menu
+            onClick={() => {
+              setIsSwitchOpen(false);
+              setIsSearchOpen(false);
+            }}
+          >
+            베스트리뷰
+          </Menu>
         </div>
       </div>
       <div style={{ display: 'flex', alignItems: 'center', marginRight: '30px' }}>
