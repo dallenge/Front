@@ -53,6 +53,11 @@ export default function Navbar() {
     setIsSwitchOpen(!isSwitchOpen);
   };
 
+  const closeBar = () => {
+    setIsSwitchOpen(false);
+    setIsSearchOpen(false);
+  };
+
   return (
     <div
       style={{
@@ -64,11 +69,19 @@ export default function Navbar() {
       }}
     >
       <div style={{ display: 'flex' }}>
-        <Logo onClick={() => navigate('/')}>Dallenge</Logo>
+        <Logo
+          onClick={() => {
+            navigate('/');
+            closeBar();
+          }}
+        >
+          Dallenge
+        </Logo>
         <div style={{ display: 'flex', alignItems: 'center', marginLeft: '30px' }}>
           <Menu
             onClick={() => {
               navigate('/challengelist');
+              closeBar();
             }}
           >
             목록
@@ -76,12 +89,25 @@ export default function Navbar() {
           <Menu
             onClick={() => {
               navigate('/createchallenge');
+              closeBar();
             }}
           >
             등록
           </Menu>
-          <Menu>추천받기</Menu>
-          <Menu>베스트리뷰</Menu>
+          <Menu
+            onClick={() => {
+              closeBar();
+            }}
+          >
+            추천받기
+          </Menu>
+          <Menu
+            onClick={() => {
+              closeBar();
+            }}
+          >
+            베스트리뷰
+          </Menu>
         </div>
       </div>
       <div style={{ display: 'flex', alignItems: 'center', marginRight: '30px' }}>
@@ -92,7 +118,11 @@ export default function Navbar() {
               setIsSwitchOpen(false);
             }}
           >
-            <img style={{ height: '16px', marginRight: '3px', marginTop: '-4px' }} src={SEARCH_IMAGE_URL} />
+            <img
+              style={{ height: '16px', marginRight: '3px', marginTop: '-4px' }}
+              alt="search-img"
+              src={SEARCH_IMAGE_URL}
+            />
             검색
           </div>
         </Menu>
@@ -127,7 +157,7 @@ export default function Navbar() {
           </div>
         )}
       </div>
-      {isSearchOpen ? <Searchbar /> : null}
+      {isSearchOpen ? <Searchbar closeBar={closeBar} /> : null}
     </div>
   );
 }
