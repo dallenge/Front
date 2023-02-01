@@ -1,8 +1,6 @@
 import styled from 'styled-components';
 import React, { useState, useRef, useEffect } from 'react';
 import CONSTANT_INFO from '../Constant/Constant';
-import { useNavigate } from 'react-router-dom';
-import SearchPage from '../Routes/SearchPage';
 
 const SearchbarDiv = styled.div`
   display: inline-block;
@@ -47,7 +45,6 @@ interface Props {
 export default function Searchbar({ closeBar }: Props) {
   const SEARCH_IMAGE_URL = CONSTANT_INFO.IMAGE_URL.SEARCH_IMAGE_URL;
 
-  const navigate = useNavigate();
   const [searchText, setSearchText] = useState<string>('');
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -66,8 +63,7 @@ export default function Searchbar({ closeBar }: Props) {
     if (!searchText) {
       alert('검색어를 입력해주세요');
     } else {
-      // <SearchPage searchText={searchText} />;
-      navigate(`/search?search=${searchText}`);
+      window.location.href = `/search?search=${searchText}`;
       closeBar();
     }
   };

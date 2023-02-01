@@ -12,6 +12,7 @@ import CreateChallenge from './Routes/CreateChallenge';
 import PwEdit from './Routes/PwEdit';
 import Withdrawal from './Routes/Withdrawal';
 import ProgressChallengeEdit from './Routes/ProgressChallengeEdit';
+import SearchPage from './Routes/SearchPage';
 
 function App() {
   return (
@@ -25,11 +26,11 @@ function App() {
         <Route path="/my-page" element={<Mypage />} />
         <Route path="/challengelist" element={<ChallengeList />} />
         <Route path="/createchallenge" element={<CreateChallenge />} />
-        {/* <Route path="my-page/modify" element={<Modify />} /> */}
         <Route path="/my-page/modify/profile-edit" element={<ProfileEdit />} />
         <Route path="/my-page/modify/password-edit" element={<PwEdit />} />
         <Route path="/my-page/modify/withdrawal" element={<Withdrawal />} />
         <Route path="my-page/modify/progress-challenge-edit" element={<ProgressChallengeEdit />} />
+        <Route path="/search/*" element={<SearchPage />} />
       </Routes>
     </div>
   );
