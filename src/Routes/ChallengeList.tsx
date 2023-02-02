@@ -49,7 +49,7 @@ export default function ChallengeList() {
   };
   const navigate = useNavigate();
   const [page, setPage] = useState<number>(0);
-  const [totalPage, setTotalPage] = useState<number>(13);
+  const [totalPage, setTotalPage] = useState<number>(0);
   const [challengeArray, setChallengeArray] = useState<challenge[]>([]);
   const [titleParams, setTitleParams] = useState<string | undefined>('');
 
@@ -58,7 +58,7 @@ export default function ChallengeList() {
   const pageLoop = () => {
     let pageItem = [];
     let n = Math.floor(page / 10);
-    for (let i = n * 10; i < (n + 1) * 10; i++) {
+    for (let i = n * 10; i < (n + 1) * 10 && i < totalPage; i++) {
       if (page === i) pageItem.push(<Pagination.Item active>{i + 1}</Pagination.Item>);
       else
         pageItem.push(
@@ -85,6 +85,7 @@ export default function ChallengeList() {
     await axios(config)
       .then((res) => {
         setChallengeArray([...res.data.content]);
+        setTotalPage(Math.ceil(res.data.totalElements / 8));
         console.log(res.data.content);
       })
       .catch((err) => {
