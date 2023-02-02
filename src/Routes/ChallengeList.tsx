@@ -4,6 +4,7 @@ import URL from '../Url';
 import { useCallback, useState, useEffect } from 'react';
 import axios from 'axios';
 import Pagination from 'react-bootstrap/Pagination';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const CategoryBtn = styled.div`
   width: 100px;
@@ -44,10 +45,13 @@ export default function ChallengeList() {
     challengeLocation: string;
     challengeDuration: string;
     howManyUsersAreInThisChallenge: number;
+    challengeImgUrl: string;
   };
   const [page, setPage] = useState<number>(0);
   const [totalPage, setTotalPage] = useState<number>(13);
   const [challengeArray, setChallengeArray] = useState<challenge[]>([]);
+
+  let { title, category } = useParams();
 
   const pageLoop = () => {
     let pageItem = [];
@@ -59,7 +63,6 @@ export default function ChallengeList() {
           <Pagination.Item
             onClick={() => {
               setPage(i);
-              console.log(page);
             }}
           >
             {i + 1}
@@ -72,15 +75,15 @@ export default function ChallengeList() {
   const getChallenges = useCallback(async () => {
     const config = {
       method: 'get',
-      url: `${URL}/challenge?size=8&page=${page}`,
+      url: `${URL}/challenge/condition?title=${title ?? ''}&category=${category ?? ''}&size=8&page=${page}`,
       headers: {
         Authorization: 'Bearer ' + localStorage.getItem('token'),
       },
     };
     await axios(config)
       .then((res) => {
-        setChallengeArray([...res.data]);
-        console.log(challengeArray);
+        setChallengeArray([...res.data.content]);
+        console.log(res.data.content);
       })
       .catch((err) => {
         console.log(err);
@@ -89,6 +92,7 @@ export default function ChallengeList() {
 
   useEffect(() => {
     getChallenges();
+    console.log(title, category);
   }, [getChallenges]);
   return (
     <div>
@@ -103,7 +107,11 @@ export default function ChallengeList() {
         {challengeArray.map((challenge, i) => {
           return (
             <Challenge key={i}>
-              <img src="/main.jpg" alt="noimage" style={{ width: '260px', height: '180px', objectFit: 'cover' }} />
+              <img
+                src={challenge.challengeImgUrl}
+                alt="noimage"
+                style={{ width: '260px', height: '180px', objectFit: 'cover' }}
+              />
               <div style={{ fontSize: '20px', fontWeight: 'bolder' }}>{challenge.title}</div>
               <div
                 style={{

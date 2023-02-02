@@ -24,6 +24,9 @@ function App() {
         <Route path="/signup/select-account" element={<SignupSelect />} />
         <Route path="/signup/user-email" element={<SingupEmail />} />
         <Route path="/my-page" element={<Mypage />} />
+        <Route path="/challengelist/:title/:category" element={<ChallengeList />} />
+        <Route path="/challengelist/:title" element={<ChallengeList />} />
+        <Route path="/challengelist//:category" element={<ChallengeList />} />
         <Route path="/challengelist" element={<ChallengeList />} />
         <Route path="/createchallenge" element={<CreateChallenge />} />
         <Route path="/my-page/modify/profile-edit" element={<ProfileEdit />} />
