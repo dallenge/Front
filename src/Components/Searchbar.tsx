@@ -63,7 +63,7 @@ export default function Searchbar({ closeBar }: Props) {
     if (!searchText) {
       alert('검색어를 입력해주세요');
     } else {
-      window.location.href = `/search?search=${searchText}`;
+      window.location.href = `/challengelist/${searchText}`;
       closeBar();
     }
   };
