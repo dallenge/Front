@@ -1,3 +1,4 @@
 .checked {
-  text-decoration: underline;
+  background: #b9d9ff;
+  border-radius: 10px;
 }

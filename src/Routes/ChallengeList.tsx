@@ -5,12 +5,14 @@ import { useCallback, useState, useEffect } from 'react';
 import axios from 'axios';
 import Pagination from 'react-bootstrap/Pagination';
 import { useNavigate, useParams } from 'react-router-dom';
+import CONSTANT_INFO from '../Constant/Constant';
 
 const CategoryBtn = styled.div`
   width: 100px;
-  height: 50px;
+  height: 30px;
   margin-right: 50px;
   display: flex;
+  font-weight: bold;
   justify-content: center;
   align-items: center;
   &:hover {
@@ -37,6 +39,37 @@ const Challenge = styled.div`
   border-radius: 10px;
 `;
 
+const InputContainer = styled.div`
+  // background: var(--color-sky);
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const Input = styled.input`
+  font-weight: bold;
+  font-size: 20px;
+  width: 800px;
+  height: 43px;
+  border-radius: 33px;
+  padding: 30px;
+  margin-left: 20px;
+  border: 2px solid var(--color-blue);
+  &: focus-visible {
+    outline: none;
+  }
+`;
+
+const Button = styled.button`
+  margin-left: 20px;
+  display: none;
+`;
+
+const Image = styled.img`
+  width: 30px;
+`;
+
 export default function ChallengeList() {
   type challenge = {
     id: number;
@@ -48,6 +81,8 @@ export default function ChallengeList() {
     challengeImgUrl: string;
   };
   const navigate = useNavigate();
+  const SEARCH_IMAGE_URL = CONSTANT_INFO.IMAGE_URL.SEARCH_IMAGE_URL;
+  const [searchText, setSearchText] = useState<string>('');
   const [page, setPage] = useState<number>(0);
   const [totalPage, setTotalPage] = useState<number>(0);
   const [challengeArray, setChallengeArray] = useState<challenge[]>([]);
@@ -55,6 +90,7 @@ export default function ChallengeList() {
 
   const { title, category } = useParams();
   const categoryList = [undefined, '공부', '봉사', '운동', '경제', '건강'];
+
   const pageLoop = () => {
     let pageItem = [];
     let n = Math.floor(page / 10);
@@ -97,6 +133,28 @@ export default function ChallengeList() {
     getChallenges();
   }, [getChallenges]);
 
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      onClickSearch();
+    }
+  };
+
+  const onClickSearch = () => {
+    if (!category) {
+      window.location.href = `/challengelist/${searchText}`;
+    } else {
+      window.location.href = `/challengelist/${searchText}/${category}`;
+    }
+  };
+
+  useEffect(() => {
+    if (title === undefined) {
+      setSearchText('');
+    } else {
+      setSearchText(`${title}`);
+    }
+  }, []);
+
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'center', margin: '50px' }}>
@@ -105,8 +163,7 @@ export default function ChallengeList() {
             <CategoryBtn
               className={category === e ? 'checked' : undefined}
               onClick={() => {
-                navigate(`/challengelist/${title ?? ''}/${e ?? ''}`);
-                window.location.reload();
+                window.location.href = `/challengelist//${e ?? ''}`;
               }}
             >
               {e === undefined ? '전체' : e}
@@ -114,6 +171,19 @@ export default function ChallengeList() {
           );
         })}
       </div>
+      <InputContainer>
+        <Image src={SEARCH_IMAGE_URL} />
+        <Input
+          type="text"
+          name="search"
+          value={searchText}
+          autoSave="off"
+          placeholder="관심있는 챌린지명을 검색해보세요!"
+          onChange={(e) => setSearchText(e.target.value)}
+          onKeyDown={handleKeyPress}
+        ></Input>
+        <Button onClick={onClickSearch}>검색</Button>
+      </InputContainer>
       <PostContainer>
         {challengeArray.map((challenge, i) => {
           return (
