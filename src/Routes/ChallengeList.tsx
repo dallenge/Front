@@ -47,12 +47,14 @@ export default function ChallengeList() {
     howManyUsersAreInThisChallenge: number;
     challengeImgUrl: string;
   };
+  const navigate = useNavigate();
   const [page, setPage] = useState<number>(0);
   const [totalPage, setTotalPage] = useState<number>(13);
   const [challengeArray, setChallengeArray] = useState<challenge[]>([]);
+  const [titleParams, setTitleParams] = useState<string | undefined>('');
 
-  let { title, category } = useParams();
-
+  const { title, category } = useParams();
+  const categoryList = [undefined, '공부', '봉사', '운동', '경제', '건강'];
   const pageLoop = () => {
     let pageItem = [];
     let n = Math.floor(page / 10);
@@ -92,23 +94,31 @@ export default function ChallengeList() {
 
   useEffect(() => {
     getChallenges();
-    console.log(title, category);
   }, [getChallenges]);
+
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'center', margin: '50px' }}>
-        <CategoryBtn className="checked">전체</CategoryBtn>
-        <CategoryBtn>카테고리1</CategoryBtn>
-        <CategoryBtn>카테고리2</CategoryBtn>
-        <CategoryBtn>카테고리3</CategoryBtn>
-        <CategoryBtn>카테고리4</CategoryBtn>
+        {categoryList.map((e) => {
+          return (
+            <CategoryBtn
+              className={category === e ? 'checked' : undefined}
+              onClick={() => {
+                navigate(`/challengelist/${title ?? ''}/${e ?? ''}`);
+                window.location.reload();
+              }}
+            >
+              {e === undefined ? '전체' : e}
+            </CategoryBtn>
+          );
+        })}
       </div>
       <PostContainer>
         {challengeArray.map((challenge, i) => {
           return (
             <Challenge key={i}>
               <img
-                src={challenge.challengeImgUrl}
+                src={URL + challenge.challengeImgUrl}
                 alt="noimage"
                 style={{ width: '260px', height: '180px', objectFit: 'cover' }}
               />
