@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import styled from 'styled-components';
 import CONSTANT_INFO from '../Constant/Constant';
 import URL from '../Url';
@@ -52,6 +52,8 @@ export default function SingupEmail() {
   const [pwError, setPwError] = useState<boolean>(false);
   const [checkPwError, setCheckPwError] = useState<boolean>(false);
   const [nameError, setNameError] = useState<boolean>(false);
+  const [dupliId, setDupliId] = useState<boolean | null>(null);
+
   const SIGNUP_MESSAGE = CONSTANT_INFO.SIGNUP_MESSAGE;
 
   const signUp = async (event: React.ChangeEvent<HTMLFormElement>) => {
@@ -59,6 +61,10 @@ export default function SingupEmail() {
 
     if (!isDisbaled) {
       return alert('입력하지 않은 정보가 있는지 다시 확인해주세요');
+    }
+
+    if (dupliId) {
+      return alert('이미 가입된 이메일을 입력하셨습니다. 수정해주세요');
     }
 
     const data = JSON.stringify({
@@ -83,8 +89,6 @@ export default function SingupEmail() {
       })
       .catch((err) => {
         alert('실패');
-        console.log(URL);
-        console.log(err);
       });
   };
 
@@ -93,6 +97,7 @@ export default function SingupEmail() {
       /^(([^<>()\[\].,;:\s@"]+(\.[^<>()\[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
     if (!e.target.value || emailRegex.test(e.target.value)) {
       setIdError(false);
+      setDupliId(null);
     } else {
       setIdError(true);
     }
@@ -130,6 +135,32 @@ export default function SingupEmail() {
   let isDisbaled =
     id.length > 0 && pw.length > 0 && name.length > 0 && !idError && !pwError && !checkPwError && !nameError;
 
+  const onBlurCheckId = async () => {
+    if (!idError && id) {
+      // id를 입력해서 유효성 검사를 끝내고서
+      const data = JSON.stringify({ email: id });
+
+      const config = {
+        method: 'post',
+        url: `${URL}/user/check?email=${id}`,
+        data: data,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      };
+
+      await axios(config)
+        .then((res) => {
+          if (res.data === '사용 가능한 아이디입니다.') {
+            setDupliId(false);
+          }
+        })
+        .catch((err) => {
+          setDupliId(true);
+        });
+    }
+  };
+
   return (
     <div>
       <div style={{ marginTop: '50px' }}></div>
@@ -138,8 +169,15 @@ export default function SingupEmail() {
           <div style={{ fontSize: '28px', lineHeight: '30px', fontWeight: '700' }}>회원가입</div>
           <div style={{ marginTop: '30px' }}>
             <div style={{ float: 'left', fontWeight: '600' }}>이메일(아이디)</div>
-            <Input type="text" placeholder={SIGNUP_MESSAGE.PRESS_EMAIL} autoSave="off" onChange={onChangeId}></Input>
+            <Input
+              type="text"
+              placeholder={SIGNUP_MESSAGE.PRESS_EMAIL}
+              autoSave="off"
+              onChange={onChangeId}
+              onBlur={onBlurCheckId}
+            ></Input>
             {idError && <ValidationView text={SIGNUP_MESSAGE.WRONG_EMAIL} />}
+            {dupliId && <ValidationView text={SIGNUP_MESSAGE.DUPLI_EMAIL} />}
 
             <div>
               <div style={{ marginTop: '20px', float: 'left', fontWeight: '600' }}>비밀번호</div>
