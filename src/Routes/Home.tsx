@@ -1,5 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
+import PopularChallenge from '../Components/PopularChallenge';
+import { useNavigate } from 'react-router-dom';
 
 const Card = styled.div<{ background: string; height: string }>`
   width: 100%;
@@ -10,7 +12,26 @@ const Card = styled.div<{ background: string; height: string }>`
   justify-content: flex-start;
   background-size: cover;
 `;
+const CategoryBtn = styled.div`
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f0ecec;
+  font-weight: bold;
+  font-size: 20px;
+  cursor: pointer;
+  &:hover {
+    background: var(--color-sky);
+    font-size: 25px;
+  }
+`;
+
+const Category = ['공부', '봉사', '운동', '경제', '건강'];
 function Home() {
+  const navigate = useNavigate();
   return (
     <div>
       <Card background="url('/main.jpg')" height="90vh">
@@ -31,7 +52,19 @@ function Home() {
         </div>
       </Card>
       <Card background="white" height="50vh">
-        카테고리 넣을 위치입니다.
+        <div style={{ display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'space-between' }}>
+          {Category.map((category) => {
+            return (
+              <CategoryBtn
+                onClick={() => {
+                  navigate(`/challengelist//${category}`);
+                }}
+              >
+                {category}
+              </CategoryBtn>
+            );
+          })}
+        </div>
       </Card>
       <Card background="var(--color-white)" height="600px">
         <div style={{ width: '100vw', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
@@ -44,23 +77,6 @@ function Home() {
           </div>
         </div>
       </Card>
-    </div>
-  );
-}
-function PopularChallenge() {
-  return (
-    <div
-      style={{
-        height: '500px',
-        width: '300px',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'flex-start',
-        padding: '10px',
-      }}
-    >
-      <div style={{ height: '250px', width: '280px', background: 'var(--color-sky)', borderRadius: '10px' }}></div>
-      <div style={{ marginTop: '20px' }}>인기 챌린지 입니다.</div>
     </div>
   );
 }
