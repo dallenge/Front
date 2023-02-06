@@ -56,7 +56,7 @@ const Input = styled.input`
   padding: 30px;
   margin-left: 20px;
   border: 2px solid var(--color-blue);
-  &: focus-visible {
+  & focus-visible {
     outline: none;
   }
 `;

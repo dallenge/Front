@@ -57,7 +57,7 @@ const TogleImageUp = styled.img`
 const DailyBox = styled.div`
   width: 96%;
   height: 50px;
-  border: 1px solid; black;
+  border: 1px solid black;
 `;
 
 interface ChallengeList {

@@ -13,6 +13,7 @@ import PwEdit from './Routes/PwEdit';
 import Withdrawal from './Routes/Withdrawal';
 import ProgressChallengeEdit from './Routes/ProgressChallengeEdit';
 import SearchPage from './Routes/SearchPage';
+import DetailChallenge from './Routes/DetailChallenge';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
         <Route path="/challengelist/:title" element={<ChallengeList />} />
         <Route path="/challengelist//:category" element={<ChallengeList />} />
         <Route path="/challengelist" element={<ChallengeList />} />
+        <Route path="/challenge/:id" element={<DetailChallenge />} />
         <Route path="/createchallenge" element={<CreateChallenge />} />
         <Route path="/my-page/modify/profile-edit" element={<ProfileEdit />} />
         <Route path="/my-page/modify/password-edit" element={<PwEdit />} />
