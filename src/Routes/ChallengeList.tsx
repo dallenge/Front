@@ -8,9 +8,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 import CONSTANT_INFO from '../Constant/Constant';
 
 const CategoryBtn = styled.div`
-  width: 100px;
+  width: 70px;
   height: 30px;
-  margin-right: 50px;
+  margin-right: 10px;
   display: flex;
   font-weight: bold;
   justify-content: center;
@@ -86,7 +86,7 @@ export default function ChallengeList() {
   const [page, setPage] = useState<number>(0);
   const [totalPage, setTotalPage] = useState<number>(0);
   const [challengeArray, setChallengeArray] = useState<challenge[]>([]);
-  const [titleParams, setTitleParams] = useState<string | undefined>('');
+  const [sortCondition, setSortCondition] = useState<string>('');
 
   const { title, category } = useParams();
   const categoryList = [undefined, '공부', '봉사', '운동', '경제', '건강'];
@@ -113,7 +113,9 @@ export default function ChallengeList() {
   const getChallenges = useCallback(async () => {
     const config = {
       method: 'get',
-      url: `${URL}/challenge/condition?title=${title ?? ''}&category=${category ?? ''}&size=8&page=${page}`,
+      url: `${URL}/challenge/condition?title=${title ?? ''}&category=${category ?? ''}&size=8&page=${page}&sort=${
+        sortCondition ?? ''
+      }`,
       headers: {
         Authorization: 'Bearer ' + localStorage.getItem('token'),
       },
@@ -129,10 +131,6 @@ export default function ChallengeList() {
       });
   }, [page]);
 
-  useEffect(() => {
-    getChallenges();
-  }, [getChallenges]);
-
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       onClickSearch();
@@ -147,6 +145,15 @@ export default function ChallengeList() {
     }
   };
 
+  const radioHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSortCondition(e.target.value);
+    getChallenges();
+  };
+
+  useEffect(() => {
+    getChallenges();
+  }, [getChallenges]);
+
   useEffect(() => {
     if (title === undefined) {
       setSearchText('');
@@ -155,9 +162,27 @@ export default function ChallengeList() {
     }
   }, []);
 
+  useEffect(() => {
+    const radioPopularBtn = document.getElementById('radio-popular') as HTMLInputElement | null;
+    if (radioPopularBtn) radioPopularBtn.checked = true;
+  }, []);
+
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'center', margin: '50px' }}>
+        <div style={{ height: '30px', paddingRight: '10px', display: 'flex', alignItems: 'center' }}>
+          <input id="radio-popular" type="radio" name="sort" value="popular" onChange={radioHandler} />
+          인기순
+          <input
+            id="radio-recent"
+            type="radio"
+            name="sort"
+            value="time"
+            style={{ marginLeft: '10px' }}
+            onChange={radioHandler}
+          />
+          최신순
+        </div>
         {categoryList.map((e) => {
           return (
             <CategoryBtn
