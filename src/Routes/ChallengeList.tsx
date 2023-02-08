@@ -71,21 +71,28 @@ const Image = styled.img`
 `;
 
 export default function ChallengeList() {
-  type challenge = {
+  type Challenge = {
     id: number;
     title: string;
     challengeCategory: string;
     challengeLocation: string;
     challengeDuration: string;
     howManyUsersAreInThisChallenge: number;
+    challengeOwnerUser: ChallengeOwnerUser;
     challengeImgUrl: string;
+    created_at: string;
+  };
+  type ChallengeOwnerUser = {
+    userName: string;
+    userId: number;
+    email: string;
   };
   const navigate = useNavigate();
   const SEARCH_IMAGE_URL = CONSTANT_INFO.IMAGE_URL.SEARCH_IMAGE_URL;
   const [searchText, setSearchText] = useState<string>('');
   const [page, setPage] = useState<number>(0);
   const [totalPage, setTotalPage] = useState<number>(0);
-  const [challengeArray, setChallengeArray] = useState<challenge[]>([]);
+  const [challengeArray, setChallengeArray] = useState<Challenge[]>([]);
   const [sortCondition, setSortCondition] = useState<string>('');
 
   const { title, category } = useParams();
@@ -149,7 +156,11 @@ export default function ChallengeList() {
   const radioHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSortCondition(e.target.value);
   };
-
+  const replaceDateFormat = (date: string): string => {
+    let day = date.split(' ')[0];
+    let time = date.split(' ')[1].slice(0, 8);
+    return day + ' ' + time;
+  };
   useEffect(() => {
     getChallenges();
   }, [getChallenges]);
@@ -189,7 +200,7 @@ export default function ChallengeList() {
             paddingRight: '10px',
             display: 'flex',
             alignItems: 'center',
-            borderRight: '1.5px solid black',
+            borderRight: '1.5px solid silver',
             marginRight: '10px',
           }}
         >
@@ -238,8 +249,8 @@ export default function ChallengeList() {
                   bottom: '20px',
                 }}
               >
-                <div>상세보기</div>
-                <div>시간 : 00.00.00 00:00:00</div>
+                <div style={{ fontSize: '15px' }}>{challenge.challengeOwnerUser.userName}</div>
+                <div>{replaceDateFormat(challenge.created_at)}</div>
               </div>
             </Challenge>
           );
