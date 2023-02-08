@@ -2,12 +2,21 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import URL from '../Url';
 import axios from 'axios';
+import { Form } from 'react-router-dom';
 
+const SelectBox = styled.select`
+  width: 100px;
+  margin: 0 10px;
+  font-size: 13px;
+`;
 export default function CreateChallenge() {
   const [imgFile, setImgFile] = useState<any>();
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
   const [view, setView] = useState<any>('');
+  const [category, setCategory] = useState<string>('');
+  const [duration, setDuration] = useState<string>('');
+  const [location, setLocation] = useState<string>('');
 
   useEffect(() => {
     if (imgFile) {
@@ -38,9 +47,9 @@ export default function CreateChallenge() {
     const challenge = {
       title: title,
       content: content,
-      challengeCategory: '공부',
-      challengeLocation: '실내',
-      challengeDuration: '10분 이내',
+      challengeCategory: category,
+      challengeLocation: location,
+      challengeDuration: duration,
     };
 
     data.append('requestCreateChallenge', new Blob([JSON.stringify(challenge)], { type: 'application/json' }));
@@ -58,9 +67,9 @@ export default function CreateChallenge() {
     await axios(config)
       .then((res) => {
         alert('등록완료');
-        console.log(imgFile);
       })
       .catch((err) => {
+        console.log(challenge);
         console.log(err);
       });
   };
@@ -80,8 +89,51 @@ export default function CreateChallenge() {
         </div>
         <input type="file" accept="image/jpg, image/jpeg, image/png" onChange={uploadImgFile} />
       </div>
-      <div style={{ width: '500px', height: '500px', background: 'var(--color-sky)', padding: '30px' }}>
+      <div style={{ width: '600px', height: '500px', background: 'var(--color-sky)', padding: '30px' }}>
         <form id="createForm" onSubmit={submitChallenge}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '30px' }}>
+            <div style={{ fontWeight: '600' }}>장소</div>
+            <SelectBox
+              onChange={(e) => {
+                setLocation(e.target.value);
+              }}
+            >
+              <option value="" selected>
+                ===선택===
+              </option>
+              <option value="실내">실내</option>
+              <option value="실외">실외</option>
+            </SelectBox>
+            <div style={{ fontWeight: '600' }}>소요 시간</div>
+            <SelectBox
+              onChange={(e) => {
+                setDuration(e.target.value);
+              }}
+            >
+              <option value="" selected>
+                ===선택===
+              </option>
+              <option value="10분 이내">10분 이내</option>
+              <option value="10분 ~ 30분 이내">10분 ~ 30분</option>
+              <option value="30분 ~ 1시간 이내">30분 ~ 1시간</option>
+              <option value="1시간 이상">1시간 이상</option>
+            </SelectBox>
+            <div style={{ fontWeight: '600' }}>카테고리</div>
+            <SelectBox
+              onChange={(e) => {
+                setCategory(e.target.value);
+              }}
+            >
+              <option value="" selected>
+                ===선택===
+              </option>
+              <option value="공부">공부</option>
+              <option value="봉사">봉사</option>
+              <option value="운동">운동</option>
+              <option value="경제">경제</option>
+              <option value="건강">건강</option>
+            </SelectBox>
+          </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '30px' }}>
             <div style={{ fontWeight: '600' }}>챌린지 명</div>
             <input

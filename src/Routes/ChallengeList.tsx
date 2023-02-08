@@ -23,7 +23,6 @@ const PostContainer = styled.div`
   padding: 50px;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
   column-gap: 20px;
   row-gap: 50px;
 `;
