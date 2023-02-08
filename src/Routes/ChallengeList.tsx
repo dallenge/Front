@@ -124,12 +124,13 @@ export default function ChallengeList() {
       .then((res) => {
         setChallengeArray([...res.data.content]);
         setTotalPage(Math.ceil(res.data.totalElements / 8));
+        console.log(sortCondition);
         console.log(res.data.content);
       })
       .catch((err) => {
         console.log(err);
       });
-  }, [page]);
+  }, [page, sortCondition]);
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
@@ -147,7 +148,6 @@ export default function ChallengeList() {
 
   const radioHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSortCondition(e.target.value);
-    getChallenges();
   };
 
   useEffect(() => {
@@ -169,8 +169,30 @@ export default function ChallengeList() {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'center', margin: '50px' }}>
-        <div style={{ height: '30px', paddingRight: '10px', display: 'flex', alignItems: 'center' }}>
+      <InputContainer>
+        <Image src={SEARCH_IMAGE_URL} />
+        <Input
+          type="text"
+          name="search"
+          value={searchText}
+          autoSave="off"
+          placeholder="관심있는 챌린지명을 검색해보세요!"
+          onChange={(e) => setSearchText(e.target.value)}
+          onKeyDown={handleKeyPress}
+        ></Input>
+        <Button onClick={onClickSearch}>검색</Button>
+      </InputContainer>
+      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '10px' }}>
+        <div
+          style={{
+            height: '30px',
+            paddingRight: '10px',
+            display: 'flex',
+            alignItems: 'center',
+            borderRight: '1.5px solid black',
+            marginRight: '10px',
+          }}
+        >
           <input id="radio-popular" type="radio" name="sort" value="popular" onChange={radioHandler} />
           인기순
           <input
@@ -196,19 +218,6 @@ export default function ChallengeList() {
           );
         })}
       </div>
-      <InputContainer>
-        <Image src={SEARCH_IMAGE_URL} />
-        <Input
-          type="text"
-          name="search"
-          value={searchText}
-          autoSave="off"
-          placeholder="관심있는 챌린지명을 검색해보세요!"
-          onChange={(e) => setSearchText(e.target.value)}
-          onKeyDown={handleKeyPress}
-        ></Input>
-        <Button onClick={onClickSearch}>검색</Button>
-      </InputContainer>
       <PostContainer>
         {challengeArray.map((challenge, i) => {
           return (
