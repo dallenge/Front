@@ -7,68 +7,6 @@ import Pagination from 'react-bootstrap/Pagination';
 import { useNavigate, useParams } from 'react-router-dom';
 import CONSTANT_INFO from '../Constant/Constant';
 
-const CategoryBtn = styled.div`
-  width: 70px;
-  height: 30px;
-  margin-right: 10px;
-  display: flex;
-  font-weight: bold;
-  justify-content: center;
-  align-items: center;
-  &:hover {
-    cursor: pointer;
-  }
-`;
-const PostContainer = styled.div`
-  padding: 50px;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  column-gap: 20px;
-  row-gap: 50px;
-`;
-const Challenge = styled.div`
-  width: 300px;
-  height: 300px;
-  background: var(--color-sky);
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  position: relative;
-  border-radius: 10px;
-`;
-
-const InputContainer = styled.div`
-  // background: var(--color-sky);
-  height: 100px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const Input = styled.input`
-  font-weight: bold;
-  font-size: 20px;
-  width: 800px;
-  height: 43px;
-  border-radius: 33px;
-  padding: 30px;
-  margin-left: 20px;
-  border: 2px solid var(--color-blue);
-  & focus-visible {
-    outline: none;
-  }
-`;
-
-const Button = styled.button`
-  margin-left: 20px;
-  display: none;
-`;
-
-const Image = styled.img`
-  width: 30px;
-`;
-
 export default function ChallengeList() {
   type Challenge = {
     id: number;
@@ -231,7 +169,7 @@ export default function ChallengeList() {
       <PostContainer>
         {challengeArray.map((challenge, i) => {
           return (
-            <Challenge key={i}>
+            <Challenge key={i} onClick={() => navigate(`/challenge/${challenge.id}`)}>
               <img
                 src={URL + challenge.challengeImgUrl}
                 alt="noimage"
@@ -289,3 +227,68 @@ export default function ChallengeList() {
     </div>
   );
 }
+
+const CategoryBtn = styled.div`
+  width: 70px;
+  height: 30px;
+  margin-right: 10px;
+  display: flex;
+  font-weight: bold;
+  justify-content: center;
+  align-items: center;
+  &:hover {
+    cursor: pointer;
+  }
+`;
+const PostContainer = styled.div`
+  padding: 50px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  column-gap: 20px;
+  row-gap: 50px;
+`;
+const Challenge = styled.div`
+  width: 300px;
+  height: 300px;
+  background: var(--color-sky);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  position: relative;
+  border-radius: 10px;
+  :hover {
+    cursor: pointer;
+  }
+`;
+
+const InputContainer = styled.div`
+  // background: var(--color-sky);
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const Input = styled.input`
+  font-weight: bold;
+  font-size: 20px;
+  width: 800px;
+  height: 43px;
+  border-radius: 33px;
+  padding: 30px;
+  margin-left: 20px;
+  border: 2px solid var(--color-blue);
+  & focus-visible {
+    outline: none;
+  }
+`;
+
+const Button = styled.button`
+  margin-left: 20px;
+  display: none;
+`;
+
+const Image = styled.img`
+  width: 30px;
+`;

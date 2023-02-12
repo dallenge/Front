@@ -1,49 +1,59 @@
 import styled from 'styled-components';
 import { RiHeart3Line, RiHeart3Fill } from 'react-icons/ri';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import CommentBox from '../Components/Comment/CommentBox';
 import Comment from '../Components/Comment/Comment';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
+import URL from '../Url';
+import GetBadRoot from '../Components/GetBadRoot';
 
 function DetailChallenge() {
+  const { id } = useParams();
+  const [challengeInfo, setChallengeInfo] = useState<Challenge>();
+  const [isBadRoot, setIsBadRoot] = useState<boolean>(false);
+
   interface Challenge {
-    id: number;
-    title: string;
-    content: string;
-    challengeCategory: string;
-    challengeLocation: string;
-    challengeDuration: string;
-    howManyUsersAreInThisChallenge: number;
-    challengeImgUrl: string;
-    challengeLikeCount: number;
-    challengeCommnetCount: number;
-    comments: { writer: string; text: string; time: string }[];
+    responseChallenge: {
+      id: string;
+      title: string;
+      content: string;
+      challengeCategory: string;
+      challengeLocation: string;
+      challengeDuration: string;
+      created_at: string;
+      challengeImgUrls: string[];
+      howManyUsersAreInThisChallenge: number;
+      challengeOwnerUser: {
+        userName: string;
+        email: string;
+        userId: number;
+      };
+    };
+    responseUserChallenges: {
+      challengeStatus: string;
+      participatedUser: {
+        userName: string;
+        email: string;
+        userId: number;
+      };
+    }[];
   }
 
-  // --dummy--
-  const challengeInfo: Challenge = {
-    id: 1,
-    title: '광합성 하기',
-    content: '하루에 10분씩 광합성을 합니다!',
-    challengeCategory: '#건강 #하루에10분',
-    challengeLocation: '위치 상관없음',
-    challengeDuration: '10분 내외',
-    howManyUsersAreInThisChallenge: 10,
-    challengeImgUrl: 'https://i.pinimg.com/736x/24/3b/12/243b12139666fbbc2474c4f8919dec9c.jpg',
-    challengeLikeCount: 3,
-    challengeCommnetCount: 5,
-    comments: [
-      {
-        writer: '강성욱',
-        text: '굳굳',
-        time: '2023-02-07',
-      },
-      {
-        writer: '박성욱',
-        text: '오 좋다~',
-        time: '2023-02-08',
-      },
-    ],
-  };
+  useEffect(() => {
+    const config = {
+      method: 'get',
+      url: `${URL}/challenge/${id}`,
+    };
+
+    axios(config)
+      .then((res) => {
+        setChallengeInfo(res.data);
+      })
+      .catch((err) => {
+        setIsBadRoot(true);
+      });
+  }, []);
 
   const [heart, setHeart] = useState<boolean>(false);
 
@@ -58,76 +68,82 @@ function DetailChallenge() {
   };
 
   return (
-    <Container>
-      <ContentBox>
-        <ImageBox src={challengeInfo.challengeImgUrl} />
-        <div>
-          <TextBox>
-            <div
-              style={{
-                display: 'inline-block',
-                fontSize: '30px',
-                fontWeight: '800',
-                marginTop: '30px',
-                justifyContent: 'left',
-              }}
-            >
-              {challengeInfo.title}
-            </div>
-            <div
-              style={{
-                height: '1px',
-                backgroundColor: 'var(--color-dark-blue)',
-                width: '90%',
-                margin: '0 auto',
-                marginTop: '20px',
-              }}
-            ></div>
-            <InnerBox>
-              <TextFrame>
-                <Text>🙋 {challengeInfo.content}</Text>
-              </TextFrame>
-              <TextFrame>
-                <Text>🕒 {challengeInfo.challengeDuration}</Text>
-              </TextFrame>
-              <TextFrame>
-                <Text>📍 {challengeInfo.challengeLocation}</Text>
-              </TextFrame>
-              <TextFrame>
-                <Text style={{ marginTop: '100px', fontSize: '17px', color: 'rgb(88, 88, 88)' }}>
+    <>
+      {!isBadRoot && challengeInfo ? (
+        <Container>
+          <ContentBox>
+            <ImageBox src={challengeInfo.responseChallenge.challengeImgUrls[0]} />
+            <div>
+              <TextBox>
+                <div
+                  style={{
+                    display: 'inline-block',
+                    fontSize: '30px',
+                    fontWeight: '800',
+                    marginTop: '30px',
+                    justifyContent: 'left',
+                  }}
+                >
+                  {challengeInfo.responseChallenge.title}
+                </div>
+                <div
+                  style={{
+                    height: '1px',
+                    backgroundColor: 'var(--color-dark-blue)',
+                    width: '90%',
+                    margin: '0 auto',
+                    marginTop: '20px',
+                  }}
+                ></div>
+                <InnerBox>
+                  <TextFrame>
+                    <Text>🙋 {challengeInfo.responseChallenge.content}</Text>
+                  </TextFrame>
+                  <TextFrame>
+                    <Text>🕒 {challengeInfo.responseChallenge.challengeDuration}</Text>
+                  </TextFrame>
+                  <TextFrame>
+                    <Text>📍 {challengeInfo.responseChallenge.challengeLocation}</Text>
+                  </TextFrame>
+                  <TextFrame>
+                    {/* <Text style={{ marginTop: '100px', fontSize: '17px', color: 'rgb(88, 88, 88)' }}>
                   {challengeInfo.challengeCategory}
-                </Text>
-              </TextFrame>
-              <TextFrame style={{ justifyContent: 'left', marginTop: '20px' }}>
-                <HoverSpan>
-                  {heart ? (
-                    <RiHeart3Fill size={28} color={'#ff0000'} onClick={onClickHeart} />
-                  ) : (
-                    <RiHeart3Line size={28} onClick={onClickHeart} />
-                  )}
-                </HoverSpan>
-                <BottomText>{challengeInfo.challengeLikeCount}</BottomText>
-                <BottomText> 참여중 {challengeInfo.howManyUsersAreInThisChallenge}</BottomText>
-              </TextFrame>
-            </InnerBox>
-          </TextBox>
-          <div style={{ display: 'inline-block', marginLeft: '25px', width: '630px' }}>
-            <Button onClick={onclickGetStart}>바로 참여하기</Button>
-          </div>
-        </div>
-      </ContentBox>
-      <div style={{ float: 'left', marginTop: '20px' }}>댓글({challengeInfo.challengeCommnetCount})</div>
-      <div style={{ marginTop: '30px' }}>
-        <>
-          <CommentBox />
-          <div style={{ padding: '20px 0', margin: '30px 0' }}>
+                </Text> */}
+                  </TextFrame>
+                  <TextFrame style={{ justifyContent: 'left', marginTop: '20px' }}>
+                    <HoverSpan>
+                      {heart ? (
+                        <RiHeart3Fill size={28} color={'#ff0000'} onClick={onClickHeart} />
+                      ) : (
+                        <RiHeart3Line size={28} onClick={onClickHeart} />
+                      )}
+                    </HoverSpan>
+                    {/* <BottomText>{challengeInfo.challengeLikeCount}</BottomText> */}
+                    <BottomText> 참여중 {challengeInfo.responseChallenge.howManyUsersAreInThisChallenge}</BottomText>
+                  </TextFrame>
+                </InnerBox>
+              </TextBox>
+              <div style={{ display: 'inline-block', marginLeft: '25px', width: '630px' }}>
+                <Button onClick={onclickGetStart}>바로 참여하기</Button>
+              </div>
+            </div>
+          </ContentBox>
+          {/* <div style={{ float: 'left', marginTop: '20px' }}>댓글({challengeInfo.challengeCommnetCount})</div> */}
+          <div style={{ marginTop: '30px' }}>
+            <>
+              <CommentBox />
+              {/* <div style={{ padding: '20px 0', margin: '30px 0' }}>
             {challengeInfo.comments.map((comment) => {
               return <Comment writer={comment.writer} text={comment.text} time={comment.time} />;
             })}
+          </div> */}
+            </>
           </div>
-        </>
-      </div>
-    </Container>
+        </Container>
+      ) : (
+        <GetBadRoot />
+      )}
+    </>
   );
 }
 export default DetailChallenge;

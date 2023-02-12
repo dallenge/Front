@@ -13,6 +13,7 @@ import PwEdit from './Routes/PwEdit';
 import Withdrawal from './Routes/Withdrawal';
 import ProgressChallengeEdit from './Routes/ProgressChallengeEdit';
 import DetailChallenge from './Routes/DetailChallenge';
+import GetBadRoot from './Components/GetBadRoot';
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
         <Route path="/my-page/modify/password-edit" element={<PwEdit />} />
         <Route path="/my-page/modify/withdrawal" element={<Withdrawal />} />
         <Route path="my-page/modify/progress-challenge-edit" element={<ProgressChallengeEdit />} />
+        <Route path="*" element={<GetBadRoot />} />
       </Routes>
     </div>
   );
