@@ -169,7 +169,7 @@ export default function ChallengeList() {
           return (
             <Challenge key={i} onClick={() => navigate(`/challenge/${challenge.id}`)}>
               <img
-                src={URL + challenge.challengeImgUrl}
+                src={challenge.challengeImgUrl ? URL + challenge.challengeImgUrl : '/noimage.png'}
                 alt="noimage"
                 style={{ width: '260px', height: '180px', objectFit: 'cover' }}
               />
