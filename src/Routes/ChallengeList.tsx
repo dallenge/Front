@@ -68,8 +68,6 @@ export default function ChallengeList() {
       .then((res) => {
         setChallengeArray([...res.data.content]);
         setTotalPage(Math.ceil(res.data.totalElements / 8));
-        console.log(sortCondition);
-        console.log(res.data.content);
       })
       .catch((err) => {
         console.log(err);
