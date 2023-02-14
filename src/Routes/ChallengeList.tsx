@@ -1,6 +1,6 @@
 import '../CSS/PostList.css';
 import styled from 'styled-components';
-import URL from '../Url';
+// import URL from '../Url';
 import { useCallback, useState, useEffect } from 'react';
 import axios from 'axios';
 import Pagination from 'react-bootstrap/Pagination';
@@ -8,6 +8,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import CONSTANT_INFO from '../Constant/Constant';
 
 export default function ChallengeList() {
+  const URL = process.env.REACT_APP_URL;
+
   type Challenge = {
     id: number;
     title: string;
@@ -16,7 +18,7 @@ export default function ChallengeList() {
     challengeDuration: string;
     howManyUsersAreInThisChallenge: number;
     challengeOwnerUser: ChallengeOwnerUser;
-    challengeImgUrl: string;
+    challengeImgUrls: string;
     created_at: string;
   };
   type ChallengeOwnerUser = {
@@ -166,10 +168,13 @@ export default function ChallengeList() {
       </div>
       <PostContainer>
         {challengeArray.map((challenge, i) => {
+          console.log(challenge);
           return (
-            <Challenge key={i} onClick={() => navigate(`/challenge/${challenge.id}`)}>
+            <Challenge key={i} onClick={() => (window.location.href = `/challenge/${challenge.id}`)}>
               <img
-                src={challenge.challengeImgUrl ? URL + challenge.challengeImgUrl : '/noimage.png'}
+                src={
+                  challenge.challengeImgUrls.length != 0 ? `${URL}` + `${challenge.challengeImgUrls[0]}` : `/logo.png`
+                }
                 alt="noimage"
                 style={{ width: '260px', height: '180px', objectFit: 'cover' }}
               />
