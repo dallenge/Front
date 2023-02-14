@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Modify from '../Components/Modify';
 import { AiFillCamera } from 'react-icons/ai';
@@ -57,8 +57,9 @@ const Textarea = styled.textarea`
 `;
 
 const Image = styled.img`
-  border-radius: 40px;
+  border-radius: 50%;
   width: 80px;
+  height: 80px;
 `;
 
 const Hover = styled.span`
@@ -69,15 +70,33 @@ const Hover = styled.span`
 
 export default function ProfileEdit() {
   const USERNAME = localStorage.getItem('userName');
-  const INFO = '기존 자기소개 들어감';
-  const IMGFILE = ''; // 서버에서 받은 기존 이미지 파일이 들어감
+  let nowInfo = '';
+  const userId = localStorage.getItem('userId');
 
   const photoInput = useRef<HTMLInputElement>(null);
   const [userName, setNickname] = useState<string>(`${USERNAME}`);
-  const [info, setInfo] = useState<string>(`${INFO}`);
-  const [imgFile, setImgFile] = useState<any>(`${IMGFILE}`);
+  const [info, setInfo] = useState<string>('');
+  const [imgFile, setImgFile] = useState<any>('');
   const [view, setView] = useState<any>('');
 
+  const getProfile = async () => {
+    const config = {
+      method: 'get',
+      url: `${URL}/user/${userId}`,
+      headers: {
+        Authorization: 'Bearer ' + localStorage.getItem('token'),
+      },
+    };
+    await axios(config)
+      .then((res) => {
+        setInfo(res.data.info);
+        setView(`${URL}${res.data.imageUrl}`);
+        nowInfo = res.data.info;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   const handleClick = () => {
     if (photoInput.current) photoInput.current.click();
   };
@@ -105,15 +124,14 @@ export default function ProfileEdit() {
       if (confirm) {
         const dataSet = {
           userName: userName,
-          password: '12345678', // 테스트 코드
           info: info,
         };
 
         const formData = new FormData();
         formData.append('requestUpdateUser', new Blob([JSON.stringify(dataSet)], { type: 'application/json' }));
-        formData.append('userImgFile', imgFile);
-
-        console.log(imgFile);
+        if (imgFile) {
+          formData.append('userImgFile', imgFile);
+        }
 
         const config = {
           method: 'post',
@@ -136,7 +154,9 @@ export default function ProfileEdit() {
       }
     }
   };
-
+  useEffect(() => {
+    getProfile();
+  }, []);
   return (
     <div>
       <Modify active={'profile'} />
@@ -171,9 +191,9 @@ export default function ProfileEdit() {
           <Text style={{ fontSize: '18px' }}>자기소개</Text>
           <Textarea onChange={(e) => setInfo(e.target.value)} value={`${info}`}></Textarea>
         </div>
-        <div style={{ marginTop: '80px' }}>
+        <div style={{ margin: '40px 0 80px 0' }}>
           <Button
-            className={userName === USERNAME && info === INFO ? 'disable-edit' : 'able-edit'}
+            className={userName === USERNAME && info === nowInfo ? 'disable-edit' : 'able-edit'}
             onClick={onClickEdit}
           >
             수정하기
