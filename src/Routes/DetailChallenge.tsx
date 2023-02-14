@@ -1,16 +1,24 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { RiHeart3Line, RiHeart3Fill } from 'react-icons/ri';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import CommentBox from '../Components/Comment/CommentBox';
 import Comment from '../Components/Comment/Comment';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
-import URL from '../Url';
+// import URL from '../Url';
 import GetBadRoot from '../Components/GetBadRoot';
 
 function DetailChallenge() {
+  const URL = process.env.REACT_APP_URL;
+
   const { id } = useParams();
+  const navigate = useNavigate();
+
   const [challengeInfo, setChallengeInfo] = useState<Challenge>();
+  const [commentList, setCommentList] = useState<Comment[]>([]);
+
+  const [heart, setHeart] = useState<boolean>(false);
+
   const [isBadRoot, setIsBadRoot] = useState<boolean>(false);
 
   interface Challenge {
@@ -40,22 +48,44 @@ function DetailChallenge() {
     }[];
   }
 
+  interface Comment {
+    id: string;
+    content: string;
+    likes: number;
+    createdAt: string;
+    commentImgUrls: string[];
+    commentOwnerUser: {
+      userName: string;
+      email: string;
+      userId: number;
+    };
+  }
+
   useEffect(() => {
     const config = {
       method: 'get',
       url: `${URL}/challenge/${id}`,
     };
-
     axios(config)
       .then((res) => {
         setChallengeInfo(res.data);
+        // const temp = { ...res.data };
+        // temp.responseChallenge.challengeImgUrls = `${URL}` + res.data.responseChallenge.challengeImgUrls;
+        // setChallengeInfo(temp);
+        // console.log(temp);
       })
       .catch((err) => {
         setIsBadRoot(true);
       });
   }, []);
 
-  const [heart, setHeart] = useState<boolean>(false);
+  useEffect(() => {
+    const config = {
+      method: 'get',
+      url: `${URL}/${id}/comment`,
+    };
+    axios(config).then((res) => setCommentList(res.data.content));
+  }, []);
 
   const onClickHeart = () => {
     setHeart(!heart);
@@ -70,76 +100,58 @@ function DetailChallenge() {
   return (
     <>
       {!isBadRoot && challengeInfo ? (
-        <Container>
-          <ContentBox>
-            <ImageBox src={challengeInfo.responseChallenge.challengeImgUrls[0]} />
+        <S.Container>
+          <S.Wrapper>
             <div>
-              <TextBox>
-                <div
-                  style={{
-                    display: 'inline-block',
-                    fontSize: '30px',
-                    fontWeight: '800',
-                    marginTop: '30px',
-                    justifyContent: 'left',
-                  }}
+              <S.Text style={{ marginTop: '20px' }}>
+                <S.Line w={'12%'} />
+                <S.HoverText size={'14px'} onClick={() => navigate('/challengelist')}>
+                  목록
+                </S.HoverText>
+                <S.Text size={'14px'}>/</S.Text>
+                <S.HoverText
+                  size={'14px'}
+                  style={{ color: 'var(--color-blue)' }}
+                  onClick={() => navigate(`/challengelist//${challengeInfo.responseChallenge.challengeCategory}`)}
                 >
-                  {challengeInfo.responseChallenge.title}
-                </div>
-                <div
-                  style={{
-                    height: '1px',
-                    backgroundColor: 'var(--color-dark-blue)',
-                    width: '90%',
-                    margin: '0 auto',
-                    marginTop: '20px',
-                  }}
-                ></div>
-                <InnerBox>
-                  <TextFrame>
-                    <Text>🙋 {challengeInfo.responseChallenge.content}</Text>
-                  </TextFrame>
-                  <TextFrame>
-                    <Text>🕒 {challengeInfo.responseChallenge.challengeDuration}</Text>
-                  </TextFrame>
-                  <TextFrame>
-                    <Text>📍 {challengeInfo.responseChallenge.challengeLocation}</Text>
-                  </TextFrame>
-                  <TextFrame>
-                    {/* <Text style={{ marginTop: '100px', fontSize: '17px', color: 'rgb(88, 88, 88)' }}>
-                  {challengeInfo.challengeCategory}
-                </Text> */}
-                  </TextFrame>
-                  <TextFrame style={{ justifyContent: 'left', marginTop: '20px' }}>
-                    <HoverSpan>
-                      {heart ? (
-                        <RiHeart3Fill size={28} color={'#ff0000'} onClick={onClickHeart} />
-                      ) : (
-                        <RiHeart3Line size={28} onClick={onClickHeart} />
-                      )}
-                    </HoverSpan>
-                    {/* <BottomText>{challengeInfo.challengeLikeCount}</BottomText> */}
-                    <BottomText> 참여중 {challengeInfo.responseChallenge.howManyUsersAreInThisChallenge}</BottomText>
-                  </TextFrame>
-                </InnerBox>
-              </TextBox>
-              <div style={{ display: 'inline-block', marginLeft: '25px', width: '630px' }}>
-                <Button onClick={onclickGetStart}>바로 참여하기</Button>
-              </div>
+                  {challengeInfo.responseChallenge.challengeCategory}
+                </S.HoverText>
+                <S.Line grow={1} />
+              </S.Text>
             </div>
-          </ContentBox>
-          {/* <div style={{ float: 'left', marginTop: '20px' }}>댓글({challengeInfo.challengeCommnetCount})</div> */}
-          <div style={{ marginTop: '30px' }}>
-            <>
-              <CommentBox />
-              {/* <div style={{ padding: '20px 0', margin: '30px 0' }}>
-            {challengeInfo.comments.map((comment) => {
-              return <Comment writer={comment.writer} text={comment.text} time={comment.time} />;
-            })}
-          </div> */}
-            </>
-          </div>
-        </Container>
+            <S.Form>
+              {/* Form 왼쪽 */}
+              <S.ContentBox>
+                <S.Image
+                  src={
+                    challengeInfo.responseChallenge.challengeImgUrls.length != 0
+                      ? `${URL}` + `${challengeInfo.responseChallenge.challengeImgUrls}`
+                      : '/logo.png'
+                  }
+                  alt="challenge_img"
+                ></S.Image>
+              </S.ContentBox>
+              {/* Form 오른쪽 */}
+              <S.ContentBox padding={'50px'}>
+                <Text size={'25px'} padding={'15px 0'}>
+                  {challengeInfo.responseChallenge.title}
+                </Text>
+                <S.Text padding={'15px 0'}>{challengeInfo.responseChallenge.content}</S.Text>
+                <S.Text>📍 {challengeInfo.responseChallenge.challengeLocation}</S.Text>
+                <S.Text>🕒 {challengeInfo.responseChallenge.challengeDuration}</S.Text>
+                <S.Text>🏃🏻 지금 {challengeInfo.responseChallenge.howManyUsersAreInThisChallenge}명 참여중</S.Text>
+                <S.Text padding={'15px 0'} color={'rgb(130, 130, 130)'}>
+                  <S.Text style={{ marginRight: '20px' }}>
+                    시작한 델린저: {challengeInfo.responseChallenge.challengeOwnerUser.userName}
+                  </S.Text>
+                  <S.Text>{challengeInfo.responseChallenge.created_at}</S.Text>
+                </S.Text>
+                <S.Button>지금 바로 참여하기</S.Button>
+              </S.ContentBox>
+            </S.Form>
+            <S.Line w={'100%'}></S.Line>
+          </S.Wrapper>
+        </S.Container>
       ) : (
         <GetBadRoot />
       )}
@@ -150,68 +162,82 @@ export default DetailChallenge;
 
 const Container = styled.div`
   margin: 0 auto;
-  width: 80%;
+  width: 60%;
+  display: flex;
+  flex-direction: column;
   justify-content: center;
-  height: 100vh;
+  margin-top: 50px;
 `;
-const ContentBox = styled.div`
-  margin-top: 30px;
+
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
   width: 100%;
-  height: 600px;
-  border: 1px solid rgb(208, 208, 208);
-  box-shadow: 2px 2px 3px rgb(200, 200, 200);
-  border-radius: 2px;
+`;
+
+const Form = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 40px;
+  background-color: #f9fafb;
 `;
-const ImageBox = styled.img`
-  display: inline-block;
-  width: 450px;
+
+const ContentBox = styled.div<{ padding?: string }>`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 50%;
+  padding: ${({ padding }) => padding};
 `;
-const TextBox = styled.div`
-  width: 600px;
-  height: 83%;
-  margin-left: 40px;
-  padding: 30px;
-  background-color: var(--color-sky);
+
+const Image = styled.img`
+  width: 100%;
 `;
-const InnerBox = styled.div`
-  margin-top: 30px;
-  width: 85%;
+
+const Line = styled.div<{ w?: string; grow?: number }>`
+  height: 1px;
+  width: ${({ w }) => w};
+  background-color: rgb(180, 180, 180);
+  flex-grow: ${({ grow }) => grow};
 `;
-const TextFrame = styled.div`
+
+const Text = styled.div<{ padding?: string; size?: string; color?: string }>`
   display: flex;
   align-items: center;
-  margin-bottom: 5px;
-  margin-left: 30px;
+  color: ${({ color }) => color};
+  /* color: rgb(120, 120, 120); */
+  padding: ${({ padding }) => padding};
+  font-weight: bold;
+  font-size: ${({ size }) => size};
 `;
-const Text = styled.div`
-  font-size: 20px;
-  font-weight: 600;
+
+const HoverText = styled(Text)`
+  padding: 0 5px;
+  :hover {
+    cursor: pointer;
+  }
 `;
-const BottomText = styled.span`
-  font-size: 16px;
-  margin-top: -4px;
-  margin-right: 30px;
-  font-weight: 600;
-  margin-left: 3px;
-`;
+
 const Button = styled.button`
+  width: 100%;
   border: none;
-  width: 95%;
-  height: 40px;
-  font-weight: 600;
-  background-color: var(--color-blue);
-  color: #ffffff;
-  line-height: 30px;
-  &:hover {
-    cursor: pointer;
-    background-color: #599ff5;
+  background-color: var(--color-sky);
+  font-weight: bold;
+  :hover {
+    background-color: #bbcef1;
   }
 `;
-const HoverSpan = styled.span`
-  &:hover {
-    cursor: pointer;
-  }
-`;
+
+const S = {
+  // 스타일 컴포넌트
+  Container,
+  Wrapper,
+  Form,
+  Line,
+  Text,
+  HoverText,
+  ContentBox,
+  Image,
+  Button,
+};
