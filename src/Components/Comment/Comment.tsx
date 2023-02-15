@@ -1,53 +1,111 @@
 import styled from 'styled-components';
+import { BiDotsHorizontalRounded } from 'react-icons/bi';
 
 interface Props {
-  writer: string;
-  text: string;
-  time: string;
+  content: string;
+  likes: number;
+  createdAt: {
+    fewYearsAge: number;
+    fewMonthAgo: number;
+    fewDaysAgo: number;
+  };
+  img: string[];
+  owner: {
+    userName: string;
+    email: string;
+    userId: number;
+  };
+  myComment: boolean;
 }
 
 function Comment(props: Props) {
-  const { writer, text, time } = props;
+  const URL = process.env.REACT_APP_URL;
+
+  const { content, likes, createdAt, img, owner, myComment } = props;
+
+  const getFewDaysAgo = (fewDayObject: { fewYearsAge: number; fewMonthAgo: number; fewDaysAgo: number }) => {
+    if (fewDayObject.fewYearsAge !== 0) {
+      return fewDayObject.fewYearsAge + '년 전';
+    }
+    if (fewDayObject.fewMonthAgo !== 0) {
+      return fewDayObject.fewMonthAgo + '월 전';
+    }
+    if (fewDayObject.fewDaysAgo !== 0 && fewDayObject.fewDaysAgo !== 1) {
+      return fewDayObject.fewDaysAgo + '일 전';
+    }
+    if (fewDayObject.fewDaysAgo === 1) {
+      return '어제';
+    }
+    if (fewDayObject.fewDaysAgo === 0) {
+      return '오늘';
+    }
+  };
 
   return (
-    <Container>
-      <Box>
-        <WriterText>{writer}</WriterText>
-        <TimeText>{time}</TimeText>
-      </Box>
-      <Box>
-        <CommentText>{text}</CommentText>
-      </Box>
-    </Container>
+    <S.Wrapper>
+      <S.Text>
+        <S.Text size={'18px'}>{owner.userName}</S.Text>
+        <S.Text size={'14px'} style={{ color: 'rgb(150, 150, 150)', marginLeft: '20px' }}>
+          {getFewDaysAgo(createdAt)}
+        </S.Text>
+        {myComment && (
+          <S.HoverText style={{ marginLeft: 'auto' }}>
+            <BiDotsHorizontalRounded size={35} />
+          </S.HoverText>
+        )}
+      </S.Text>
+      <S.Form>
+        <S.Text>{img.length !== 0 && <S.Image src={`${URL}` + `${img}`} />}</S.Text>
+        <S.ContentText>{content}</S.ContentText>
+      </S.Form>
+    </S.Wrapper>
   );
 }
 export default Comment;
 
-const Container = styled.div`
-  margin-top: 30px;
+const Wrapper = styled.div`
   width: 100%;
-  border: 1px solid rgb(208, 208, 208);
-  background-color: #ffffff;
-  border-radius: 7px;
-  padding: 10px;
-  margin: 20px auto;
+  display: flex;
+  align-items: left;
+  flex-direction: column;
+  padding-bottom: 40px;
+  border-bottom: 1px solid rgb(190, 190, 190);
+  margin-top: 30px;
 `;
-const Box = styled.div`
+
+const Text = styled.div<{ size?: string }>`
   display: flex;
   align-items: center;
-  justify-content: left;
+  font-size: ${({ size }) => size};
+  font-weight: bold;
 `;
-const WriterText = styled.div`
-  display: inline-block;
-  font-size: 20px;
-  font-weight: 600;
+
+const HoverText = styled(Text)`
+  :hover {
+    cursor: pointer;
+  }
 `;
-const TimeText = styled.div`
-  display: inline-block;
-  font-size: 14px;
-  color: rgb(88, 88, 88);
-  margin-left: 30px;
+
+const ContentText = styled(Text)`
+  align-items: initial;
+  margin: 20px 0 20px 30px;
 `;
-const CommentText = styled.div`
-  font-size: 18px;
+
+const Form = styled.div`
+  display: flex;
+  padding: 10px 20px;
+  margin-top: 20px;
 `;
+
+const Image = styled.img`
+  width: 200px;
+`;
+
+const S = {
+  Wrapper,
+  Text,
+  Image,
+  Form,
+  HoverText,
+  ContentText,
+};

@@ -1,12 +1,13 @@
-import styled, { css } from 'styled-components';
-import { RiHeart3Line, RiHeart3Fill } from 'react-icons/ri';
-import { useCallback, useEffect, useState } from 'react';
-import CommentBox from '../Components/Comment/CommentBox';
-import Comment from '../Components/Comment/Comment';
+import styled from 'styled-components';
+import { BsBookmark, BsBookmarkFill } from 'react-icons/bs';
+import { useEffect, useState } from 'react';
+
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 // import URL from '../Url';
 import GetBadRoot from '../Components/GetBadRoot';
+import CommentInput from '../Components/Comment/CommentInput';
+import Comment from '../Components/Comment/Comment';
 
 function DetailChallenge() {
   const URL = process.env.REACT_APP_URL;
@@ -17,7 +18,7 @@ function DetailChallenge() {
   const [challengeInfo, setChallengeInfo] = useState<Challenge>();
   const [commentList, setCommentList] = useState<Comment[]>([]);
 
-  const [heart, setHeart] = useState<boolean>(false);
+  const [bookmark, setBookmark] = useState<boolean>(false);
 
   const [isBadRoot, setIsBadRoot] = useState<boolean>(false);
 
@@ -69,32 +70,59 @@ function DetailChallenge() {
     axios(config)
       .then((res) => {
         setChallengeInfo(res.data);
-        // const temp = { ...res.data };
-        // temp.responseChallenge.challengeImgUrls = `${URL}` + res.data.responseChallenge.challengeImgUrls;
-        // setChallengeInfo(temp);
-        // console.log(temp);
       })
       .catch((err) => {
         setIsBadRoot(true);
       });
   }, []);
 
-  useEffect(() => {
+  const getComments = () => {
     const config = {
       method: 'get',
       url: `${URL}/${id}/comment`,
     };
     axios(config).then((res) => setCommentList(res.data.content));
+  };
+
+  useEffect(() => {
+    getComments();
   }, []);
 
-  const onClickHeart = () => {
-    setHeart(!heart);
+  const onClickBookmark = () => {
+    setBookmark((prev) => !prev);
     // 서버에 post 및 화면 refresh
   };
 
   const onclickGetStart = () => {
     // 버튼에 text 변경
     // 서버에 post
+  };
+
+  // ~일 전 구하는 함수
+  const getSimpleDate = (date: string) => {
+    const createTime = new Date(date);
+    const now = new Date();
+
+    const fewYearsAge = now.getFullYear() - createTime.getFullYear();
+    const fewMonthAgo = now.getMonth() - createTime.getMonth();
+    const fewDaysAgo = now.getDate() - createTime.getDate();
+
+    return {
+      fewYearsAge,
+      fewMonthAgo,
+      fewDaysAgo,
+    };
+  };
+
+  const getfewAgoList = (commentList: Comment[]) => {
+    return commentList.map((comment) => getSimpleDate(comment.createdAt));
+  };
+
+  // 오늘 몇개의 후기가 남겨졌는지 구하는 함수
+  const getTodayComment = (fewAgoList: { fewYearsAge: number; fewMonthAgo: number; fewDaysAgo: number }[]) => {
+    return fewAgoList.filter(
+      (object) => object.fewYearsAge === 0 && object.fewMonthAgo === 0 && object.fewDaysAgo === 0,
+    ).length;
   };
 
   return (
@@ -124,7 +152,7 @@ function DetailChallenge() {
               <S.ContentBox>
                 <S.Image
                   src={
-                    challengeInfo.responseChallenge.challengeImgUrls.length != 0
+                    challengeInfo.responseChallenge.challengeImgUrls.length !== 0
                       ? `${URL}` + `${challengeInfo.responseChallenge.challengeImgUrls}`
                       : '/logo.png'
                   }
@@ -133,8 +161,11 @@ function DetailChallenge() {
               </S.ContentBox>
               {/* Form 오른쪽 */}
               <S.ContentBox padding={'50px'}>
-                <Text size={'25px'} padding={'15px 0'}>
-                  {challengeInfo.responseChallenge.title}
+                <Text size={'25px'} padding={'15px 0'} style={{ justifyContent: 'space-between' }}>
+                  <Text>{challengeInfo.responseChallenge.title}</Text>
+                  <HoverText onClick={onClickBookmark}>
+                    {bookmark ? <BsBookmarkFill color={'var(--color-blue)'} /> : <BsBookmark />}
+                  </HoverText>
                 </Text>
                 <S.Text padding={'15px 0'}>{challengeInfo.responseChallenge.content}</S.Text>
                 <S.Text>📍 {challengeInfo.responseChallenge.challengeLocation}</S.Text>
@@ -151,6 +182,20 @@ function DetailChallenge() {
             </S.Form>
             <S.Line w={'100%'}></S.Line>
           </S.Wrapper>
+          <S.Text padding={'20px 0 5px 0'}>오늘 {getTodayComment(getfewAgoList(commentList))}개의 기록🏃🏻</S.Text>
+          <CommentInput postId={Number(id)} getComments={getComments} />
+          {commentList.reverse().map((comment) => {
+            return (
+              <Comment
+                content={comment.content}
+                likes={comment.likes}
+                createdAt={getSimpleDate(comment.createdAt)}
+                img={comment.commentImgUrls}
+                owner={comment.commentOwnerUser}
+                myComment={comment.commentOwnerUser.userId === Number(localStorage.getItem('userId'))}
+              />
+            );
+          })}
         </S.Container>
       ) : (
         <GetBadRoot />
@@ -224,6 +269,7 @@ const Button = styled.button`
   border: none;
   background-color: var(--color-sky);
   font-weight: bold;
+  height: 50px;
   :hover {
     background-color: #bbcef1;
   }
