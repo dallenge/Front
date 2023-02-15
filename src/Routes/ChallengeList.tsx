@@ -168,7 +168,6 @@ export default function ChallengeList() {
       </div>
       <PostContainer>
         {challengeArray.map((challenge, i) => {
-          console.log(challenge);
           return (
             <Challenge key={i} onClick={() => (window.location.href = `/challenge/${challenge.id}`)}>
               <img
