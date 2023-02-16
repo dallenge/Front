@@ -187,12 +187,15 @@ function DetailChallenge() {
           {commentList.reverse().map((comment) => {
             return (
               <Comment
+                challengeId={challengeInfo.responseChallenge.id}
+                commentId={comment.id}
                 content={comment.content}
                 likes={comment.likes}
                 createdAt={getSimpleDate(comment.createdAt)}
                 img={comment.commentImgUrls}
                 owner={comment.commentOwnerUser}
                 myComment={comment.commentOwnerUser.userId === Number(localStorage.getItem('userId'))}
+                getComments={getComments}
               />
             );
           })}
