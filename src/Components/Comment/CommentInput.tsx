@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { useRef, useState } from 'react';
 import styled from 'styled-components';
+import CommentArea from './Components/CommentArea';
 
 interface Props {
   postId: number;
@@ -66,13 +67,21 @@ function CommentInput({ postId, getComments }: Props) {
     }
   };
 
+  const onChangeWriteComment = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setWriteText(e.target.value);
+  };
+
   return (
     <S.Form>
-      <input type={'file'} style={{ width: '90%' }} ref={imageRef} onChange={onUploadImage} />
-      <S.Textarea value={writeText} onChange={(e) => setWriteText(e.target.value)} placeholder="댓글로 기록하기.." />
-      <S.Text>
-        <S.Button onClick={onClickSubmitComment}>기록하기</S.Button>
-      </S.Text>
+      <CommentArea
+        imageRef={imageRef}
+        onUploadImage={onUploadImage}
+        value={writeText}
+        onChangeWriteComment={onChangeWriteComment}
+        placeholder={'댓글로 기록하기..'}
+        onClickSubmitComment={onClickSubmitComment}
+        children={'기록하기'}
+      />
     </S.Form>
   );
 }
@@ -86,37 +95,6 @@ const Form = styled.div`
   border-radius: 8px;
 `;
 
-const Textarea = styled.textarea`
-  width: 90%;
-  height: 130px;
-  resize: none;
-  border: 1px solid rgb(220, 220, 220);
-  padding: 20px;
-  :focus-visible {
-    outline: none;
-  }
-`;
-
-const Text = styled.div`
-  width: 90%;
-  display: inline-block;
-`;
-
-const Button = styled.button`
-  border: none;
-  background-color: var(--color-sky);
-  float: right;
-  font-weight: bold;
-  padding: 7px;
-  width: 100px;
-  :hover {
-    background-color: #bbcef1;
-  }
-`;
-
 const S = {
   Form,
-  Textarea,
-  Button,
-  Text,
 };
