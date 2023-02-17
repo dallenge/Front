@@ -2,7 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 import PopularChallenge from '../Components/PopularChallenge';
 import { useNavigate } from 'react-router-dom';
-
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import { FaMedal } from 'react-icons/fa';
 const Card = styled.div<{ background: string; height: string }>`
   width: 100%;
   height: ${(props) => props.height};
@@ -29,9 +31,65 @@ const CategoryBtn = styled.div`
   }
 `;
 
-const Category = ['공부', '봉사', '운동', '경제', '건강'];
+const Challenge = styled.div`
+  width: 300px;
+  height: 300px;
+  background: var(--color-sky);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  position: relative;
+  border-radius: 10px;
+  :hover {
+    cursor: pointer;
+  }
+`;
+
 function Home() {
+  type Challenge = {
+    id: number;
+    title: string;
+    challengeCategory: string;
+    challengeLocation: string;
+    challengeDuration: string;
+    howManyUsersAreInThisChallenge: number;
+    challengeOwnerUser: ChallengeOwnerUser;
+    challengeImgUrls: string;
+    created_at: string;
+  };
+
+  type ChallengeOwnerUser = {
+    userName: string;
+    userId: number;
+    email: string;
+  };
+
+  const Category = ['공부', '봉사', '운동', '경제', '건강'];
+  const medal = ['gold', 'silver', '#964b00'];
+  const URL = process.env.REACT_APP_URL;
   const navigate = useNavigate();
+  const [popularChallenge, setPopularChallenge] = useState<Challenge[]>([]);
+
+  const getPopularChallenge = async () => {
+    const config = {
+      method: 'get',
+      url: `${URL}/challenge?size=4&page=0&sort=popular`,
+    };
+    await axios(config).then((res) => {
+      setPopularChallenge(res.data.content);
+    });
+  };
+
+  const replaceDateFormat = (date: string): string => {
+    let day = date.split(' ')[0];
+    let time = date.split(' ')[1].slice(0, 8);
+    return day + ' ' + time;
+  };
+
+  useEffect(() => {
+    getPopularChallenge();
+  }, []);
   return (
     <div>
       <Card background="url('/main.jpg')" height="90vh">
@@ -70,10 +128,49 @@ function Home() {
         <div style={{ width: '100vw', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
           <div style={{ fontSize: '20px', fontWeight: '600' }}>인기 챌린지</div>
           <div style={{ width: '100%', display: 'flex', marginTop: '50px', justifyContent: 'space-around' }}>
-            <PopularChallenge></PopularChallenge>
-            <PopularChallenge></PopularChallenge>
-            <PopularChallenge></PopularChallenge>
-            <PopularChallenge></PopularChallenge>
+            {popularChallenge.map((challenge, i) => {
+              console.log(challenge);
+              return (
+                <Challenge key={i} onClick={() => (window.location.href = `/challenge/${challenge.id}`)}>
+                  {i <= 2 ? (
+                    <FaMedal
+                      style={{
+                        zIndex: '1',
+                        width: '30px',
+                        height: '30px',
+                        position: 'absolute',
+                        left: '5px',
+                        top: '5px',
+                        color: medal[i],
+                      }}
+                    />
+                  ) : null}
+                  <img
+                    src={
+                      challenge.challengeImgUrls.length != 0
+                        ? `${URL}` + `${challenge.challengeImgUrls[0]}`
+                        : `/logo.png`
+                    }
+                    alt="noimage"
+                    style={{ width: '260px', height: '180px', objectFit: 'cover' }}
+                  />
+                  <div style={{ fontSize: '20px', fontWeight: 'bolder' }}>{challenge.title}</div>
+                  <div
+                    style={{
+                      fontSize: '13px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'flex-start',
+                      position: 'absolute',
+                      bottom: '20px',
+                    }}
+                  >
+                    <div style={{ fontSize: '15px' }}>{challenge.challengeOwnerUser.userName}</div>
+                    <div>{replaceDateFormat(challenge.created_at)}</div>
+                  </div>
+                </Challenge>
+              );
+            })}
           </div>
         </div>
       </Card>

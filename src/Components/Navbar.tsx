@@ -36,14 +36,18 @@ export default function Navbar() {
   const SPREAD_MENU_SWITCH_IMAGE_URL = CONSTANT_INFO.IMAGE_URL.SPREAD_MENU_SWITCH_IMAGE_URL;
   const SEARCH_IMAGE_URL = CONSTANT_INFO.IMAGE_URL.SEARCH_IMAGE_URL;
   const navigate = useNavigate();
+  const username = localStorage.getItem('userName');
 
   const [isSwitchOpen, setIsSwitchOpen] = useState<boolean>(false);
   const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
+  const [userName, setUserName] = useState<string | null>(username);
 
   useEffect(() => {
     if (Date.now() >= Number(localStorage.getItem('expire'))) localStorage.clear();
   });
-
+  useEffect(() => {
+    setUserName(localStorage.getItem('userName'));
+  });
   interface SetOpenFunc {
     (): void;
   }
@@ -135,7 +139,7 @@ export default function Navbar() {
           <div style={{ display: 'flex' }}>
             <span>
               <Menu style={{ marginLeft: '50px', marginRight: '20px' }} onClick={() => navigate('/my-page')}>
-                {localStorage.getItem('userName')}님
+                {userName}님
               </Menu>
             </span>
             {isSwitchOpen ? (
