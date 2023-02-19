@@ -100,7 +100,7 @@ export default function Login() {
 
     await axios(config)
       .then((res) => {
-        navigate('/');
+        window.history.back();
         localStorage.clear();
         localStorage.setItem('token', res.data.token);
         localStorage.setItem('expire', (Date.now() + 7200000).toString());
