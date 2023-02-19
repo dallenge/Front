@@ -77,6 +77,9 @@ function Comment(props: Props) {
       method: 'post',
       url: `${URL}/${challengeId}/comment/${commentId}`,
       data: formData,
+      headers: {
+        Authorization: 'Bearer ' + localStorage.getItem('token'),
+      },
     };
 
     await axios(config)
