@@ -92,7 +92,7 @@ export default function Navbar() {
           </Menu>
           <Menu
             onClick={() => {
-              navigate('/createchallenge');
+              localStorage.getItem('token') ? navigate('/createchallenge') : navigate('/login');
               closeBar();
             }}
           >
