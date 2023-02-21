@@ -1,0 +1,20 @@
+.HashWrapOuter {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.HashWrapInner {
+  height: 20px;
+  font-size: 0.8rem;
+  margin: 3px;
+  background: var(--color-blue);
+  border-radius: 56px;
+  padding: 8px 12px;
+  color: var(--color-white);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  margin-right: 5px;
+  cursor: pointer;
+}

@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import '../CSS/CreateChallenge.css';
+import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import URL from '../Url';
 import axios from 'axios';
@@ -17,6 +18,8 @@ export default function CreateChallenge() {
   const [category, setCategory] = useState<string>('');
   const [duration, setDuration] = useState<string>('');
   const [location, setLocation] = useState<string>('');
+  const [hashtag, setHashtag] = useState<string>('');
+  const [hashArr, setHashArr] = useState<string[] | []>([]);
 
   useEffect(() => {
     if (imgFile) {
@@ -37,6 +40,29 @@ export default function CreateChallenge() {
       setImgFile(img);
     }
   };
+  const onChangeHashtag = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setHashtag(e.target.value);
+  };
+  const onKeyUp = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      const hashWrapOuter = document.querySelector('.HashWrapOuter');
+      const hashWrapInner = document.createElement('div');
+      hashWrapInner.className = 'HashWrapInner';
+
+      hashWrapInner.addEventListener('click', () => {
+        hashWrapOuter?.removeChild(hashWrapInner);
+        setHashArr(hashArr.filter((hashtag) => hashtag));
+      });
+
+      if (e.key === 'Enter' && e.currentTarget.value.trim() !== '') {
+        hashWrapInner.innerHTML = '#' + e.currentTarget.value;
+        hashWrapOuter?.insertBefore(hashWrapInner, e.currentTarget);
+        setHashArr((hashArr) => [...hashArr, hashtag]);
+        setHashtag('');
+      }
+    },
+    [hashtag, hashArr],
+  );
 
   const submitChallenge = async (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -54,6 +80,7 @@ export default function CreateChallenge() {
 
     data.append('requestCreateChallenge', new Blob([JSON.stringify(challenge)], { type: 'application/json' }));
     data.append('challengeImgFile', imgFile);
+    data.append('hashtagDto', hashArr);
 
     const config = {
       method: 'post',
@@ -67,6 +94,7 @@ export default function CreateChallenge() {
     await axios(config)
       .then((res) => {
         alert('등록완료');
+        console.log(res);
       })
       .catch((err) => {
         console.log(challenge);
@@ -89,7 +117,7 @@ export default function CreateChallenge() {
         </div>
         <input type="file" accept="image/jpg, image/jpeg, image/png" onChange={uploadImgFile} />
       </div>
-      <div style={{ width: '600px', height: '500px', background: 'var(--color-sky)', padding: '30px' }}>
+      <div style={{ width: '600px', height: '600px', background: 'var(--color-sky)', padding: '30px' }}>
         <form id="createForm" onSubmit={submitChallenge}>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '30px' }}>
             <div style={{ fontWeight: '600' }}>장소</div>
@@ -144,6 +172,31 @@ export default function CreateChallenge() {
                 setTitle(e.target.value);
               }}
             ></input>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '30px' }}>
+            <div style={{ fontWeight: '600' }}>해시태그</div>
+            <div
+              className="HashWrapOuter"
+              style={{
+                width: '350px',
+                background: 'white',
+                border: '1px solid black',
+                display: 'flex',
+              }}
+            >
+              <input type="hidden"></input>
+              <input
+                style={{
+                  width: '150px',
+                  border: 'none',
+                  outline: 'none',
+                }}
+                placeholder="해시태그 입력"
+                onChange={onChangeHashtag}
+                onKeyUp={onKeyUp}
+                value={hashtag}
+              ></input>
+            </div>
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <div style={{ fontWeight: '600' }}>내용</div>
