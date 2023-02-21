@@ -4,10 +4,12 @@ import { useEffect, useState } from 'react';
 
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
-// import URL from '../Url';
+
 import GetBadRoot from '../Components/GetBadRoot';
 import CommentInput from '../Components/Comment/CommentInput';
 import Comment from '../Components/Comment/Comment';
+
+let bookmarkId: number;
 
 function DetailChallenge() {
   const URL = process.env.REACT_APP_URL;
@@ -18,84 +20,129 @@ function DetailChallenge() {
   const [challengeInfo, setChallengeInfo] = useState<Challenge>();
   const [commentList, setCommentList] = useState<Comment[]>([]);
 
-  const [bookmark, setBookmark] = useState<boolean>(false);
+  const [isParticipatedChallenge, setIsParticipatedChallenge] = useState<boolean>(false);
+  const [isBookmark, setIsBookmark] = useState<boolean>(false);
 
   const [isBadRoot, setIsBadRoot] = useState<boolean>(false);
 
-  interface Challenge {
-    responseChallenge: {
-      id: string;
-      title: string;
-      content: string;
-      challengeCategory: string;
-      challengeLocation: string;
-      challengeDuration: string;
-      created_at: string;
-      challengeImgUrls: string[];
-      howManyUsersAreInThisChallenge: number;
-      challengeOwnerUser: {
-        userName: string;
-        email: string;
-        userId: number;
-      };
-    };
-    responseUserChallenges: {
-      challengeStatus: string;
-      participatedUser: {
-        userName: string;
-        email: string;
-        userId: number;
-      };
-    }[];
-  }
-
-  interface Comment {
-    id: string;
-    content: string;
-    likes: number;
-    createdAt: string;
-    commentImgUrls: string[];
-    commentOwnerUser: {
-      userName: string;
-      email: string;
-      userId: number;
-    };
-  }
-
-  useEffect(() => {
+  const getChallengeInfo = async () => {
     const config = {
       method: 'get',
       url: `${URL}/challenge/${id}`,
     };
-    axios(config)
+    await axios(config)
       .then((res) => {
         setChallengeInfo(res.data);
       })
       .catch((err) => {
         setIsBadRoot(true);
       });
-  }, []);
+  };
 
-  const getComments = () => {
+  const getComments = async () => {
     const config = {
       method: 'get',
       url: `${URL}/${id}/comment`,
     };
-    axios(config).then((res) => setCommentList(res.data.content));
+    await axios(config).then((res) => setCommentList(res.data.content));
+  };
+
+  const getMyParticipate = async () => {
+    const config = {
+      method: 'get',
+      url: `${URL}/user/participate`,
+      headers: {
+        Authorization: 'Bearer ' + localStorage.getItem('token'),
+      },
+    };
+    await axios(config).then((res) => {
+      const myParticipate = res.data;
+      if (
+        myParticipate.filter((challenge: { challengeId: number | undefined }) => challenge.challengeId === Number(id))
+          .length > 0
+      ) {
+        setIsParticipatedChallenge(true);
+      }
+    });
+  };
+
+  const getMyBookmark = async () => {
+    const config = {
+      method: 'get',
+      url: `${URL}/user/${localStorage.getItem('userId')}/bookmark`,
+      headers: {
+        Authorization: 'Bearer ' + localStorage.getItem('token'),
+      },
+    };
+    await axios(config).then((res) => {
+      const myBookmark = res.data.content;
+
+      // const thisChallengeBookmark = myBookmark.filter(
+      //   (challenge: { id: number | undefined }) => challenge.id === Number(id),
+      // );
+      /* 위 코드에서 응답필드에서 challengeId로 filter하기*/
+
+      // if (thisChallengeBookmark.length > 0) {
+      //   bookmarkId = thisChallengeBookmark.id;
+      //   setIsBookmark(true);
+      // }
+    });
   };
 
   useEffect(() => {
+    getChallengeInfo();
     getComments();
+    getMyParticipate();
+    getMyBookmark();
+
+    /*
+      암튼 여기에 해야할 일
+      
+      2. 이미 북마크한 챌린지임?
+          -> oo : setIsBookmark(true), 북마크 아이콘 fill, bookmarkId 저장
+          -> ㄴㄴ : 그대로
+   */
   }, []);
 
-  const onClickBookmark = () => {
-    setBookmark((prev) => !prev);
-    // 서버에 post 및 화면 refresh
+  const onClickBookmark = async () => {
+    if (!isBookmark) {
+      // 북마크 생성
+      const config = {
+        method: 'post',
+        url: `${URL}/${id}/bookmark/new`,
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem('token'),
+        },
+      };
+      await axios(config).then((res) => {
+        bookmarkId = res.data.id;
+        setIsBookmark(true);
+      });
+    } else {
+      // 북마크 삭제
+      const config = {
+        method: 'delete',
+        url: `${URL}/user/${localStorage.getItem('userId')}/bookmark/${bookmarkId}`,
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem('token'),
+        },
+      };
+      await axios(config).then((res) => setIsBookmark(false));
+    }
   };
 
-  const onclickGetStart = () => {
-    // 버튼에 text 변경
-    // 서버에 post
+  const onClickParticipate = async () => {
+    const config = {
+      method: 'post',
+      url: `${URL}/challenge/${id}/participate`,
+      headers: {
+        Authorization: 'Bearer ' + localStorage.getItem('token'),
+      },
+    };
+    await axios(config).then((res) => {
+      alert('참여하기가 완료되었습니다.');
+      setIsParticipatedChallenge(true);
+    });
   };
 
   // ~일 전 구하는 함수
@@ -106,7 +153,6 @@ function DetailChallenge() {
     const fewYearsAge = now.getFullYear() - createTime.getFullYear();
     const fewMonthAgo = now.getMonth() - createTime.getMonth();
     const fewDaysAgo = now.getDate() - createTime.getDate();
-
     return {
       fewYearsAge,
       fewMonthAgo,
@@ -164,20 +210,31 @@ function DetailChallenge() {
                 <Text size={'25px'} padding={'15px 0'} style={{ justifyContent: 'space-between' }}>
                   <Text>{challengeInfo.responseChallenge.title}</Text>
                   <HoverText onClick={onClickBookmark}>
-                    {bookmark ? <BsBookmarkFill color={'var(--color-blue)'} /> : <BsBookmark />}
+                    {isBookmark ? <BsBookmarkFill color={'var(--color-blue)'} /> : <BsBookmark />}
                   </HoverText>
                 </Text>
                 <S.Text padding={'15px 0'}>{challengeInfo.responseChallenge.content}</S.Text>
                 <S.Text>📍 {challengeInfo.responseChallenge.challengeLocation}</S.Text>
                 <S.Text>🕒 {challengeInfo.responseChallenge.challengeDuration}</S.Text>
                 <S.Text>🏃🏻 지금 {challengeInfo.responseChallenge.howManyUsersAreInThisChallenge}명 참여중</S.Text>
+                <S.Text style={{ marginTop: '20px' }}>
+                  {challengeInfo.responseChallenge.challengeHashtags.map((hashtage) => (
+                    <span>#{hashtage}</span>
+                  ))}
+                </S.Text>
                 <S.Text padding={'15px 0'} color={'rgb(130, 130, 130)'}>
                   <S.Text style={{ marginRight: '20px' }}>
                     시작한 델린저: {challengeInfo.responseChallenge.challengeOwnerUser.userName}
                   </S.Text>
                   <S.Text>{challengeInfo.responseChallenge.created_at}</S.Text>
                 </S.Text>
-                <S.Button>지금 바로 참여하기</S.Button>
+                <S.Button
+                  state={isParticipatedChallenge}
+                  onClick={onClickParticipate}
+                  disabled={isParticipatedChallenge}
+                >
+                  {isParticipatedChallenge ? '이미 참여중입니다' : '지금 바로 참여하기'}
+                </S.Button>
               </S.ContentBox>
             </S.Form>
             <S.Line w={'100%'}></S.Line>
@@ -267,14 +324,15 @@ const HoverText = styled(Text)`
   }
 `;
 
-const Button = styled.button`
+const Button = styled.button<{ state?: boolean }>`
   width: 100%;
   border: none;
-  background-color: var(--color-sky);
+  color: ${({ state }) => (state ? 'rgb(210, 210, 210)' : '#000000')};
+  background-color: ${({ state }) => (state ? 'var(--color-dark-blue)' : 'var(--color-sky)')};
   font-weight: bold;
   height: 50px;
   :hover {
-    background-color: #bbcef1;
+    background-color: ${({ state }) => (state ? 'var(--color-dark-blue)' : '#bbcef1')};
   }
 `;
 
@@ -290,3 +348,44 @@ const S = {
   Image,
   Button,
 };
+
+interface Challenge {
+  responseChallenge: {
+    id: string;
+    title: string;
+    content: string;
+    challengeCategory: string;
+    challengeLocation: string;
+    challengeDuration: string;
+    created_at: string;
+    challengeImgUrls: string[];
+    challengeHashtags: string[];
+    howManyUsersAreInThisChallenge: number;
+    challengeOwnerUser: {
+      userName: string;
+      email: string;
+      userId: number;
+    };
+  };
+  responseUserChallenges: {
+    challengeStatus: string;
+    participatedUser: {
+      userName: string;
+      email: string;
+      userId: number;
+    };
+  }[];
+}
+
+interface Comment {
+  id: string;
+  content: string;
+  likes: number;
+  createdAt: string;
+  commentImgUrls: string[];
+  commentOwnerUser: {
+    userName: string;
+    email: string;
+    userId: number;
+  };
+}

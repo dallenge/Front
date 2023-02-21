@@ -20,6 +20,9 @@ function Modal({ state, challengeId, commentId, getComments, setIsModalOpen, set
       const config = {
         method: 'delete',
         url: `${URL}/${challengeId}/comment/${commentId}`,
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem('token'),
+        },
       };
 
       await axios(config)
