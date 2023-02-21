@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { BsBookmark, BsBookmarkFill } from 'react-icons/bs';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
@@ -8,6 +8,9 @@ import axios from 'axios';
 import GetBadRoot from '../Components/GetBadRoot';
 import CommentInput from '../Components/Comment/CommentInput';
 import Comment from '../Components/Comment/Comment';
+
+import { pageLoop } from '../Utils/pagination';
+import { Pagination } from 'react-bootstrap';
 
 let bookmarkId: number;
 
@@ -19,6 +22,9 @@ function DetailChallenge() {
 
   const [challengeInfo, setChallengeInfo] = useState<Challenge>();
   const [commentList, setCommentList] = useState<Comment[]>([]);
+
+  const [page, setPage] = useState<number>(0);
+  const [totalPage, setTotalPage] = useState<number>(0);
 
   const [isParticipatedChallenge, setIsParticipatedChallenge] = useState<boolean>(false);
   const [isBookmark, setIsBookmark] = useState<boolean>(false);
@@ -39,13 +45,19 @@ function DetailChallenge() {
       });
   };
 
-  const getComments = async () => {
+  const getComments = useCallback(async () => {
+    const size = 10;
+
     const config = {
       method: 'get',
-      url: `${URL}/${id}/comment`,
+      url: `${URL}/${id}/comment?size=${size}&page=${page}&sort=likes`,
     };
-    await axios(config).then((res) => setCommentList(res.data.content));
-  };
+    await axios(config).then((res) => {
+      setCommentList(res.data.content);
+      setTotalPage(Math.ceil(res.data.totalElements / 10));
+      window.scrollTo(0, 0);
+    });
+  }, [page]);
 
   const getMyParticipate = async () => {
     const config = {
@@ -103,6 +115,10 @@ function DetailChallenge() {
           -> ㄴㄴ : 그대로
    */
   }, []);
+
+  useEffect(() => {
+    getComments();
+  }, [getComments]);
 
   const onClickBookmark = async () => {
     if (!isBookmark) {
@@ -193,7 +209,7 @@ function DetailChallenge() {
                 <S.Line grow={1} />
               </S.Text>
             </div>
-            <S.Form>
+            <S.Form state={'content'}>
               {/* Form 왼쪽 */}
               <S.ContentBox>
                 <S.Image
@@ -256,6 +272,31 @@ function DetailChallenge() {
               />
             );
           })}
+          <S.Form>
+            <Pagination>
+              <Pagination.First
+                onClick={() => {
+                  setPage(0);
+                }}
+              />
+              <Pagination.Prev
+                onClick={() => {
+                  if (page !== 0) setPage(page - 1);
+                }}
+              />
+              {pageLoop(page, totalPage, setPage)}
+              <Pagination.Next
+                onClick={() => {
+                  if (page !== totalPage - 1) setPage(page + 1);
+                }}
+              />
+              <Pagination.Last
+                onClick={() => {
+                  setPage(totalPage - 1);
+                }}
+              />
+            </Pagination>
+          </S.Form>
         </S.Container>
       ) : (
         <GetBadRoot />
@@ -280,12 +321,12 @@ const Wrapper = styled.div`
   width: 100%;
 `;
 
-const Form = styled.div`
+const Form = styled.div<{ state?: string }>`
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 40px;
-  background-color: #f9fafb;
+  background-color: ${({ state }) => (state === 'content' ? '#f9fafb' : '#ffffff')};
 `;
 
 const ContentBox = styled.div<{ padding?: string }>`
