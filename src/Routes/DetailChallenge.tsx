@@ -121,10 +121,12 @@ function DetailChallenge() {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
       };
-      await axios(config).then((res) => {
-        bookmarkId = res.data.id;
-        setIsBookmark(true);
-      });
+      await axios(config)
+        .then((res) => {
+          bookmarkId = res.data.id;
+          setIsBookmark(true);
+        })
+        .catch((err) => alert('로그인 후 이용해주세요'));
     } else {
       // 북마크 삭제
       const config = {
@@ -146,10 +148,14 @@ function DetailChallenge() {
         Authorization: 'Bearer ' + localStorage.getItem('token'),
       },
     };
-    await axios(config).then((res) => {
-      alert('참여하기가 완료되었습니다.');
-      setIsParticipatedChallenge(true);
-    });
+    await axios(config)
+      .then((res) => {
+        alert('참여하기가 완료되었습니다.');
+        setIsParticipatedChallenge(true);
+      })
+      .catch((err) => {
+        if (!localStorage.getItem('token')) return alert('로그인 후 이용해주세요');
+      });
   };
 
   // ~일 전 구하는 함수
@@ -247,7 +253,11 @@ function DetailChallenge() {
             <S.Line w={'100%'}></S.Line>
           </S.Wrapper>
           <S.Text padding={'20px 0 5px 0'}>오늘 {getTodayComment(getfewAgoList(commentList))}개의 기록🏃🏻</S.Text>
-          <CommentInput postId={Number(id)} getComments={getComments} />
+          <CommentInput
+            postId={Number(id)}
+            getComments={getComments}
+            isParticipatedChallenge={isParticipatedChallenge}
+          />
           {commentList.map((comment) => {
             return (
               <Comment

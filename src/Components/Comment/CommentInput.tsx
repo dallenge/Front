@@ -6,9 +6,10 @@ import CommentArea from './Components/CommentArea';
 interface Props {
   postId: number;
   getComments: () => void;
+  isParticipatedChallenge: boolean;
 }
 
-function CommentInput({ postId, getComments }: Props) {
+function CommentInput({ postId, getComments, isParticipatedChallenge }: Props) {
   const URL = process.env.REACT_APP_URL;
 
   const imageRef = useRef<HTMLInputElement>(null);
@@ -24,6 +25,10 @@ function CommentInput({ postId, getComments }: Props) {
     if (!writeText && imageRef.current?.files?.length === 0) {
       return alert('사진을 업로드하거나, 내용을 입력해주세요');
     }
+
+    if (!localStorage.getItem('token')) return alert('로그인 후 이용해주세요');
+
+    if (!isParticipatedChallenge) return alert('참여하고 있는 델린저만 기록을 남길 수 있습니다');
 
     const formData = new FormData();
 
