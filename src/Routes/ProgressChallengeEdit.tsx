@@ -1,28 +1,33 @@
 import Modify from '../Components/Modify';
 import styled from 'styled-components';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
-const Container = styled.div`
-  text-align: center;
-  justify-content: center;
-  display: inline-block;
-  width: 1200px;
-`;
+interface myParticipateChallgen {
+  challengeContent: string;
+  challengeId: number;
+  challengeStatus: string;
+  challengeTitle: string;
+}
 
 function ProgressChallengeEdit() {
-  // ----dummy------------------------------
-  const myChallengeList = [
-    {
-      challenge_id: 22,
-      title: '광합성 하기',
-      content: '하루에 한번씩 광합성 하기~',
-    },
-    {
-      challenge_id: 23,
-      title: '프론트엔드 공부하기',
-      content: '하루에 5시간씩 공부하기',
-    },
-  ];
-  // ---------------------------------------
+  const URL = process.env.REACT_APP_URL;
+
+  const [challengeList, setChallengeList] = useState<myParticipateChallgen[]>([]);
+
+  useEffect(() => {
+    const config = {
+      method: 'get',
+      url: `${URL}/user/participate`,
+      headers: {
+        Authorization: 'Bearer ' + localStorage.getItem('token'),
+      },
+    };
+
+    axios(config).then((res) => {
+      setChallengeList(res.data);
+    });
+  }, []);
   return (
     <div>
       <Modify active={'challengeEdit'} />
@@ -31,8 +36,14 @@ function ProgressChallengeEdit() {
         그만하기를 누르시면 마이페이지 챌린지 목록에서 사라지며 모든 기록이 삭제됩니다
       </div>
       <Container>
-        {myChallengeList.map((challenge) => {
-          return <ChallengeBox id={challenge.challenge_id} title={challenge.title} content={challenge.content} />;
+        {challengeList.map((challenge) => {
+          return (
+            <ChallengeBox
+              id={challenge.challengeId}
+              title={challenge.challengeTitle}
+              content={challenge.challengeContent}
+            />
+          );
         })}
       </Container>
     </div>
@@ -63,6 +74,13 @@ const Box = styled.div`
   margin: 0 10px;
   padding: 14px;
   margin-bottom: 20px;
+`;
+
+const Container = styled.div`
+  text-align: center;
+  justify-content: center;
+  display: inline-block;
+  width: 1200px;
 `;
 
 function ChallengeBox({ id, title, content }: { id: number; title: string; content: string }) {
