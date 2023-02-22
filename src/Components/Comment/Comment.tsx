@@ -6,26 +6,6 @@ import CommentInput from './CommentInput';
 import CommentArea from './Components/CommentArea';
 import axios from 'axios';
 
-interface Props {
-  challengeId: string;
-  commentId: string;
-  content: string;
-  likes: number;
-  createdAt: {
-    fewYearsAge: number;
-    fewMonthAgo: number;
-    fewDaysAgo: number;
-  };
-  img: string[];
-  owner: {
-    userName: string;
-    email: string;
-    userId: number;
-  };
-  myComment: boolean;
-  getComments: () => void;
-}
-
 function Comment(props: Props) {
   const URL = process.env.REACT_APP_URL;
 
@@ -59,6 +39,7 @@ function Comment(props: Props) {
 
   const onChangeEditCommentText = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setEditCommentText(e.target.value);
+
     if (content !== e.target.value) {
       setIsEditOk(true);
     } else {
@@ -70,14 +51,28 @@ function Comment(props: Props) {
     if (!isEditOk) return;
 
     const formData = new FormData();
-    formData.append('commentDtoImg', editImage);
-    formData.append('content', editCommentText);
+
+    if (editImage === img) {
+      formData.append(
+        'commentDto',
+        new Blob([JSON.stringify({ content: editCommentText })], { type: 'application/json' }),
+      );
+    } else if (!editCommentText) {
+      formData.append('commentImgFiles', editImage);
+    } else {
+      formData.append(
+        'commentDto',
+        new Blob([JSON.stringify({ content: editCommentText })], { type: 'application/json' }),
+      );
+      formData.append('commentImgFiles', editImage);
+    }
 
     const config = {
       method: 'post',
       url: `${URL}/${challengeId}/comment/${commentId}`,
       data: formData,
       headers: {
+        'Content-Type': 'multipart/form-data',
         Authorization: 'Bearer ' + localStorage.getItem('token'),
       },
     };
@@ -85,6 +80,8 @@ function Comment(props: Props) {
     await axios(config)
       .then((res) => {
         getComments();
+        setIsEditOk(false);
+        setIsEditComment(false);
       })
       .catch((err) => {
         alert('잠시후 다시 시도해주세요');
@@ -207,3 +204,23 @@ const S = {
   Textarea,
   EditForm,
 };
+
+interface Props {
+  challengeId: string;
+  commentId: string;
+  content: string;
+  likes: number;
+  createdAt: {
+    fewYearsAge: number;
+    fewMonthAgo: number;
+    fewDaysAgo: number;
+  };
+  img: string[];
+  owner: {
+    userName: string;
+    email: string;
+    userId: number;
+  };
+  myComment: boolean;
+  getComments: () => void;
+}
