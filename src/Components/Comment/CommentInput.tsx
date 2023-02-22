@@ -25,22 +25,18 @@ function CommentInput({ postId, getComments }: Props) {
       return alert('사진을 업로드하거나, 내용을 입력해주세요');
     }
 
-    const commentDto = {
-      content: writeText,
-    };
-
     const formData = new FormData();
 
     if (imageRef.current?.files?.length === 0) {
       // 글만 입력했을 때
-      formData.append('commentDto', new Blob([JSON.stringify(commentDto)], { type: 'application/json' }));
+      formData.append('commentDto', new Blob([JSON.stringify({ content: writeText })], { type: 'application/json' }));
     } else if (!writeText) {
       // 사진만 업로드 했을 때
-      formData.append('commentDtoImg', uploadImage);
+      formData.append('commentImgFiles', uploadImage);
     } else {
       // 둘다 입력했을 떄
-      formData.append('commentDto', new Blob([JSON.stringify(commentDto)], { type: 'application/json' }));
-      formData.append('commentDtoImg', uploadImage);
+      formData.append('commentDto', new Blob([JSON.stringify({ content: writeText })], { type: 'application/json' }));
+      formData.append('commentImgFiles', uploadImage);
     }
 
     const config = {
