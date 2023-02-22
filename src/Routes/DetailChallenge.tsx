@@ -88,16 +88,15 @@ function DetailChallenge() {
     };
     await axios(config).then((res) => {
       const myBookmark = res.data.content;
+      const thisChallengeBookmark = myBookmark.filter(
+        (challenge: { challengeId: number | undefined }) => challenge.challengeId === Number(id),
+      );
 
-      // const thisChallengeBookmark = myBookmark.filter(
-      //   (challenge: { id: number | undefined }) => challenge.id === Number(id),
-      // );
-      /* 위 코드에서 응답필드에서 challengeId로 filter하기*/
-
-      // if (thisChallengeBookmark.length > 0) {
-      //   bookmarkId = thisChallengeBookmark.id;
-      //   setIsBookmark(true);
-      // }
+      if (thisChallengeBookmark.length > 0) {
+        bookmarkId = thisChallengeBookmark[0].id;
+        console.log(bookmarkId);
+        setIsBookmark(true);
+      }
     });
   };
 
@@ -106,14 +105,6 @@ function DetailChallenge() {
     getComments();
     getMyParticipate();
     getMyBookmark();
-
-    /*
-      암튼 여기에 해야할 일
-      
-      2. 이미 북마크한 챌린지임?
-          -> oo : setIsBookmark(true), 북마크 아이콘 fill, bookmarkId 저장
-          -> ㄴㄴ : 그대로
-   */
   }, []);
 
   useEffect(() => {
