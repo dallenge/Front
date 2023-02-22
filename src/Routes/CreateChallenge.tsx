@@ -3,7 +3,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import URL from '../Url';
 import axios from 'axios';
-import { Form } from 'react-router-dom';
+import { Form, Navigate, useNavigate } from 'react-router-dom';
 
 const SelectBox = styled.select`
   width: 100px;
@@ -11,6 +11,7 @@ const SelectBox = styled.select`
   font-size: 13px;
 `;
 export default function CreateChallenge() {
+  const navigate = useNavigate();
   const [imgFile, setImgFile] = useState<any>();
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
@@ -49,7 +50,7 @@ export default function CreateChallenge() {
       const hashWrapInner = document.createElement('div');
       hashWrapInner.className = 'HashWrapInner';
 
-      hashWrapInner.addEventListener('click', () => {
+      hashWrapInner.addEventListener('click', (e) => {
         hashWrapOuter?.removeChild(hashWrapInner);
         setHashArr(hashArr.filter((hashtag) => hashtag));
       });
@@ -59,6 +60,9 @@ export default function CreateChallenge() {
         hashWrapOuter?.insertBefore(hashWrapInner, e.currentTarget);
         setHashArr((hashArr) => [...hashArr, hashtag]);
         setHashtag('');
+      } else if (e.key === 'Backspace' && e.currentTarget.value.trim() === '') {
+        const hashArr = document.querySelectorAll('.HashWrapInner');
+        hashArr[hashArr.length - 1].remove();
       }
     },
     [hashtag, hashArr],
@@ -80,7 +84,6 @@ export default function CreateChallenge() {
 
     data.append('requestCreateChallenge', new Blob([JSON.stringify(challenge)], { type: 'application/json' }));
     data.append('challengeImgFile', imgFile);
-    data.append('hashtagDto', hashArr);
 
     const config = {
       method: 'post',
@@ -94,10 +97,9 @@ export default function CreateChallenge() {
     await axios(config)
       .then((res) => {
         alert('등록완료');
-        console.log(res);
+        navigate('/challengeList');
       })
       .catch((err) => {
-        console.log(challenge);
         console.log(err);
       });
   };
@@ -117,8 +119,8 @@ export default function CreateChallenge() {
         </div>
         <input type="file" accept="image/jpg, image/jpeg, image/png" onChange={uploadImgFile} />
       </div>
-      <div style={{ width: '600px', height: '600px', background: 'var(--color-sky)', padding: '30px' }}>
-        <form id="createForm" onSubmit={submitChallenge}>
+      <div style={{ width: '600px', background: 'var(--color-sky)', padding: '30px' }}>
+        <div id="createForm">
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '30px' }}>
             <div style={{ fontWeight: '600' }}>장소</div>
             <SelectBox
@@ -221,11 +223,12 @@ export default function CreateChallenge() {
                 fontWeight: '600',
                 height: '40px',
               }}
+              onClick={submitChallenge}
             >
               등록
             </button>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );
