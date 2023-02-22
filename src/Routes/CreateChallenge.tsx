@@ -50,7 +50,7 @@ export default function CreateChallenge() {
       const hashWrapInner = document.createElement('div');
       hashWrapInner.className = 'HashWrapInner';
 
-      hashWrapInner.addEventListener('click', (e) => {
+      hashWrapInner.addEventListener('click', () => {
         hashWrapOuter?.removeChild(hashWrapInner);
         setHashArr(hashArr.filter((hashtag) => hashtag));
       });
@@ -81,9 +81,12 @@ export default function CreateChallenge() {
       challengeLocation: location,
       challengeDuration: duration,
     };
-
+    const hashtagObj = {
+      content: hashArr,
+    };
     data.append('requestCreateChallenge', new Blob([JSON.stringify(challenge)], { type: 'application/json' }));
     data.append('challengeImgFile', imgFile);
+    data.append('hashtagDto', new Blob([JSON.stringify(hashtagObj)], { type: 'application/json' }));
 
     const config = {
       method: 'post',
