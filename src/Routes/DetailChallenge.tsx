@@ -50,7 +50,7 @@ function DetailChallenge() {
 
     const config = {
       method: 'get',
-      url: `${URL}/${id}/comment?size=${size}&page=${page}&sort=likes`,
+      url: `${URL}/${id}/comment?size=${size}&page=${page}&sort=time`,
     };
     await axios(config).then((res) => {
       setCommentList(res.data.content);
@@ -248,7 +248,7 @@ function DetailChallenge() {
           </S.Wrapper>
           <S.Text padding={'20px 0 5px 0'}>오늘 {getTodayComment(getfewAgoList(commentList))}개의 기록🏃🏻</S.Text>
           <CommentInput postId={Number(id)} getComments={getComments} />
-          {commentList.reverse().map((comment) => {
+          {commentList.map((comment) => {
             return (
               <Comment
                 challengeId={challengeInfo.responseChallenge.id}
