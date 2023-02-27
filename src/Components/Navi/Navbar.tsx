@@ -1,38 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import CONSTANT_INFO from '../Constant/Constant';
-import Searchbar from './Searchbar';
+import CONSTANT_INFO from '../../Constant/Constant';
+import Searchbar from '../Searchbar';
 
-const Logo = styled.div`
-  font-size: 40px;
-  color: var(--color-blue);
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  padding: 20px;
-  cursor: pointer;
-`;
+import SpreadMenu from './Components/Spread';
 
-const Menu = styled.div`
-  cursor: pointer;
-  margin-left: 40px;
-  font-size: 18px;
-  font-weight: 600;
-  &:hover {
-    cursor: pointer;
-  }
-`;
-
-const SwitchCloseImg = styled.img`
-  width: 23px;
-  margin-left: 20px;
-  &:hover {
-    cursor: pointer;
-  }
-`;
-
-export default function Navbar() {
+function Navbar() {
   const SPREAD_MENU_SWITCH_IMAGE_URL = CONSTANT_INFO.IMAGE_URL.SPREAD_MENU_SWITCH_IMAGE_URL;
   const SEARCH_IMAGE_URL = CONSTANT_INFO.IMAGE_URL.SEARCH_IMAGE_URL;
   const navigate = useNavigate();
@@ -63,15 +37,7 @@ export default function Navbar() {
   };
 
   return (
-    <div
-      style={{
-        height: '100px',
-        display: 'flex',
-        alignItems: 'cneter',
-        borderBottom: '2px solid black',
-        justifyContent: 'space-between',
-      }}
-    >
+    <Container>
       <div style={{ display: 'flex' }}>
         <Logo
           onClick={() => {
@@ -100,6 +66,7 @@ export default function Navbar() {
           </Menu>
           <Menu
             onClick={() => {
+              navigate('/get-recommendations');
               closeBar();
             }}
           >
@@ -162,84 +129,44 @@ export default function Navbar() {
         )}
       </div>
       {isSearchOpen ? <Searchbar closeBar={closeBar} /> : null}
-    </div>
+    </Container>
   );
 }
 
-const SpreadMenuBox = styled.div`
-  padding: 15px;
-  position: absolute;
-  z-index: 999;
-  width: 240px;
-  height: 250px;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
-  background: #ffffff;
-  right: 40px;
-  top: 110px;
-`;
+export default Navbar;
 
-const Layer = styled.div`
+const Container = styled.div`
+  height: 100px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  margin: 14px 0;
+  border-bottom: 2px solid black;
+  justify-content: space-between;
 `;
 
-const SpreadDiv = styled.div`
-  width: 100%;
-  font-size: 16px;
+const Logo = styled.div`
+  font-size: 40px;
+  color: var(--color-blue);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  cursor: pointer;
+`;
+
+const Menu = styled.div`
+  cursor: pointer;
+  margin-left: 40px;
+  font-size: 18px;
   font-weight: 600;
   &:hover {
     cursor: pointer;
   }
 `;
 
-const Line = styled.div`
-  height: 1px;
-  width: 80%;
-  background: rgb(200, 200, 200);
+const SwitchCloseImg = styled.img`
+  width: 23px;
+  margin-left: 20px;
+  &:hover {
+    cursor: pointer;
+  }
 `;
-
-interface SetOpenFunc {
-  (): void;
-}
-
-const SpreadMenu = ({ setOpen }: { setOpen: SetOpenFunc }) => {
-  const navigate = useNavigate();
-  return (
-    <SpreadMenuBox>
-      <Layer>
-        <SpreadDiv>관심있는 챌린지</SpreadDiv>
-      </Layer>
-      <Layer>
-        <SpreadDiv>내가 시작한 챌린지</SpreadDiv>
-      </Layer>
-      <Layer>
-        <SpreadDiv>내가 쓴 후기</SpreadDiv>
-      </Layer>
-      <Layer>
-        <Line></Line>
-      </Layer>
-      <Layer>
-        <SpreadDiv
-          onClick={() => {
-            navigate('/my-page/modify/profile-edit');
-            setOpen(); // 페이지 이동하면 스프레드 메뉴 닫히도록
-          }}
-        >
-          회원정보 수정
-        </SpreadDiv>
-      </Layer>
-      <Layer>
-        <SpreadDiv
-          onClick={() => {
-            localStorage.clear();
-            window.location.href = '/';
-          }}
-        >
-          로그아웃
-        </SpreadDiv>
-      </Layer>
-    </SpreadMenuBox>
-  );
-};
