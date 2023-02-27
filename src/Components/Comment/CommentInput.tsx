@@ -16,11 +16,6 @@ function CommentInput({ postId, getComments, isParticipatedChallenge }: Props) {
   const [uploadImage, setUploadImage] = useState<any>();
   const [writeText, setWriteText] = useState<string>('');
 
-  const clearInputs = () => {
-    setUploadImage(null);
-    setWriteText('');
-  };
-
   const onClickSubmitComment = () => {
     if (!writeText && imageRef.current?.files?.length === 0) {
       return alert('사진을 업로드하거나, 내용을 입력해주세요');
@@ -56,8 +51,7 @@ function CommentInput({ postId, getComments, isParticipatedChallenge }: Props) {
 
     axios(config)
       .then((res) => {
-        getComments();
-        clearInputs();
+        window.location.reload();
       })
       .catch((err) => console.trace(err));
   };
@@ -77,7 +71,7 @@ function CommentInput({ postId, getComments, isParticipatedChallenge }: Props) {
       <CommentArea
         imageRef={imageRef}
         onUploadImage={onUploadImage}
-        value={writeText}
+        textValue={writeText}
         onChangeWriteComment={onChangeWriteComment}
         placeholder={'댓글로 기록하기..'}
         onClickSubmitComment={onClickSubmitComment}

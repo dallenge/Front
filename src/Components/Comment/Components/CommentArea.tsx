@@ -4,22 +4,28 @@ import styled from 'styled-components';
 interface Props {
   isEditComment?: boolean;
   setIsEditComment?: (state: boolean) => void;
-  value: string;
+
+  textValue: string;
   onChangeWriteComment: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+
   placeholder?: string;
+
   onClickSubmitComment?: () => void; // 기록하기 버튼 클릭 이벤트
   onClickEditCommentBtn?: () => void; // 수정하기 버튼 클릭 이벤트
+
   children: string;
+
   imageRef: RefObject<HTMLInputElement>;
   onUploadImage: () => void;
   imageValue?: any;
+
   isEditOk?: boolean;
 }
 
 function CommentArea({
   isEditComment,
   setIsEditComment,
-  value,
+  textValue,
   onChangeWriteComment,
   placeholder,
   onClickSubmitComment,
@@ -38,7 +44,7 @@ function CommentArea({
   return (
     <>
       <input type={'file'} style={{ width: '90%' }} ref={imageRef} onChange={() => onUploadImage()} />
-      <S.Textarea value={value} onChange={(e) => onChangeWriteComment(e)} placeholder={placeholder} />
+      <S.Textarea value={textValue} onChange={(e) => onChangeWriteComment(e)} placeholder={placeholder} />
       <S.Text>
         <S.Button
           state={true}
