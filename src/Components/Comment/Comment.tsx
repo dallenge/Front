@@ -10,12 +10,14 @@ function Comment(props: Props) {
   const URL = process.env.REACT_APP_URL;
 
   const { challengeId, commentId, content, likes, createdAt, img, owner, myComment, getComments } = props;
+
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isEditComment, setIsEditComment] = useState<boolean>(false);
+  const [isEditOk, setIsEditOk] = useState(false);
+
   const [editCommentText, setEditCommentText] = useState<string>(content);
   const editImageRef = useRef<HTMLInputElement>(null);
-  const [editImage, setEditImage] = useState<any>(img);
-  const [isEditOk, setIsEditOk] = useState(false);
+  const [editImage, setEditImage] = useState<any>();
 
   const getFewDaysAgo = (fewDayObject: { fewYearsAge: number; fewMonthAgo: number; fewDaysAgo: number }) => {
     if (fewDayObject.fewYearsAge !== 0) {
@@ -34,13 +36,12 @@ function Comment(props: Props) {
       return '오늘';
     }
   };
-
   const onClickModal = () => setIsModalOpen((prev) => !prev);
 
   const onChangeEditCommentText = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setEditCommentText(e.target.value);
 
-    if (content !== e.target.value) {
+    if (e.target.value && content !== e.target.value) {
       setIsEditOk(true);
     } else {
       setIsEditOk(false);
@@ -91,6 +92,7 @@ function Comment(props: Props) {
   const onUploadEditImage = () => {
     if (editImageRef.current?.files) {
       setEditImage(editImageRef.current?.files[0]);
+      setIsEditOk(true);
     }
   };
 
@@ -128,7 +130,7 @@ function Comment(props: Props) {
             onUploadImage={onUploadEditImage}
             isEditComment={isEditComment}
             setIsEditComment={setIsEditComment}
-            value={editCommentText}
+            textValue={editCommentText}
             onChangeWriteComment={onChangeEditCommentText}
             onClickEditCommentBtn={onClickEditCommentBtn}
             children={'수정하기'}

@@ -1,6 +1,6 @@
 import './CSS/App.css';
 import { Routes, Route } from 'react-router-dom';
-import Navbar from './Components/Navbar';
+import Navbar from './Components/Navi/Navbar';
 import Home from './Routes/Home';
 import Login from './Routes/Login';
 import SignupSelect from './Routes/SignupSelect';
@@ -14,6 +14,7 @@ import Withdrawal from './Routes/Withdrawal';
 import ProgressChallengeEdit from './Routes/ProgressChallengeEdit';
 import DetailChallenge from './Routes/DetailChallenge';
 import GetBadRoot from './Components/GetBadRoot';
+import Recommendation from './Routes/Recommendation';
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
         <Route path="/my-page/modify/password-edit" element={<PwEdit />} />
         <Route path="/my-page/modify/withdrawal" element={<Withdrawal />} />
         <Route path="my-page/modify/progress-challenge-edit" element={<ProgressChallengeEdit />} />
+        <Route path="/get-recommendations" element={<Recommendation />} />
         <Route path="*" element={<GetBadRoot />} />
       </Routes>
     </div>
