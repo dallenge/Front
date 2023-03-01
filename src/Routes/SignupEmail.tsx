@@ -36,6 +36,8 @@ function SingupEmail() {
   }, [errors.email]);
 
   const signUp = async () => {
+    if (isDuplicatedEmail === null) return alert('아이디 중복확인을 해주세요');
+
     const signupData = JSON.stringify({
       email: watch('email'),
       password: watch('password'),
@@ -52,11 +54,11 @@ function SingupEmail() {
     };
     await axios(config)
       .then((res) => {
-        alert('등록 완료');
+        alert('회원가입이 완료되었습니다');
         navigate('/login');
       })
       .catch((err) => {
-        alert('실패');
+        alert('입력한 내용을 다시 확인해 주세요');
       });
   };
 
