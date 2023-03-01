@@ -1,23 +1,208 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios, { AxiosResponse } from 'axios';
 import styled from 'styled-components';
 import CONSTANT_INFO from '../Constant/Constant';
 import URL from '../Url';
 
+import { useForm, SubmitHandler } from 'react-hook-form';
+
+const Regex = {
+  email: /^(([^<>()\[\].,;:\s@"]+(\.[^<>()\[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i,
+  nickname: /^(?=.*[a-z0-9가-힣])[a-z0-9가-힣]{2,16}$/,
+};
+const SIGNUP_MESSAGE = CONSTANT_INFO.SIGNUP_MESSAGE;
+
+function SingupEmail() {
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<Inputs>();
+
+  const navigate = useNavigate();
+
+  const [isEmailError, setIsEmailError] = useState<boolean>(false);
+  const [isDuplicatedEmail, setDuplicatedEmail] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    if (errors.email) {
+      setIsEmailError(true);
+      setDuplicatedEmail(null);
+    } else {
+      setIsEmailError(false);
+    }
+  }, [errors.email]);
+
+  const signUp = async () => {
+    const signupData = JSON.stringify({
+      email: watch('email'),
+      password: watch('password'),
+      userName: watch('nickname'),
+    });
+
+    const config = {
+      method: 'post',
+      url: `${URL}/user/new`,
+      data: signupData,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    await axios(config)
+      .then((res) => {
+        alert('등록 완료');
+        navigate('/login');
+      })
+      .catch((err) => {
+        alert('실패');
+      });
+  };
+
+  const onClickDupliConfirm = async (e: any) => {
+    e.preventDefault();
+
+    const data = JSON.stringify({ email: watch('email') });
+
+    const config = {
+      method: 'post',
+      url: `${URL}/user/check?email=${watch('email')}`,
+      data: data,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    await axios(config)
+      .then((res) => {
+        if (res.data === '사용 가능한 아이디입니다.') {
+          setDuplicatedEmail(false);
+        }
+      })
+      .catch((err) => {
+        setDuplicatedEmail(true);
+      });
+  };
+
+  return (
+    <S.Container>
+      <S.Title>회원가입</S.Title>
+      <S.Form onSubmit={handleSubmit(signUp)}>
+        <S.SubTitle>이메일(아이디)</S.SubTitle>
+        <S.FlexRow>
+          <Input
+            type="text"
+            placeholder={SIGNUP_MESSAGE.PRESS_EMAIL}
+            {...register('email', {
+              required: { value: true, message: '🔥 이메일을 입력해주세요' },
+              pattern: {
+                value: Regex.email,
+                message: '🔥 이메일 형식에 맞게 입력해주세요',
+              },
+            })}
+          ></Input>
+          <S.DupliButton disabled={isEmailError} onClick={onClickDupliConfirm}>
+            중복확인
+          </S.DupliButton>
+        </S.FlexRow>
+        {!isEmailError && (
+          <P>
+            {isDuplicatedEmail === null
+              ? ''
+              : isDuplicatedEmail
+              ? '🔥 중복된 아이디입니다'
+              : '🍀 사용 가능한 아이디입니다'}
+          </P>
+        )}
+        {errors.email && <P>{errors.email.message}</P>}
+        <S.SubTitle>비밀번호</S.SubTitle>
+        <S.Input
+          type="password"
+          placeholder={SIGNUP_MESSAGE.PRESS_PASSWORD}
+          {...register('password', {
+            required: { value: true, message: '🔥 비밀번호를 입력해주세요' },
+            minLength: { value: 8, message: '🔥 8자 이상 입력해주세요' },
+          })}
+        ></S.Input>
+        {errors.password && <P> {errors.password.message}</P>}
+        <S.SubTitle>비밀번호 확인</S.SubTitle>
+        <S.Input
+          type="password"
+          placeholder={SIGNUP_MESSAGE.PRESS_PASSWORD_AGAIN}
+          {...register('password_confirm', {
+            required: { value: true, message: '🔥 비밀번호 확인을 입력해주세요' },
+            validate: (value: string) => value === watch('password') || '🔥 입력한 비밀번호와 일치하지 않습니다',
+          })}
+        ></S.Input>
+        {errors.password_confirm && <P>{errors.password_confirm.message}</P>}
+        <S.SubTitle>이름(닉네임)</S.SubTitle>
+        <S.Input
+          type="text"
+          placeholder={SIGNUP_MESSAGE.PRESS_USERNAME}
+          autoSave="off"
+          {...register('nickname', {
+            required: { value: true, message: '🔥 닉네임을 입력해주세요' },
+            pattern: { value: Regex.nickname, message: '🔥 다시 입력하거나 2자 이상 입력해주세요' },
+          })}
+        ></S.Input>
+        {errors.nickname && <P>{errors.nickname.message}</P>}
+        <S.SubTitle state={'center'}>모든 내용 입력을 완료하셨나요?</S.SubTitle>
+        <SignupButton type="submit">가입하기</SignupButton>
+      </S.Form>
+    </S.Container>
+  );
+}
+
+export default SingupEmail;
+
 const Container = styled.div`
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
   justify-content: center;
-  margin: auto 0;
-  display: inline-block;
-  width: 320px;
+  margin-top: 50px;
+`;
+
+const Form = styled.form`
+  margin-top: 30px;
+  width: 22%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+`;
+
+const Title = styled.div`
+  font-size: 28px;
+  font-weight: bold;
+`;
+
+const SubTitle = styled.div<{ state?: string }>`
+  font-weight: bold;
+  margin-top: 15px;
+  margin: ${({ state }) => state === 'center' && '40px auto 0 auto'};
+`;
+
+const FlexRow = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 42px;
+`;
+
+const DupliButton = styled.button`
+  border: none;
+  width: 26%;
+  height: 100%;
+  border-radius: 5px;
 `;
 
 const Input = styled.input`
   width: 100%;
   height: 42px;
   padding: 12px;
-  margin-top: 8px;
   border-radius: 6px;
   border: 1px solid #bcbcbc;
   font-size: 15px;
@@ -27,7 +212,7 @@ const Input = styled.input`
 `;
 
 const SignupButton = styled.button`
-  width: 320px;
+  width: 100%;
   border: none;
   margin-top: 10px;
   background: var(--color-blue);
@@ -42,183 +227,19 @@ const SignupButton = styled.button`
   }
 `;
 
-export default function SingupEmail() {
-  const navigate = useNavigate();
-  const [id, setId] = useState<string>('');
-  const [pw, setPw] = useState<string>('');
-  const [name, setName] = useState<string>('');
+const P = styled.p`
+  color: #f00001;
+  font-weight: 600;
+  font-size: 13px;
+  display: inline-block;
+  margin-top: 4px;
+`;
 
-  const [idError, setIdError] = useState<boolean>(false);
-  const [pwError, setPwError] = useState<boolean>(false);
-  const [checkPwError, setCheckPwError] = useState<boolean>(false);
-  const [nameError, setNameError] = useState<boolean>(false);
-  const [dupliId, setDupliId] = useState<boolean | null>(null);
+const S = { Container, Title, SubTitle, Form, FlexRow, DupliButton, Input };
 
-  const SIGNUP_MESSAGE = CONSTANT_INFO.SIGNUP_MESSAGE;
-
-  const signUp = async (event: React.ChangeEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    if (!isDisbaled) {
-      return alert('입력하지 않은 정보가 있는지 다시 확인해주세요');
-    }
-
-    if (dupliId) {
-      return alert('이미 가입된 이메일을 입력하셨습니다. 수정해주세요');
-    }
-
-    const data = JSON.stringify({
-      email: id,
-      password: pw,
-      userName: name,
-    });
-
-    const config = {
-      method: 'post',
-      url: `${URL}/user/new`,
-      data: data,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
-
-    await axios(config)
-      .then((res) => {
-        alert('등록 완료');
-        navigate('/login');
-      })
-      .catch((err) => {
-        alert('실패');
-      });
-  };
-
-  const onChangeId = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const emailRegex =
-      /^(([^<>()\[\].,;:\s@"]+(\.[^<>()\[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
-    if (!e.target.value || emailRegex.test(e.target.value)) {
-      setIdError(false);
-      setDupliId(null);
-    } else {
-      setIdError(true);
-    }
-    setId(e.target.value);
-  };
-
-  const onChangePw = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.value || e.target.value.length >= 8) {
-      setPwError(false);
-    } else {
-      setPwError(true);
-    }
-    setPw(e.target.value);
-  };
-
-  const onChangeCheckPw = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.value || pw === e.target.value) {
-      setCheckPwError(false);
-    } else {
-      setCheckPwError(true);
-    }
-  };
-
-  const onChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const nameRegex = /^(?=.*[a-z0-9가-힣])[a-z0-9가-힣]{2,16}$/;
-    if (!e.target.value || (e.target.value.length > 1 && nameRegex.test(e.target.value))) {
-      // 닉네임 길이는 2자 이상으로
-      setNameError(false);
-    } else {
-      setNameError(true);
-    }
-    setName(e.target.value);
-  };
-
-  let isDisbaled =
-    id.length > 0 && pw.length > 0 && name.length > 0 && !idError && !pwError && !checkPwError && !nameError;
-
-  const onBlurCheckId = async () => {
-    if (!idError && id) {
-      // id를 입력해서 유효성 검사를 끝내고서
-      const data = JSON.stringify({ email: id });
-
-      const config = {
-        method: 'post',
-        url: `${URL}/user/check?email=${id}`,
-        data: data,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      };
-
-      await axios(config)
-        .then((res) => {
-          if (res.data === '사용 가능한 아이디입니다.') {
-            setDupliId(false);
-          }
-        })
-        .catch((err) => {
-          setDupliId(true);
-        });
-    }
-  };
-
-  return (
-    <div>
-      <div style={{ marginTop: '50px' }}></div>
-      <Container>
-        <form onSubmit={signUp}>
-          <div style={{ fontSize: '28px', lineHeight: '30px', fontWeight: '700' }}>회원가입</div>
-          <div style={{ marginTop: '30px' }}>
-            <div style={{ float: 'left', fontWeight: '600' }}>이메일(아이디)</div>
-            <Input
-              type="text"
-              placeholder={SIGNUP_MESSAGE.PRESS_EMAIL}
-              autoSave="off"
-              onChange={onChangeId}
-              onBlur={onBlurCheckId}
-            ></Input>
-            {idError && <ValidationView text={SIGNUP_MESSAGE.WRONG_EMAIL} />}
-            {dupliId && <ValidationView text={SIGNUP_MESSAGE.DUPLI_EMAIL} />}
-
-            <div>
-              <div style={{ marginTop: '20px', float: 'left', fontWeight: '600' }}>비밀번호</div>
-              <Input
-                type="password"
-                placeholder={SIGNUP_MESSAGE.PRESS_PASSWORD}
-                autoSave="off"
-                onChange={onChangePw}
-              ></Input>
-              {pwError && <ValidationView text={SIGNUP_MESSAGE.SHORT_PASSWORD} />}
-
-              <Input
-                type="password"
-                placeholder={SIGNUP_MESSAGE.PRESS_PASSWORD_AGAIN}
-                autoSave="off"
-                onChange={onChangeCheckPw}
-              ></Input>
-              {checkPwError && <ValidationView text={SIGNUP_MESSAGE.WRONG_PASSWORD} />}
-            </div>
-            <div style={{ marginTop: '20px', float: 'left', fontWeight: '600' }}>이름(닉네임)</div>
-            <Input
-              type="text"
-              placeholder={SIGNUP_MESSAGE.PRESS_USERNAME}
-              autoSave="off"
-              onChange={onChangeName}
-            ></Input>
-            {nameError && <ValidationView text={SIGNUP_MESSAGE.SHORT_USERNAME} />}
-
-            <div style={{ marginTop: '30px', fontWeight: '600' }}>모든 내용 입력을 완료하셨나요?</div>
-            <SignupButton type="submit">가입하기</SignupButton>
-          </div>
-        </form>
-      </Container>
-    </div>
-  );
+interface Inputs {
+  email: string;
+  password: string;
+  password_confirm: string;
+  nickname: string;
 }
-
-const ValidationView = ({ text }: { text: string }) => {
-  return (
-    <div style={{ marginTop: '4px', marginBottom: '10px' }}>
-      <div style={{ padding: '0 14px', fontSize: '13px', color: '#F00001', fontWeight: '600' }}>🔥{text}</div>
-    </div>
-  );
-};
