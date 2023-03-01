@@ -25,6 +25,7 @@ const Container = styled.div`
   justify-content: center;
   display: inline-block;
   width: 1200px;
+  overflow: hidden;
 `;
 
 export default function Withdrawal() {

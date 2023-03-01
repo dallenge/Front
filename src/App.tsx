@@ -15,6 +15,9 @@ import ProgressChallengeEdit from './Routes/ProgressChallengeEdit';
 import DetailChallenge from './Routes/DetailChallenge';
 import GetBadRoot from './Components/GetBadRoot';
 import Recommendation from './Routes/Recommendation';
+import TestRecommendation from './Routes/Recommendation/Test';
+import HashTagRecommendation from './Routes/Recommendation/HashTag';
+import RandomRecommendation from './Routes/Recommendation/Random';
 
 function App() {
   return (
@@ -37,6 +40,9 @@ function App() {
         <Route path="/my-page/modify/withdrawal" element={<Withdrawal />} />
         <Route path="my-page/modify/progress-challenge-edit" element={<ProgressChallengeEdit />} />
         <Route path="/get-recommendations" element={<Recommendation />} />
+        <Route path="/get-recommendations/test" element={<TestRecommendation />} />
+        <Route path="/get-recommendations/hashtag" element={<HashTagRecommendation />} />
+        <Route path="/get-recommendations/random" element={<RandomRecommendation />} />
         <Route path="*" element={<GetBadRoot />} />
       </Routes>
     </div>
