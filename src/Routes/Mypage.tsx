@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Progressbar from '../Components/Progressbar';
@@ -61,36 +62,38 @@ const DailyBox = styled.div`
 `;
 
 interface ChallengeList {
-  id: number;
-  title: string;
-  content: string;
+  challengeId: number;
+  challengeTitle: string;
+  challengeContent: string;
+  challengeStatus: string;
 }
 
 export default function Mypage() {
+  const URL = process.env.REACT_APP_URL;
   // ----dummy-------------------------------------
-  const myChallengeList: ChallengeList[] = [
-    {
-      id: 1,
-      title: '광합성 하기~',
-      content: '하루에 10분씩 햇빛 보기^^!',
-    },
-    {
-      id: 2,
-      title: '하루에 한번 강아지 산책시키기',
-      content: '적어도 30분씩 산책 다녀오기',
-    },
-    {
-      id: 3,
-      title: '매일 프론트엔드 공부하기',
-      content: '하루에 6시간씩 공부하기!!',
-    },
-  ];
+  const [myChallengeList, setMyChallengeList] = useState<ChallengeList[]>([]);
   // -------------------------------------------
 
-  const [total, setTotal] = useState<number>(myChallengeList.length);
+  const [total, setTotal] = useState<number>(0);
   const [completed, setCompleted] = useState<number>(0); // 완료한 개수 데이터베이스에서 주고받고....
 
   const [checkedArr, setCheckedArr] = useState<Array<number>>([]);
+
+  const getMyChallenge = useCallback(async () => {
+    const config = {
+      method: 'get',
+      url: `${URL}/user/participate`,
+      headers: {
+        Authorization: 'Bearer ' + localStorage.getItem('token'),
+      },
+    };
+    await axios(config)
+      .then((res) => {
+        setMyChallengeList(res.data);
+        setTotal(res.data.length);
+      })
+      .catch(() => {});
+  }, []);
 
   const pushChallenge = (id: number, status: string) => {
     let copyArray = [...checkedArr];
@@ -111,6 +114,10 @@ export default function Mypage() {
       });
     }
   };
+
+  useEffect(() => {
+    getMyChallenge();
+  }, [getMyChallenge]);
 
   return (
     <div style={{ marginTop: '40px' }}>
@@ -151,9 +158,9 @@ export default function Mypage() {
             {myChallengeList.map((challenge) => {
               return (
                 <ChallengeItem
-                  id={challenge.id}
-                  title={challenge.title}
-                  content={challenge.content}
+                  id={challenge.challengeId}
+                  title={challenge.challengeTitle}
+                  content={challenge.challengeContent}
                   pushChallenge={pushChallenge}
                 />
               );
