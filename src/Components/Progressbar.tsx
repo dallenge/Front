@@ -6,6 +6,7 @@ interface ProgressStatus {
 }
 
 export default function Progressbar(props: ProgressStatus) {
-  const percent = Math.trunc((props.now / props.total) * 100);
+  const percent = props.total ? Math.trunc((props.now / props.total) * 100) : 0;
+
   return <ProgressBar style={{ height: '40px', fontSize: '20px' }} now={percent} label={`${percent}%`} />;
 }

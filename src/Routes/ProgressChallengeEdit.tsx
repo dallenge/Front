@@ -1,6 +1,6 @@
 import Modify from '../Components/Modify';
 import styled from 'styled-components';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 
 interface myParticipateChallgen {
@@ -15,7 +15,7 @@ function ProgressChallengeEdit() {
 
   const [challengeList, setChallengeList] = useState<myParticipateChallgen[]>([]);
 
-  useEffect(() => {
+  const getMyParticipate = () => {
     const config = {
       method: 'get',
       url: `${URL}/user/participate`,
@@ -27,7 +27,30 @@ function ProgressChallengeEdit() {
     axios(config).then((res) => {
       setChallengeList(res.data);
     });
-  }, []);
+  };
+
+  const onClickStopChallenge = (id: number) => {
+    const confirm = window.confirm('선택한 챌린지를 정말 그만하시겠습니까?');
+    if (confirm) {
+      const config = {
+        method: 'delete',
+        url: `${URL}/challenge/${id}/leave`,
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem('token'),
+        },
+      };
+      axios(config)
+        .then((res) => {
+          alert(res.data.message);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  };
+  useEffect(() => {
+    getMyParticipate();
+  }, [getMyParticipate]);
   return (
     <div>
       <Modify active={'challengeEdit'} />
@@ -38,11 +61,25 @@ function ProgressChallengeEdit() {
       <Container>
         {challengeList.map((challenge) => {
           return (
-            <ChallengeBox
-              id={challenge.challengeId}
-              title={challenge.challengeTitle}
-              content={challenge.challengeContent}
-            />
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <Box>
+                <div>
+                  <div style={{ fontSize: '20px', fontWeight: 'bold', display: 'inline-block' }}>
+                    {challenge.challengeTitle}
+                  </div>
+                </div>
+                <div>
+                  <div style={{ fontSize: '15px', display: 'inline-block' }}>{challenge.challengeContent}</div>
+                </div>
+              </Box>
+              <StopBox
+                onClick={() => {
+                  onClickStopChallenge(challenge.challengeId);
+                }}
+              >
+                그만하기
+              </StopBox>
+            </div>
           );
         })}
       </Container>
@@ -82,27 +119,5 @@ const Container = styled.div`
   display: inline-block;
   width: 1200px;
 `;
-
-function ChallengeBox({ id, title, content }: { id: number; title: string; content: string }) {
-  const onClickStopChallenge = () => {
-    const confirm = window.confirm('선택한 챌린지를 정말 그만하시겠습니까?');
-    if (confirm) {
-      // 진행하고 있는 챌린지 목록에서 삭제
-    }
-  };
-  return (
-    <div style={{ display: 'flex', justifyContent: 'center' }}>
-      <Box>
-        <div>
-          <div style={{ fontSize: '20px', fontWeight: 'bold', display: 'inline-block' }}>{title}</div>
-        </div>
-        <div>
-          <div style={{ fontSize: '15px', display: 'inline-block' }}>{content}</div>
-        </div>
-      </Box>
-      <StopBox onClick={onClickStopChallenge}>그만하기</StopBox>
-    </div>
-  );
-}
 
 export default ProgressChallengeEdit;
