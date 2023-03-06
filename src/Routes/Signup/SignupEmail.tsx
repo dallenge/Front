@@ -8,10 +8,8 @@ import URL from '../../Url';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import AuthApi from '../../Apis/authApi';
 
-const Regex = {
-  email: /^(([^<>()\[\].,;:\s@"]+(\.[^<>()\[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i,
-  nickname: /^(?=.*[a-z0-9가-힣])[a-z0-9가-힣]{2,16}$/,
-};
+import Regex from '../../Constant/Regex';
+
 const SIGNUP_MESSAGE = CONSTANT_INFO.SIGNUP_MESSAGE;
 
 function SingupEmail() {

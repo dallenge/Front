@@ -1,51 +1,33 @@
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
 
 import styled from 'styled-components';
 import { RiKakaoTalkFill } from 'react-icons/ri';
 import { FcGoogle } from 'react-icons/fc';
 
 import AuthApi from '../../Apis/authApi';
+import Regex from '../../Constant/Regex';
 
 function Login() {
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<Inputs>();
+
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
-  const [idError, setIdError] = useState(false);
-  const [pwError, setPwError] = useState(false);
-
-  const onChangeId = (e: any) => {
-    const emailRegex =
-      /^(([^<>()\[\].,;:\s@"]+(\.[^<>()\[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
-    if (!e.target.value || emailRegex.test(e.target.value)) {
-      setIdError(false);
-    } else {
-      setIdError(true);
-    }
-    setEmail(e.target.value);
-  };
-
-  const onChangePw = (e: any) => {
-    if (!e.target.value || e.target.value.length >= 8) {
-      setPwError(false);
-    } else {
-      setPwError(true);
-    }
-    setPassword(e.target.value);
-  };
-
-  const doLogin = async () => {
+  const onClickLogin = async () => {
     try {
-      const res = await AuthApi.login(email, password);
+      const res = await AuthApi.login(watch('email'), watch('password'));
       window.history.back();
       localStorage.clear();
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('expire', (Date.now() + 7200000).toString());
       localStorage.setItem('userName', res.data.userName);
       localStorage.setItem('userId', res.data.userId);
-      localStorage.setItem('email', email);
+      localStorage.setItem('email', watch('email'));
       window.location.href = '/';
     } catch (err: any) {
       alert(JSON.parse(err.request.response).message);
@@ -53,117 +35,80 @@ function Login() {
   };
 
   return (
-    <div>
-      <div style={{ marginTop: '70px' }}></div>
-      <LoginContainer>
-        <div style={{ fontSize: '30px', lineHeight: '40px', fontWeight: '700' }}>로그인</div>
-        <div style={{ marginTop: '20px' }}>
-          <div>
-            <Input type="text" placeholder="아이디를 입력해주세요" autoSave="off" onChange={onChangeId}></Input>
-            {idError && <ValidationView text={'이메일 형식에 맞게 입력해 주세요'} onChange={onChangeId} />}
+    <S.Container>
+      <S.Title>로그인</S.Title>
+      <form onSubmit={handleSubmit(onClickLogin)}>
+        <Input
+          type="text"
+          placeholder="아이디를 입력해주세요"
+          {...register('email', {
+            required: { value: true, message: '🔥 이메일을 입력해주세요' },
+            pattern: {
+              value: Regex.email,
+              message: '🔥 이메일 형식에 맞게 입력해주세요',
+            },
+          })}
+        ></Input>
+        {errors.email && <S.P>{errors.email.message}</S.P>}
 
-            <Input type="password" placeholder="비밀번호를 입력해주세요" autoSave="off" onChange={onChangePw}></Input>
-            {pwError && <ValidationView text={'비밀번호를 8자 이상 입력해주세요'} />}
-          </div>
-          <div style={{ marginTop: '13px' }}>
-            <Button style={{ background: 'var(--color-blue)', color: 'white' }} onClick={doLogin}>
-              로그인
-            </Button>
-          </div>
-          <div style={{ marginTop: '4px' }}>
-            <DivHover
-              style={{
-                fontSize: '14px',
-                float: 'right',
-                display: 'inline-block',
-                color: 'var(--color-blue)',
-                fontWeight: '600',
-              }}
-            >
-              비밀번호 찾기
-            </DivHover>
-          </div>
-          <div style={{ marginTop: '60px' }}>
-            <DivHover
-              style={{ marginTop: '20px', background: '#F7E600', width: '100%', height: '50px', borderRadius: '6px' }}
-            >
-              <div style={{ paddingTop: '6px', display: 'flex' }}>
-                <RiKakaoTalkFill style={{ marginLeft: '10px', width: '36px', height: '36px' }} />
-                <div
-                  style={{
-                    display: 'inline-block',
-                    lineHeight: '36px',
-                    width: '250px',
-                    fontWeight: '600',
-                    fontSize: '15px',
-                  }}
-                >
-                  카카오로 로그인
-                </div>
-              </div>
-            </DivHover>
-            <DivHover
-              style={{
-                marginTop: '10px',
-                background: '#ffffff',
-                width: '100%',
-                height: '50px',
-                borderRadius: '6px',
-                border: '1px solid #bcbcbc',
-              }}
-            >
-              <div style={{ paddingTop: '6px', display: 'flex' }}>
-                <FcGoogle style={{ marginLeft: '10px', width: '36px', height: '36px' }} />
-                <div
-                  style={{
-                    display: 'inline-block',
-                    lineHeight: '36px',
-                    width: '250px',
-                    fontWeight: '600',
-                    fontSize: '15px',
-                  }}
-                >
-                  구글로 로그인
-                </div>
-              </div>
-            </DivHover>
-          </div>
-          <div style={{ marginTop: '40px', width: '100%', height: '1px', backgroundColor: '#E1E1E1' }}></div>
-          <div style={{ marginTop: '30px', fontSize: '13px', fontWeight: '600' }}>아직 델린지 회원이 아니신가요?</div>
-          <DivHover
-            style={{
-              border: '1px solid var(--color-blue)',
-              borderRadius: '6px',
-              lineHeight: '42px',
-              marginTop: '10px',
-            }}
-          >
-            <SignupDiv onClick={() => navigate('/signup/select-account')}>델린지 회원가입 하기</SignupDiv>
-          </DivHover>
-        </div>
-      </LoginContainer>
-    </div>
+        <Input
+          type="password"
+          placeholder="비밀번호를 입력해주세요"
+          {...register('password', {
+            required: { value: true, message: '🔥 비밀번호를 입력해주세요' },
+            minLength: { value: 8, message: '🔥 8자 이상 입력해주세요' },
+          })}
+        ></Input>
+        {errors.password && <S.P>{errors.password.message}</S.P>}
+
+        <S.Button style={{ background: 'var(--color-blue)', color: 'white' }}>로그인</S.Button>
+      </form>
+
+      <S.smallText>비밀번호 찾기</S.smallText>
+
+      <S.BtnsWrapper>
+        <S.BtnBox background="#F7E600" border={false}>
+          <RiKakaoTalkFill style={{ marginLeft: '10px', width: '36px', height: '36px' }} />
+          <S.BtnInnerText>카카오로 로그인</S.BtnInnerText>
+        </S.BtnBox>
+        <S.BtnBox background="#ffffff" border={true}>
+          <FcGoogle style={{ marginLeft: '10px', width: '36px', height: '36px' }} />
+          <S.BtnInnerText>구글로 로그인</S.BtnInnerText>
+        </S.BtnBox>
+      </S.BtnsWrapper>
+      <S.Line />
+      <S.Text>아직 델린지 회원이 아니신가요?</S.Text>
+      <S.SignupDiv onClick={() => navigate('/signup/select-account')}>델린지 회원가입 하기</S.SignupDiv>
+    </S.Container>
   );
 }
 
 export default Login;
 
-const ValidationView = (props: any) => {
-  return (
-    <div style={{ marginTop: '4px', marginBottom: '30px' }}>
-      <div style={{ padding: '0 14px', fontSize: '13px', color: '#F00001', fontWeight: '600', float: 'left' }}>
-        🔥{props.text}
-      </div>
-    </div>
-  );
-};
-
-const LoginContainer = styled.div`
+const Container = styled.div`
   text-align: center;
-  justify-content: center;
-  margin: auto 0;
   display: inline-block;
   width: 320px;
+  margin-top: 70px;
+`;
+
+const smallText = styled.div`
+  font-size: 14px;
+  float: right;
+  display: inline-flex;
+  color: var(--color-blue);
+  font-weight: 600;
+  margin-top: 4px;
+  :hover {
+    cursor: pointer;
+  }
+`;
+
+const Title = styled.div`
+  font-size: 30px;
+  line-height: 40px;
+  font-weight: 700;
+  margin-bottom: 20px;
 `;
 
 const Input = styled.input`
@@ -179,6 +124,32 @@ const Input = styled.input`
   }
 `;
 
+const BtnsWrapper = styled.div`
+  margin-top: 60px;
+`;
+
+const BtnBox = styled.div<{ background?: string; border: boolean }>`
+  margin-top: 10px;
+  background-color: ${({ background }) => background};
+  width: 100%;
+  height: 50px;
+  border-radius: 6px;
+  padding-top: 6px;
+  display: flex;
+  border: ${({ border }) => (border ? '1px solid rgb(190, 190, 190)' : 'none')};
+  :hover {
+    cursor: pointer;
+  }
+`;
+
+const BtnInnerText = styled.div`
+  display: inline-block;
+  line-height: 36px;
+  width: 250px;
+  font-weight: 600;
+  font-size: 15px;
+`;
+
 const Button = styled.button`
   width: 100%;
   height: 50px;
@@ -188,15 +159,27 @@ const Button = styled.button`
   border: none;
   border-radius: 6px;
   font-weight: 700;
+  margin-top: 13px;
 `;
 
-const DivHover = styled.div`
-  &:hover {
-    cursor: pointer;
-  }
+const Text = styled.div`
+  margin-top: 30px;
+  font-size: 13px;
+  font-weight: bold;
+`;
+
+const Line = styled.div`
+  margin-top: 40px;
+  width: 100%;
+  height: 1px;
+  background-color: #e1e1e1;
 `;
 
 const SignupDiv = styled.div`
+  border: 1px solid var(--color-blue);
+  border-radius: 6px;
+  line-height: 42px;
+  margin-top: 10px;
   color: var(--color-blue);
   font-weight: 600;
   &:hover {
@@ -205,3 +188,18 @@ const SignupDiv = styled.div`
     background: rgba(63, 114, 175, 0.1);
   }
 `;
+
+const P = styled.p`
+  color: #f00001;
+  font-weight: 600;
+  font-size: 13px;
+  display: inline-block;
+  margin-top: 4px;
+`;
+
+const S = { Container, Title, Input, Button, smallText, Text, BtnsWrapper, BtnBox, BtnInnerText, Line, SignupDiv, P };
+
+interface Inputs {
+  email: string;
+  password: string;
+}
