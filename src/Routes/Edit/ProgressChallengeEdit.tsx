@@ -1,4 +1,4 @@
-import Modify from '../Components/Modify';
+import Modify from '../../Components/Modify';
 import styled from 'styled-components';
 import { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
