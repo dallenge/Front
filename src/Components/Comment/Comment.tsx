@@ -19,23 +19,6 @@ function Comment(props: Props) {
   const editImageRef = useRef<HTMLInputElement>(null);
   const [editImage, setEditImage] = useState<any>();
 
-  const getFewDaysAgo = (fewDayObject: { fewYearsAge: number; fewMonthAgo: number; fewDaysAgo: number }) => {
-    if (fewDayObject.fewYearsAge !== 0) {
-      return fewDayObject.fewYearsAge + '년 전';
-    }
-    if (fewDayObject.fewMonthAgo !== 0) {
-      return fewDayObject.fewMonthAgo + '월 전';
-    }
-    if (fewDayObject.fewDaysAgo !== 0 && fewDayObject.fewDaysAgo !== 1) {
-      return fewDayObject.fewDaysAgo + '일 전';
-    }
-    if (fewDayObject.fewDaysAgo === 1) {
-      return '어제';
-    }
-    if (fewDayObject.fewDaysAgo === 0) {
-      return '오늘';
-    }
-  };
   const onClickModal = () => setIsModalOpen((prev) => !prev);
 
   const onChangeEditCommentText = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -101,7 +84,7 @@ function Comment(props: Props) {
       <S.Text>
         <S.Text size={'18px'}>{owner.userName}</S.Text>
         <S.Text size={'14px'} style={{ color: 'rgb(150, 150, 150)', marginLeft: '20px' }}>
-          {getFewDaysAgo(createdAt)}
+          {createdAt}
         </S.Text>
         {myComment && !isEditComment && (
           <S.HoverText style={{ marginLeft: 'auto' }}>
@@ -212,11 +195,7 @@ interface Props {
   commentId: string;
   content: string;
   likes: number;
-  createdAt: {
-    fewYearsAge: number;
-    fewMonthAgo: number;
-    fewDaysAgo: number;
-  };
+  createdAt: string;
   img: string[];
   owner: {
     userName: string;

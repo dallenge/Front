@@ -3,7 +3,6 @@ import { BsBookmark, BsBookmarkFill } from 'react-icons/bs';
 import { useCallback, useEffect, useState } from 'react';
 
 import { useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
 
 import GetBadRoot from '../Components/GetBadRoot';
 import CommentInput from '../Components/Comment/CommentInput';
@@ -11,6 +10,9 @@ import Comment from '../Components/Comment/Comment';
 
 import { pageLoop } from '../Utils/pagination';
 import { Pagination } from 'react-bootstrap';
+import ChallengeApi from '../Apis/challengeApi';
+import Loading from './Recommendation/Components/Loading';
+import AuthApi from '../Apis/authApi';
 
 let bookmarkId: number;
 
@@ -29,75 +31,57 @@ function DetailChallenge() {
   const [isParticipatedChallenge, setIsParticipatedChallenge] = useState<boolean>(false);
   const [isBookmark, setIsBookmark] = useState<boolean>(false);
 
-  const [isBadRoot, setIsBadRoot] = useState<boolean>(false);
+  const [isBadRoot, setIsBadRoot] = useState<boolean | null>(null);
 
   const getChallengeInfo = async () => {
-    const config = {
-      method: 'get',
-      url: `${URL}/challenge/${id}`,
-    };
-    await axios(config)
-      .then((res) => {
-        setChallengeInfo(res.data);
-      })
-      .catch((err) => {
-        setIsBadRoot(true);
-      });
+    try {
+      const res = await ChallengeApi.getChallengeData(id);
+      setChallengeInfo(res.data);
+    } catch (err) {
+      setIsBadRoot(true);
+    }
   };
 
   const getComments = useCallback(async () => {
     const size = 10;
-
-    const config = {
-      method: 'get',
-      url: `${URL}/${id}/comment?size=${size}&page=${page}&sort=time`,
-    };
-    await axios(config).then((res) => {
+    try {
+      const res = await ChallengeApi.getComments(id, size, page);
       setCommentList(res.data.content);
       setTotalPage(Math.ceil(res.data.totalElements / 10));
       window.scrollTo(0, 0);
-    });
+    } catch (err) {
+      console.trace(err);
+    }
   }, [page]);
 
   const getMyParticipate = async () => {
-    const config = {
-      method: 'get',
-      url: `${URL}/user/participate`,
-      headers: {
-        Authorization: 'Bearer ' + localStorage.getItem('token'),
-      },
-    };
-    await axios(config).then((res) => {
-      const myParticipate = res.data;
+    try {
+      const { data } = await AuthApi.getMyParticipatedChallenge();
       if (
-        myParticipate.filter((challenge: { challengeId: number | undefined }) => challenge.challengeId === Number(id))
-          .length > 0
+        data.filter((challenge: { challengeId: number | undefined }) => challenge.challengeId === Number(id)).length > 0
       ) {
         setIsParticipatedChallenge(true);
       }
-    });
+    } catch (err) {
+      console.trace(err);
+    }
   };
 
   const getMyBookmark = async () => {
-    const config = {
-      method: 'get',
-      url: `${URL}/user/${localStorage.getItem('userId')}/bookmark`,
-      headers: {
-        Authorization: 'Bearer ' + localStorage.getItem('token'),
-      },
-    };
-    await axios(config).then((res) => {
-      const myBookmark = res.data.content;
+    try {
+      const { data } = await AuthApi.getMyBookmarkedChallenge();
+      const myBookmark = data.content;
       const thisChallengeBookmark = myBookmark.filter(
         (challenge: { challengeId: number | undefined }) => challenge.challengeId === Number(id),
       );
-
       if (thisChallengeBookmark.length > 0) {
         bookmarkId = thisChallengeBookmark[0].id;
         console.log(bookmarkId);
         setIsBookmark(true);
       }
-    });
+    } catch (err) {
+      console.trace(err);
+    }
   };
 
   useEffect(() => {
@@ -114,74 +98,37 @@ function DetailChallenge() {
   const onClickBookmark = async () => {
     if (!isBookmark) {
       // 북마크 생성
-      const config = {
-        method: 'post',
-        url: `${URL}/${id}/bookmark/new`,
-        headers: {
-          Authorization: 'Bearer ' + localStorage.getItem('token'),
-        },
-      };
-      await axios(config)
-        .then((res) => {
-          bookmarkId = res.data.id;
-          setIsBookmark(true);
-        })
-        .catch((err) => alert('로그인 후 이용해주세요'));
+      try {
+        const { data } = await ChallengeApi.addBookmark(id);
+        bookmarkId = data.id;
+        setIsBookmark(true);
+      } catch (err) {
+        alert('로그인 후 이용해주세요');
+      }
     } else {
       // 북마크 삭제
-      const config = {
-        method: 'delete',
-        url: `${URL}/user/${localStorage.getItem('userId')}/bookmark/${bookmarkId}`,
-        headers: {
-          Authorization: 'Bearer ' + localStorage.getItem('token'),
-        },
-      };
-      await axios(config).then((res) => setIsBookmark(false));
+      try {
+        await ChallengeApi.deleteBookmark(bookmarkId);
+        setIsBookmark(false);
+      } catch (err) {
+        alert('잠시후 다시 이용해주세요');
+      }
     }
   };
 
   const onClickParticipate = async () => {
-    const config = {
-      method: 'post',
-      url: `${URL}/challenge/${id}/participate`,
-      headers: {
-        Authorization: 'Bearer ' + localStorage.getItem('token'),
-      },
-    };
-    await axios(config)
-      .then((res) => {
-        alert('참여하기가 완료되었습니다.');
-        setIsParticipatedChallenge(true);
-      })
-      .catch((err) => {
-        if (!localStorage.getItem('token')) return alert('로그인 후 이용해주세요');
-      });
-  };
-
-  // ~일 전 구하는 함수
-  const getSimpleDate = (date: string) => {
-    const createTime = new Date(date);
-    const now = new Date();
-
-    const fewYearsAge = now.getFullYear() - createTime.getFullYear();
-    const fewMonthAgo = now.getMonth() - createTime.getMonth();
-    const fewDaysAgo = now.getDate() - createTime.getDate();
-    return {
-      fewYearsAge,
-      fewMonthAgo,
-      fewDaysAgo,
-    };
-  };
-
-  const getfewAgoList = (commentList: Comment[]) => {
-    return commentList.map((comment) => getSimpleDate(comment.createdAt));
+    try {
+      await ChallengeApi.participateChallenge(id);
+      alert('참여하기가 완료되었습니다');
+      setIsParticipatedChallenge(true);
+    } catch (err) {
+      if (!localStorage.getItem('token')) return alert('로그인 후 이용해주세요');
+    }
   };
 
   // 오늘 몇개의 후기가 남겨졌는지 구하는 함수
-  const getTodayComment = (fewAgoList: { fewYearsAge: number; fewMonthAgo: number; fewDaysAgo: number }[]) => {
-    return fewAgoList.filter(
-      (object) => object.fewYearsAge === 0 && object.fewMonthAgo === 0 && object.fewDaysAgo === 0,
-    ).length;
+  const getTodayComment = (comments: Comment[]): number => {
+    return comments.filter((comment) => comment.createdAt === '오늘').length;
   };
 
   return (
@@ -252,7 +199,7 @@ function DetailChallenge() {
             </S.Form>
             <S.Line w={'100%'}></S.Line>
           </S.Wrapper>
-          <S.Text padding={'20px 0 5px 0'}>오늘 {getTodayComment(getfewAgoList(commentList))}개의 기록🏃🏻</S.Text>
+          <S.Text padding={'20px 0 5px 0'}>오늘 {getTodayComment(commentList)}개의 기록🏃🏻</S.Text>
           <CommentInput
             postId={Number(id)}
             getComments={getComments}
@@ -265,7 +212,7 @@ function DetailChallenge() {
                 commentId={comment.id}
                 content={comment.content}
                 likes={comment.likes}
-                createdAt={getSimpleDate(comment.createdAt)}
+                createdAt={comment.createdAt}
                 img={comment.commentImgUrls}
                 owner={comment.commentOwnerUser}
                 myComment={comment.commentOwnerUser.userId === Number(localStorage.getItem('userId'))}
@@ -300,7 +247,7 @@ function DetailChallenge() {
           </S.Form>
         </S.Container>
       ) : (
-        <GetBadRoot />
+        <>{isBadRoot ? <GetBadRoot /> : <Loading />}</>
       )}
     </>
   );

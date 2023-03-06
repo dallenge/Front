@@ -1,6 +1,7 @@
 import { Axios } from './core';
 
 const PATH = '/user';
+const USER_ID = localStorage.getItem('userId');
 const JSON_TYPE = 'application/json';
 
 const AuthApi = {
@@ -17,9 +18,15 @@ const AuthApi = {
   },
 
   changePassword(oldPassword, newPassword) {
-    return Axios(JSON_TYPE).post(
-      PATH + `/${localStorage.getItem('userId')}/change?oldPassword=${oldPassword}&newPassword=${newPassword}`,
-    );
+    return Axios(JSON_TYPE).post(PATH + `/${USER_ID}/change?oldPassword=${oldPassword}&newPassword=${newPassword}`);
+  },
+
+  getMyParticipatedChallenge() {
+    return Axios().get(PATH + `/participate`);
+  },
+
+  getMyBookmarkedChallenge() {
+    return Axios().get(PATH + `/${USER_ID}/bookmark`);
   },
 };
 
