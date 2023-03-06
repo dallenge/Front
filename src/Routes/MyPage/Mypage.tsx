@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import Progressbar from '../Components/Progressbar';
-import CONSTANT_INFO from '../Constant/Constant';
+import Progressbar from '../../Components/Progressbar';
+import CONSTANT_INFO from '../../Constant/Constant';
 
 const IMAGE_URL = CONSTANT_INFO.IMAGE_URL;
 

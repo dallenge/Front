@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
-import Modify from '../Components/Modify';
+import Modify from '../../Components/Modify';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import URL from '../Url';
+import URL from '../../Url';
 
 const WithdrawalBtn = styled.button`
   border: 2px solid var(--color-blue);

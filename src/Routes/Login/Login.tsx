@@ -1,64 +1,17 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import styled from 'styled-components';
 import { RiKakaoTalkFill } from 'react-icons/ri';
 import { FcGoogle } from 'react-icons/fc';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import URL from '../Url';
 
-const LoginContainer = styled.div`
-  text-align: center;
-  justify-content: center;
-  margin: auto 0;
-  display: inline-block;
-  width: 320px;
-`;
+import AuthApi from '../../Apis/authApi';
 
-const Input = styled.input`
-  width: 100%;
-  height: 42px;
-  padding: 12px;
-  margin-top: 8px;
-  border-radius: 6px;
-  border: 1px solid #bcbcbc;
-  font-size: 15px;
-  &:focus {
-    outline: 1px solid var(--color-blue);
-  }
-`;
-
-const Button = styled.button`
-  width: 100%;
-  height: 50px;
-  padding: 12px;
-  font-size: 16px;
-  cursor: pointer;
-  border: none;
-  border-radius: 6px;
-  font-weight: 700;
-`;
-
-const DivHover = styled.div`
-  &:hover {
-    cursor: pointer;
-  }
-`;
-
-const SignupDiv = styled.div`
-  color: var(--color-blue);
-  font-weight: 600;
-  &:hover {
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
-    background: rgba(63, 114, 175, 0.1);
-  }
-`;
-
-export default function Login() {
+function Login() {
   const navigate = useNavigate();
 
-  const [id, setId] = useState('');
-  const [pw, setPw] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   const [idError, setIdError] = useState(false);
   const [pwError, setPwError] = useState(false);
@@ -71,7 +24,7 @@ export default function Login() {
     } else {
       setIdError(true);
     }
-    setId(e.target.value);
+    setEmail(e.target.value);
   };
 
   const onChangePw = (e: any) => {
@@ -80,38 +33,25 @@ export default function Login() {
     } else {
       setPwError(true);
     }
-    setPw(e.target.value);
+    setPassword(e.target.value);
   };
 
   const doLogin = async () => {
-    const data = JSON.stringify({
-      email: id,
-      password: pw,
-    });
-
-    const config = {
-      method: 'post',
-      url: `${URL}/user/login`,
-      data: data,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
-
-    await axios(config)
-      .then((res) => {
-        window.history.back();
-        localStorage.clear();
-        localStorage.setItem('token', res.data.token);
-        localStorage.setItem('expire', (Date.now() + 7200000).toString());
-        localStorage.setItem('userName', res.data.userName);
-        localStorage.setItem('userId', res.data.userId);
-        localStorage.setItem('email', id);
-      })
-      .catch((err) => {
-        alert(JSON.parse(err.request.response).message);
-      });
+    try {
+      const res = await AuthApi.login(email, password);
+      window.history.back();
+      localStorage.clear();
+      localStorage.setItem('token', res.data.token);
+      localStorage.setItem('expire', (Date.now() + 7200000).toString());
+      localStorage.setItem('userName', res.data.userName);
+      localStorage.setItem('userId', res.data.userId);
+      localStorage.setItem('email', email);
+      window.location.href = '/';
+    } catch (err: any) {
+      alert(JSON.parse(err.request.response).message);
+    }
   };
+
   return (
     <div>
       <div style={{ marginTop: '70px' }}></div>
@@ -206,6 +146,8 @@ export default function Login() {
   );
 }
 
+export default Login;
+
 const ValidationView = (props: any) => {
   return (
     <div style={{ marginTop: '4px', marginBottom: '30px' }}>
@@ -215,3 +157,51 @@ const ValidationView = (props: any) => {
     </div>
   );
 };
+
+const LoginContainer = styled.div`
+  text-align: center;
+  justify-content: center;
+  margin: auto 0;
+  display: inline-block;
+  width: 320px;
+`;
+
+const Input = styled.input`
+  width: 100%;
+  height: 42px;
+  padding: 12px;
+  margin-top: 8px;
+  border-radius: 6px;
+  border: 1px solid #bcbcbc;
+  font-size: 15px;
+  &:focus {
+    outline: 1px solid var(--color-blue);
+  }
+`;
+
+const Button = styled.button`
+  width: 100%;
+  height: 50px;
+  padding: 12px;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+  border-radius: 6px;
+  font-weight: 700;
+`;
+
+const DivHover = styled.div`
+  &:hover {
+    cursor: pointer;
+  }
+`;
+
+const SignupDiv = styled.div`
+  color: var(--color-blue);
+  font-weight: 600;
+  &:hover {
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    background: rgba(63, 114, 175, 0.1);
+  }
+`;

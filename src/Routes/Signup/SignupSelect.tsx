@@ -19,16 +19,17 @@ const DivHover = styled.div`
 `;
 
 const EmailSignup = styled.div`
-color: #ffffff;
-font-weight: 600;
-border-radius: 6px;
-line-height: 50px;
-background: var(--color-blue);
-&:hover {
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  background: rgba(63, 114, 175, 0.2);
-  color: var(--color-blue);
+  color: #ffffff;
+  font-weight: 600;
+  border-radius: 6px;
+  line-height: 50px;
+  background: var(--color-blue);
+  :hover {
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    background: rgba(63, 114, 175, 0.2);
+    color: var(--color-blue);
+  }
 `;
 
 const SingupDiv = styled.div`

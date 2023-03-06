@@ -1,11 +1,11 @@
 import React, { useRef, useState, useEffect } from 'react';
 import styled from 'styled-components';
-import Modify from '../Components/Modify';
+import Modify from '../../Components/Modify';
 import { AiFillCamera } from 'react-icons/ai';
 
-import '../CSS/ProfileEdit.css';
+import '../../CSS/ProfileEdit.css';
 import axios from 'axios';
-import URL from '../Url';
+import URL from '../../Url';
 
 const Container = styled.div`
   text-align: left;

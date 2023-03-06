@@ -2,10 +2,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios, { AxiosResponse } from 'axios';
 import styled from 'styled-components';
-import CONSTANT_INFO from '../Constant/Constant';
-import URL from '../Url';
+import CONSTANT_INFO from '../../Constant/Constant';
+import URL from '../../Url';
 
 import { useForm, SubmitHandler } from 'react-hook-form';
+import AuthApi from '../../Apis/authApi';
 
 const Regex = {
   email: /^(([^<>()\[\].,;:\s@"]+(\.[^<>()\[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i,
@@ -35,62 +36,37 @@ function SingupEmail() {
     }
   }, [errors.email]);
 
-  const signUp = async () => {
+  const onSignUp = async () => {
     if (isDuplicatedEmail === null) return alert('아이디 중복확인을 해주세요');
 
-    const signupData = JSON.stringify({
-      email: watch('email'),
-      password: watch('password'),
-      userName: watch('nickname'),
-    });
-
-    const config = {
-      method: 'post',
-      url: `${URL}/user/new`,
-      data: signupData,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
-    await axios(config)
-      .then((res) => {
-        alert('회원가입이 완료되었습니다');
-        navigate('/login');
-      })
-      .catch((err) => {
-        alert('입력한 내용을 다시 확인해 주세요');
+    try {
+      await AuthApi.signup({
+        email: watch('email'),
+        password: watch('password'),
+        userName: watch('nickname'),
       });
+      alert('회원가입이 완료되었습니다.');
+      navigate('/login');
+    } catch (err) {
+      alert('입력한 내용을 다시 확인해 주세요');
+    }
   };
 
   const onClickDupliConfirm = async (e: any) => {
     e.preventDefault();
 
-    const data = JSON.stringify({ email: watch('email') });
-
-    const config = {
-      method: 'post',
-      url: `${URL}/user/check?email=${watch('email')}`,
-      data: data,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
-
-    await axios(config)
-      .then((res) => {
-        if (res.data === '사용 가능한 아이디입니다.') {
-          setDuplicatedEmail(false);
-        }
-      })
-      .catch((err) => {
-        setDuplicatedEmail(true);
-      });
+    try {
+      await AuthApi.duplicatedEmailConfirm(watch('email'));
+      setDuplicatedEmail(false);
+    } catch (err: any) {
+      if (err.response.data.code === 409) setDuplicatedEmail(true);
+    }
   };
 
   return (
     <S.Container>
       <S.Title>회원가입</S.Title>
-      <S.Form onSubmit={handleSubmit(signUp)}>
+      <S.Form onSubmit={handleSubmit(onSignUp)}>
         <S.SubTitle>이메일(아이디)</S.SubTitle>
         <S.FlexRow>
           <Input
