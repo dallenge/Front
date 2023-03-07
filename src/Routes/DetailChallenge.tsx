@@ -33,14 +33,14 @@ function DetailChallenge() {
 
   const [isBadRoot, setIsBadRoot] = useState<boolean | null>(null);
 
-  const getChallengeInfo = async () => {
+  const getChallengeInfo = useCallback(async () => {
     try {
       const res = await ChallengeApi.getChallengeData(id);
       setChallengeInfo(res.data);
     } catch (err) {
       setIsBadRoot(true);
     }
-  };
+  }, [isParticipatedChallenge]);
 
   const getComments = useCallback(async () => {
     const size = 10;
@@ -54,37 +54,38 @@ function DetailChallenge() {
     }
   }, [page]);
 
-  const getMyParticipate = async () => {
-    try {
-      const { data } = await AuthApi.getMyParticipatedChallenge();
-      if (
-        data.filter((challenge: { challengeId: number | undefined }) => challenge.challengeId === Number(id)).length > 0
-      ) {
-        setIsParticipatedChallenge(true);
-      }
-    } catch (err) {
-      console.trace(err);
-    }
-  };
-
-  const getMyBookmark = async () => {
-    try {
-      const { data } = await AuthApi.getMyBookmarkedChallenge();
-      const myBookmark = data.content;
-      const thisChallengeBookmark = myBookmark.filter(
-        (challenge: { challengeId: number | undefined }) => challenge.challengeId === Number(id),
-      );
-      if (thisChallengeBookmark.length > 0) {
-        bookmarkId = thisChallengeBookmark[0].id;
-        console.log(bookmarkId);
-        setIsBookmark(true);
-      }
-    } catch (err) {
-      console.trace(err);
-    }
-  };
-
   useEffect(() => {
+    const getMyParticipate = async () => {
+      try {
+        const { data } = await AuthApi.getMyParticipatedChallenge();
+        if (
+          data.filter((challenge: { challengeId: number | undefined }) => challenge.challengeId === Number(id)).length >
+          0
+        ) {
+          setIsParticipatedChallenge(true);
+        }
+      } catch (err) {
+        console.trace(err);
+      }
+    };
+
+    const getMyBookmark = async () => {
+      try {
+        const { data } = await AuthApi.getMyBookmarkedChallenge();
+        const myBookmark = data.content;
+        const thisChallengeBookmark = myBookmark.filter(
+          (challenge: { challengeId: number | undefined }) => challenge.challengeId === Number(id),
+        );
+        if (thisChallengeBookmark.length > 0) {
+          bookmarkId = thisChallengeBookmark[0].id;
+          console.log(bookmarkId);
+          setIsBookmark(true);
+        }
+      } catch (err) {
+        console.trace(err);
+      }
+    };
+
     getChallengeInfo();
     getComments();
     getMyParticipate();
@@ -94,6 +95,10 @@ function DetailChallenge() {
   useEffect(() => {
     getComments();
   }, [getComments]);
+
+  useEffect(() => {
+    getChallengeInfo();
+  }, [getChallengeInfo]);
 
   const onClickBookmark = async () => {
     if (!isBookmark) {
