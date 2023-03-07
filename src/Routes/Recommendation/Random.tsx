@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import RecommendationApi from '../../Apis/recommendationApi';
+import ChallengeCard from '../../Components/Card';
 import Loading from './Components/Loading';
 
 let testCount = 0;
@@ -11,16 +13,30 @@ function RandomRecommendation() {
   const [isRandomStart, setIsRandomStart] = useState<boolean>(false);
   const [isShowResult, setIsShowResult] = useState<boolean>(false);
 
-  const onStartRandom = () => {
+  const [results, setResults] = useState<ResultChallenge>({
+    id: 0,
+    title: '',
+    content: '',
+    challengeImgUrls: [],
+  });
+
+  const onStartRandom = async () => {
     ++testCount;
 
     setIsShowResult(false);
     setIsRandomStart(true);
 
-    setTimeout(() => {
-      setIsRandomStart(false);
-      setIsShowResult(true);
-    }, 5000);
+    try {
+      const { data } = await RecommendationApi.getRandomResult();
+      setResults(data);
+
+      setTimeout(() => {
+        setIsRandomStart(false);
+        setIsShowResult(true);
+      }, 5000);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -43,7 +59,14 @@ function RandomRecommendation() {
             )
           ) : (
             <>
-              <div>RESULT</div>
+              <S.CardContainer>
+                <ChallengeCard
+                  id={results.id}
+                  title={results.title}
+                  content={results.content}
+                  img={results.challengeImgUrls}
+                />
+              </S.CardContainer>
               {testCount < 3 ? (
                 <S.smallButton onClick={onStartRandom}>다시 추천받기</S.smallButton>
               ) : (
@@ -72,7 +95,8 @@ const Wrapper = styled.div`
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  margin-top: 200px;
+  width: 100%;
+  margin-top: 120px;
   align-items: center;
 `;
 
@@ -89,7 +113,7 @@ const Box = styled.div`
 
 const Button = styled.button`
   border: none;
-  width: 100%;
+  width: 20%;
   height: 70px;
   margin-top: 30px;
   font-weight: bold;
@@ -104,8 +128,14 @@ const Button = styled.button`
 
 const smallButton = styled(Button)`
   font-size: 20px;
-  width: 50%;
+  width: 20%;
   height: 40px;
+`;
+
+const CardContainer = styled.div`
+  display: flex;
+  width: 80%;
+  margin: 0 auto;
 `;
 
 const S = {
@@ -115,4 +145,12 @@ const S = {
   Title,
   Button,
   smallButton,
+  CardContainer,
 };
+
+interface ResultChallenge {
+  id: number;
+  title: string;
+  content: string;
+  challengeImgUrls: string[];
+}
