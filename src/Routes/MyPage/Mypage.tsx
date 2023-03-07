@@ -70,9 +70,7 @@ interface ChallengeList {
 
 export default function Mypage() {
   const URL = process.env.REACT_APP_URL;
-  // ----dummy-------------------------------------
   const [myChallengeList, setMyChallengeList] = useState<ChallengeList[]>([]);
-  // -------------------------------------------
 
   const [total, setTotal] = useState<number>(0);
   const [completed, setCompleted] = useState<number>(0); // 완료한 개수 데이터베이스에서 주고받고....
