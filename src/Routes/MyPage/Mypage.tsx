@@ -89,6 +89,13 @@ export default function Mypage() {
     };
     await axios(config)
       .then((res) => {
+        let countCompleted = 0;
+        res.data.map((challenge: ChallengeList) => {
+          if (challenge.challengeStatus === 'SUCCESS') {
+            countCompleted += 1;
+          }
+        });
+        setCompleted(countCompleted);
         setMyChallengeList(res.data);
         setTotal(res.data.length);
       })
@@ -162,6 +169,7 @@ export default function Mypage() {
                   title={challenge.challengeTitle}
                   content={challenge.challengeContent}
                   pushChallenge={pushChallenge}
+                  status={challenge.challengeStatus}
                 />
               );
             })}
@@ -183,14 +191,17 @@ const ChallengeItem = ({
   id,
   title,
   content,
+  status,
   pushChallenge,
 }: {
   id: number;
   title: string;
   content: string;
+  status: string;
   pushChallenge: any;
 }) => {
-  const [isChecked, setIsChecked] = useState<boolean>(false);
+  const URL = process.env.REACT_APP_URL;
+  const [isChecked, setIsChecked] = useState<boolean>(status === 'SUCCESS' ? true : false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const onClickCheck = () => {
@@ -198,8 +209,23 @@ const ChallengeItem = ({
       // 체크O 상태인데 체크버튼이 눌렸다면 -> 취소가 되어야 함
       pushChallenge(id, 'delete');
     } else {
-      // 체크X 상태인데 체크버튼이 눌렸다면 -> 선택이 되어야 함
-      pushChallenge(id, 'add');
+      const config = {
+        method: 'post',
+        url: `${URL}/challenge/${id}/success`,
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem('token'),
+        },
+      };
+
+      axios(config)
+        .then((res) => {
+          console.log(res);
+          // 체크X 상태인데 체크버튼이 눌렸다면 -> 선택이 되어야 함
+          pushChallenge(id, 'add');
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
     setIsChecked(!isChecked);
   };
