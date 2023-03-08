@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { BsBookmark, BsBookmarkFill } from 'react-icons/bs';
-import { useCallback, useEffect, useState } from 'react';
 
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import GetBadRoot from '../Components/GetBadRoot';
