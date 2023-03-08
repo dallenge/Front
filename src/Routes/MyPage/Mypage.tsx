@@ -210,28 +210,36 @@ const ChallengeItem = ({
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const onClickCheck = () => {
-    if (isChecked) {
-      // 체크O 상태인데 체크버튼이 눌렸다면 -> 취소가 되어야 함
-      pushChallenge(id, 'delete');
+    let config = {};
+    if (status === 'SUCCESS') {
+      config = {
+        method: 'post',
+        url: `${URL}/challenge/${id}/pause`,
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem('token'),
+        },
+      };
     } else {
-      const config = {
+      config = {
         method: 'post',
         url: `${URL}/challenge/${id}/success`,
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
       };
-
-      axios(config)
-        .then((res) => {
-          console.log(res);
-          // 체크X 상태인데 체크버튼이 눌렸다면 -> 선택이 되어야 함
-          pushChallenge(id, 'add');
-        })
-        .catch((err) => {
-          console.log(err);
-        });
     }
+
+    axios(config)
+      .then((res) => {
+        console.log(res);
+        // 체크X 상태인데 체크버튼이 눌렸다면 -> 선택이 되어야 함
+        if (status === 'SUCCESS') pushChallenge(id, 'delete');
+        else pushChallenge(id, 'add');
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
     setIsChecked(!isChecked);
   };
 
