@@ -1,10 +1,13 @@
 import styled from 'styled-components';
 import { BiDotsHorizontalRounded } from 'react-icons/bi';
-import { useEffect, useRef, useState } from 'react';
+import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
+
+import { useRef, useState } from 'react';
+
 import Modal from './Modal';
-import CommentInput from './CommentInput';
 import CommentArea from './Components/CommentArea';
 import axios from 'axios';
+import CommentApi from '../../Apis/commentApi';
 
 function Comment(props: Props) {
   const URL = process.env.REACT_APP_URL;
@@ -13,7 +16,8 @@ function Comment(props: Props) {
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isEditComment, setIsEditComment] = useState<boolean>(false);
-  const [isEditOk, setIsEditOk] = useState(false);
+  const [isEditOk, setIsEditOk] = useState<boolean>(false);
+  const [isHeart, setIsHeart] = useState<boolean>(false);
 
   const [editCommentText, setEditCommentText] = useState<string>(content);
   const editImageRef = useRef<HTMLInputElement>(null);
@@ -24,18 +28,14 @@ function Comment(props: Props) {
   const onChangeEditCommentText = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setEditCommentText(e.target.value);
 
-    if (e.target.value && content !== e.target.value) {
-      setIsEditOk(true);
-    } else {
-      setIsEditOk(false);
-    }
+    if (e.target.value && content !== e.target.value) return setIsEditOk(true);
+    setIsEditOk(false);
   };
 
   const onClickEditCommentBtn = async () => {
     if (!isEditOk) return;
 
     const formData = new FormData();
-
     if (editImage === img) {
       formData.append(
         'commentDto',
@@ -51,31 +51,40 @@ function Comment(props: Props) {
       formData.append('commentImgFiles', editImage);
     }
 
-    const config = {
-      method: 'post',
-      url: `${URL}/${challengeId}/comment/${commentId}`,
-      data: formData,
-      headers: {
-        'Content-Type': 'multipart/form-data',
-        Authorization: 'Bearer ' + localStorage.getItem('token'),
-      },
-    };
-
-    await axios(config)
-      .then((res) => {
-        getComments();
-        setIsEditOk(false);
-        setIsEditComment(false);
-      })
-      .catch((err) => {
-        alert('잠시후 다시 시도해주세요');
-      });
+    try {
+      await CommentApi.editComment(challengeId, commentId, formData);
+      getComments();
+      setIsEditOk(false);
+      setIsEditComment(false);
+    } catch (err) {
+      alert('잠시후 다시 시도해주세요');
+    }
   };
 
   const onUploadEditImage = () => {
     if (editImageRef.current?.files) {
       setEditImage(editImageRef.current?.files[0]);
       setIsEditOk(true);
+    }
+  };
+
+  const onClickCommentHeart = async () => {
+    if (!isHeart) {
+      // 좋아요 추가
+      try {
+        await CommentApi.commentLikes(commentId, 1);
+        setIsHeart(true);
+      } catch (err) {
+        console.trace(err);
+      }
+    } else {
+      // 좋아요 취소
+      try {
+        await CommentApi.commentLikes(commentId, 0);
+        setIsHeart(false);
+      } catch (err) {
+        console.trace(err);
+      }
     }
   };
 
@@ -104,6 +113,12 @@ function Comment(props: Props) {
             setIsModalOpen={setIsModalOpen}
             setIsEditComment={setIsEditComment}
           />
+          <S.Text>
+            <S.IconBox onClick={onClickCommentHeart}>
+              {isHeart ? <AiFillHeart size={28} color={'red'} /> : <AiOutlineHeart size={28} />}
+            </S.IconBox>
+            <SmallText>{likes}</SmallText>
+          </S.Text>
         </S.Form>
       ) : (
         <S.EditForm>
@@ -179,6 +194,19 @@ const Textarea = styled.textarea`
 const EditForm = styled(Form)`
   flex-direction: column;
 `;
+
+const SmallText = styled.span`
+  font-size: 20px;
+  padding-bottom: 3px;
+  margin-left: 5px;
+`;
+
+const IconBox = styled.span`
+  :hover {
+    cursor: pointer;
+  }
+`;
+
 const S = {
   Wrapper,
   Text,
@@ -188,6 +216,8 @@ const S = {
   ContentText,
   Textarea,
   EditForm,
+  SmallText,
+  IconBox,
 };
 
 interface Props {

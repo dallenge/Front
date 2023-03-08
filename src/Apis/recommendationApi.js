@@ -1,4 +1,4 @@
-import { Axios } from './core';
+import { Axios } from './@core';
 
 const PATH = '/challenge';
 const JSON_TYPE = 'application/json';

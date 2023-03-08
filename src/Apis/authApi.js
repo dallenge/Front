@@ -1,4 +1,4 @@
-import { Axios } from './core';
+import { Axios } from './@core';
 
 const PATH = '/user';
 const USER_ID = localStorage.getItem('userId');
