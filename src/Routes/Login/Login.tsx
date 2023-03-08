@@ -7,8 +7,10 @@ import { FcGoogle } from 'react-icons/fc';
 
 import AuthApi from '../../Apis/authApi';
 import Regex from '../../Constant/Regex';
+import axios from 'axios';
 
 function Login() {
+  const URL = process.env.REACT_APP_URL;
   const {
     register,
     handleSubmit,
@@ -21,16 +23,31 @@ function Login() {
   const onClickLogin = async () => {
     try {
       const res = await AuthApi.login(watch('email'), watch('password'));
-      window.history.back();
       localStorage.clear();
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('expire', (Date.now() + 7200000).toString());
-      localStorage.setItem('userName', res.data.userName);
       localStorage.setItem('userId', res.data.userId);
-      localStorage.setItem('email', watch('email'));
-      window.location.href = '/';
     } catch (err: any) {
       alert(JSON.parse(err.request.response).message);
+    } finally {
+      const config = {
+        method: 'get',
+        url: `${URL}/user/${localStorage.getItem('userId')}`,
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem('token'),
+        },
+      };
+      axios(config)
+        .then((res) => {
+          localStorage.setItem('userName', res.data.userName);
+          localStorage.setItem('email', res.data.email);
+          localStorage.setItem('info', res.data.info);
+          localStorage.setItem('imageUrl', res.data.imageUrl);
+          window.history.back();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
   };
 
