@@ -159,11 +159,17 @@ export default function Mypage() {
           <Progressbar now={completed} total={total} />
         </div>
         <div style={{ marginTop: '15px' }}>
-          <div style={{ display: 'inline-block', float: 'right', fontWeight: '600', fontSize: '20px' }}>
-            <span>{`오늘은 ${total}개 중에 `}</span>
-            <span style={{ color: 'rgb(228, 15, 15)' }}>{`${completed}`}</span>
-            <span>개를 완료하셨어요!</span>
-          </div>
+          {total ? (
+            <div style={{ display: 'inline-block', float: 'right', fontWeight: '600', fontSize: '20px' }}>
+              <span>{`오늘은 ${total}개 중에 `}</span>
+              <span style={{ color: 'rgb(228, 15, 15)' }}>{`${completed}`}</span>
+              <span>개를 완료하셨어요!</span>
+            </div>
+          ) : (
+            <div style={{ display: 'inline-block', float: 'right', fontWeight: '600', fontSize: '20px' }}>
+              <span>진행 중인 챌린지가 없습니다.</span>
+            </div>
+          )}
           <div style={{ height: '30px' }}></div>
           <div>
             {/* ------- 데이터베이스로부터 받은 챌린지 사용하는 부분 -------- */}

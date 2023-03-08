@@ -32,6 +32,8 @@ function Home() {
   `;
 
   const CursorDiv = styled.div`
+    width: 40px;
+    height: 40px;
     &:hover {
       cursor: pointer;
     }
@@ -59,6 +61,7 @@ function Home() {
         console.log(err);
       });
   }, []);
+
   const onClickCheck = (status: string, id: number) => {
     let config = {};
     if (status === 'SUCCESS') {
@@ -162,17 +165,73 @@ function Home() {
                       onClick={() => {
                         onClickCheck(challenge.challengeStatus, challenge.challengeId);
                       }}
-                      style={{ display: 'inline-block', marginRight: '20px', marginTop: '8px' }}
                     >
                       {challenge.challengeStatus == 'SUCCESS' ? (
-                        <img style={{ width: '50px' }} src={IMAGE_URL.CHECK_YES_URL} />
+                        <img style={{ width: '40px' }} src={IMAGE_URL.CHECK_YES_URL} />
                       ) : (
-                        <img style={{ width: '50px' }} src={IMAGE_URL.CHECK_NO_URL} />
+                        <img style={{ width: '40px' }} src={IMAGE_URL.CHECK_NO_URL} />
                       )}
                     </CursorDiv>
                   </ChallengeBox>
                 );
               })}
+              {myChallengeList[0] ? (
+                <ChallengeBox
+                  style={{
+                    background: 'var(--color-blue)',
+                    border: 'none',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    fontSize: '20px',
+                    fontWeight: 'bolder',
+                    color: 'white',
+                    cursor: 'pointer',
+                  }}
+                  onClick={() => {
+                    navigate('/my-page');
+                  }}
+                >
+                  자세히보기
+                </ChallengeBox>
+              ) : (
+                <div
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                  }}
+                >
+                  <div
+                    style={{
+                      fontWeight: 'bold',
+                      fontSize: '20px',
+                      marginTop: '60px',
+                    }}
+                  >
+                    챌린지가 없습니다!
+                  </div>
+                  <ChallengeBox
+                    style={{
+                      background: 'var(--color-blue)',
+                      border: 'none',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      fontSize: '20px',
+                      fontWeight: 'bolder',
+                      color: 'white',
+                      cursor: 'pointer',
+                    }}
+                    onClick={() => {
+                      navigate('/challengelist');
+                    }}
+                  >
+                    챌린지 추가하기
+                  </ChallengeBox>
+                </div>
+              )}
             </div>
           </div>
         </Card>
