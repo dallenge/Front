@@ -148,6 +148,8 @@ export default function ProfileEdit() {
           .then((res) => {
             alert('프로필이 변경되었습니다.');
             localStorage.setItem('userName', userName);
+            localStorage.setItem('info', info);
+            localStorage.setItem('imageUrl', view);
             window.location.reload();
           })
           .catch((err) => console.trace(err));

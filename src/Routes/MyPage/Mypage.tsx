@@ -15,9 +15,10 @@ const Container = styled.div`
 `;
 
 const Image = styled.img`
-  width: 140px;
+  width: 120px;
+  height: 120px;
   border: 3px solid black;
-  border-radius: 70px;
+  border-radius: 50%;
 `;
 
 const ChallengeBox = styled.div`
@@ -133,7 +134,13 @@ export default function Mypage() {
         <div style={{ marginTop: '50px', display: 'flex' }}>
           {/* 여기에 회원 이미지 넣기!!!!!! */}
           <div style={{ display: 'inline-block' }}>
-            <Image src={URL + `${localStorage.getItem('imageUrl')}` ?? ''}></Image>
+            <Image
+              src={
+                localStorage.getItem('imageUrl')?.split('/')[1] === 'images'
+                  ? URL + `${localStorage.getItem('imageUrl')}` ?? ''
+                  : localStorage.getItem('imageUrl') ?? ''
+              }
+            ></Image>
           </div>
           <div style={{ display: 'inline-block', height: '140px', padding: '10px 30px' }}>
             <div style={{ display: 'flex' }}>
