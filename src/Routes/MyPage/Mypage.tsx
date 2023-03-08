@@ -133,7 +133,7 @@ export default function Mypage() {
         <div style={{ marginTop: '50px', display: 'flex' }}>
           {/* 여기에 회원 이미지 넣기!!!!!! */}
           <div style={{ display: 'inline-block' }}>
-            <Image src="https://cdn-icons-png.flaticon.com/512/4645/4645949.png"></Image>
+            <Image src={URL + `${localStorage.getItem('imageUrl')}` ?? ''}></Image>
           </div>
           <div style={{ display: 'inline-block', height: '140px', padding: '10px 30px' }}>
             <div style={{ display: 'flex' }}>
@@ -144,7 +144,7 @@ export default function Mypage() {
                 {/* <EditButton>프로필 수정</EditButton> */}
               </div>
             </div>
-            <div style={{ marginTop: '20px' }}>아직 자기소개가 없어요!🏃🏻</div>
+            <div style={{ marginTop: '20px' }}>{localStorage.getItem('info') ?? '아직 자기소개가 없어요!🏃🏻'}</div>
           </div>
         </div>
         <div style={{ height: '30px' }}></div>
