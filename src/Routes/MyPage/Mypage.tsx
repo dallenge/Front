@@ -123,7 +123,7 @@ export default function Mypage() {
 
   useEffect(() => {
     getMyChallenge();
-  }, [getMyChallenge]);
+  });
 
   return (
     <div style={{ marginTop: '40px' }}>
