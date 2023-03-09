@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
+import RecommendationApi from '../../Apis/recommendationApi';
 import Loading from './Components/Loading';
 import Questionnaire from './Components/Questionnaire';
 
@@ -7,6 +8,8 @@ function TestRecommendation() {
   const [questionsCount, setQuestionsCount] = useState<number>(0);
   const [answeredList, setAnsweredList] = useState<number[]>([]);
   const [isShowResult, setIsShowResult] = useState<boolean>(false);
+
+  const [results, setResults] = useState<Result[]>([]);
 
   const questions = {
     challengeLocation: {
@@ -24,13 +27,26 @@ function TestRecommendation() {
   };
 
   const onNextQuestion = (idx?: number) => {
-    if (idx) setAnsweredList([...answeredList, idx]);
+    console.log('선택됨 -->', idx);
+    if (idx !== undefined) setAnsweredList([...answeredList, idx]);
     setQuestionsCount((prev) => prev + 1);
   };
 
-  const submitResult = useCallback(() => {
+  const submitResult = useCallback(async () => {
     if (questionsCount === 4) {
-      setTimeout(() => {
+      try {
+        const res = await RecommendationApi.getTestResult({
+          challengeLocationIndex: answeredList[0],
+          challengeDurationIndex: answeredList[1],
+          challengeCategoryIndex: answeredList[2],
+        });
+        console.log(res);
+        setResults(res.data);
+      } catch (err) {
+        console.log(err);
+      }
+
+      setTimeout(async () => {
         console.log({
           challengeLocation: answeredList[0],
           challengeDuration: answeredList[1],
@@ -131,8 +147,9 @@ const Button = styled.button`
 
 const S = { Wrapper, Container, Title, Button };
 
-interface Answered {
-  challengeLocation: number;
-  challengeDuration: number;
-  challengeCategory: number;
+interface Result {
+  id: number;
+  title: string;
+  content: string;
+  challengeImgUrls: string[];
 }
