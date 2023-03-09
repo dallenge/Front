@@ -254,6 +254,7 @@ const Challenge = styled.div`
   height: 300px;
   background: var(--color-sky);
   padding: 20px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
