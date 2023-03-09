@@ -38,6 +38,14 @@ function Home() {
       cursor: pointer;
     }
   `;
+
+  const DetailDiv = styled.div`
+    margin-right: 20px;
+    &:hover {
+      cursor: pointer;
+      text-decoration: underline;
+    }
+  `;
   interface ChallengeList {
     challengeId: number;
     challengeTitle: string;
@@ -141,7 +149,7 @@ function Home() {
                 fontWeight: 'bolder',
               }}
             >
-              ⭐️오늘의 챌린지⭐️
+              ⭐️ 오늘의 챌린지 ⭐️
             </div>
             <div
               style={{
@@ -161,17 +169,20 @@ function Home() {
                 return (
                   <ChallengeBox>
                     <div style={{ fontSize: '20px' }}>{challenge.challengeTitle}</div>
-                    <CursorDiv
-                      onClick={() => {
-                        onClickCheck(challenge.challengeStatus, challenge.challengeId);
-                      }}
-                    >
-                      {challenge.challengeStatus == 'SUCCESS' ? (
-                        <img style={{ width: '40px' }} src={IMAGE_URL.CHECK_YES_URL} />
-                      ) : (
-                        <img style={{ width: '40px' }} src={IMAGE_URL.CHECK_NO_URL} />
-                      )}
-                    </CursorDiv>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <DetailDiv onClick={() => navigate(`/challenge/${challenge.challengeId}`)}>상세보기</DetailDiv>
+                      <CursorDiv
+                        onClick={() => {
+                          onClickCheck(challenge.challengeStatus, challenge.challengeId);
+                        }}
+                      >
+                        {challenge.challengeStatus == 'SUCCESS' ? (
+                          <img style={{ width: '40px' }} src={IMAGE_URL.CHECK_YES_URL} />
+                        ) : (
+                          <img style={{ width: '40px' }} src={IMAGE_URL.CHECK_NO_URL} />
+                        )}
+                      </CursorDiv>
+                    </div>
                   </ChallengeBox>
                 );
               })}

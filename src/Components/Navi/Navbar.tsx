@@ -1,3 +1,4 @@
+import React from 'react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
@@ -82,7 +83,7 @@ function Navbar() {
         </div>
       </div>
       <div style={{ display: 'flex', alignItems: 'center', marginRight: '30px' }}>
-        <Menu style={{ marginTop: '3px' }}>
+        <Menu>
           <div
             onClick={() => {
               setIsSearchOpen(!isSearchOpen);

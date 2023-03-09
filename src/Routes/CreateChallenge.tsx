@@ -219,7 +219,7 @@ export default function CreateChallenge() {
           <div>
             <button
               style={{
-                width: '440px',
+                width: '540px',
                 border: 'none',
                 background: 'var(--color-blue)',
                 color: 'white',
