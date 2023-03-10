@@ -1,101 +1,87 @@
-import React from 'react';
-import styled from 'styled-components';
-import PopularChallenge from '../Components/PopularChallenge';
 import { useNavigate } from 'react-router-dom';
-import { useState, useEffect, useCallback } from 'react';
-import axios from 'axios';
-import { FaMedal } from 'react-icons/fa';
-import useScrollFadeIn from '../Hooks/useScrollFadeIn';
-import CONSTANT_INFO from '../Constant/Constant';
+import { useState, useEffect, useCallback, useRef } from 'react';
+
+import { AiOutlineSearch } from 'react-icons/ai';
+import S from '../CSS/Home-style';
+import Slick from '../Components/Slider';
+
+import { ChallengeList, Challenge } from '../Interfaces';
+import TodayChallenge from '../Components/Home/TodayChallenge';
+import Icons from '../Components/Home/Icons';
+import AuthApi from '../Apis/authApi';
+import ChallengeApi from '../Apis/challengeApi';
+
+const URL = process.env.REACT_APP_URL;
+
+interface itemsProps {
+  item: string;
+  name: string;
+}
+
+const items: itemsProps[] = [
+  {
+    item: '/main/image1.png',
+    name: 'banner1',
+  },
+  {
+    item: '/main/image2.png',
+    name: 'banner2',
+  },
+];
+
+const categories = [
+  {
+    category: '공부',
+    image: '/category/image1.png',
+  },
+  {
+    category: '봉사',
+    image: '/category/image2.png',
+  },
+  {
+    category: '운동',
+    image: '/category/image3.png',
+  },
+  {
+    category: '경제',
+    image: '/category/image4.png',
+  },
+  {
+    category: '건강',
+    image: '/category/image5.png',
+  },
+];
 
 function Home() {
-  const Category = ['공부', '봉사', '운동', '경제', '건강'];
-  const medal = ['gold', 'silver', '#964b00'];
-  const URL = process.env.REACT_APP_URL;
-
-  const IMAGE_URL = CONSTANT_INFO.IMAGE_URL;
   const navigate = useNavigate();
+  const search = useRef<HTMLInputElement>(null);
   const [popularChallenge, setPopularChallenge] = useState<Challenge[]>([]);
   const [myChallengeList, setMyChallengeList] = useState<ChallengeList[]>([]);
 
-  const ChallengeBox = styled.div`
-    border: 3px solid var(--color-sky);
-    background: rgba(219, 226, 239, 0.3);
-    border-radius: 8px;
-    width: 90%;
-    height: 60px;
-    padding: 0 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 30px;
-  `;
-
-  const CursorDiv = styled.div`
-    width: 40px;
-    height: 40px;
-    &:hover {
-      cursor: pointer;
-    }
-  `;
-
-  const DetailDiv = styled.div`
-    margin-right: 20px;
-    &:hover {
-      cursor: pointer;
-      text-decoration: underline;
-    }
-  `;
-  interface ChallengeList {
-    challengeId: number;
-    challengeTitle: string;
-    challengeContent: string;
-    challengeStatus: string;
-  }
-
   const getMyChallenge = useCallback(async () => {
-    const config = {
-      method: 'get',
-      url: `${URL}/user/participate`,
-      headers: {
-        Authorization: 'Bearer ' + localStorage.getItem('token'),
-      },
-    };
-    await axios(config)
-      .then((res) => {
-        setMyChallengeList(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    try {
+      const { data } = await AuthApi.getMyParticipatedChallenge();
+      setMyChallengeList(data);
+    } catch (err) {
+      console.trace(err);
+    }
   }, []);
 
-  const onClickCheck = (status: string, id: number) => {
-    let config = {};
+  const onClickCheck = async (status: string, id: number) => {
     if (status === 'SUCCESS') {
-      config = {
-        method: 'post',
-        url: `${URL}/challenge/${id}/pause`,
-        headers: {
-          Authorization: 'Bearer ' + localStorage.getItem('token'),
-        },
-      };
+      try {
+        await ChallengeApi.pauseChallenge(id);
+      } catch (err) {
+        console.trace(err);
+      }
     } else {
-      config = {
-        method: 'post',
-        url: `${URL}/challenge/${id}/success`,
-        headers: {
-          Authorization: 'Bearer ' + localStorage.getItem('token'),
-        },
-      };
+      try {
+        await ChallengeApi.successChallenge(id);
+      } catch (err) {
+        console.trace(err);
+      }
     }
-    axios(config)
-      .then(() => {
-        getMyChallenge();
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    getMyChallenge();
   };
 
   useEffect(() => {
@@ -103,295 +89,86 @@ function Home() {
   }, [getMyChallenge]);
 
   const getPopularChallenge = async () => {
-    const config = {
-      method: 'get',
-      url: `${URL}/challenge?size=4&page=0&sort=popular`,
-    };
-    await axios(config).then((res) => {
-      setPopularChallenge(res.data.content);
-    });
-  };
-
-  const replaceDateFormat = (date: string): string => {
-    let day = date.split(' ')[0];
-    let time = date.split(' ')[1].slice(0, 8);
-    return day + ' ' + time;
-  };
-
-  const animatedItem: any = {
-    0: useScrollFadeIn('up', 0, 0),
-    1: useScrollFadeIn('up', 1, 0.2),
-    2: useScrollFadeIn('up', 1, 0.3),
-    3: useScrollFadeIn('up', 1, 0.4),
-    4: useScrollFadeIn('up', 1, 0.5),
-    5: useScrollFadeIn('up', 1, 0.6),
+    try {
+      const { data } = await ChallengeApi.getPopularChallenge(4);
+      setPopularChallenge(data.content);
+    } catch (err) {
+      console.trace(err);
+    }
   };
 
   useEffect(() => {
     getPopularChallenge();
   }, []);
+
   return (
-    <div>
+    <>
       {localStorage.getItem('token') ? (
-        <Card background="var(--color-white)" height="70vh">
-          <div
-            style={{
-              width: '100%',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              color: 'black',
-            }}
-          >
-            <div
-              style={{
-                fontSize: '30px',
-                fontWeight: 'bolder',
-              }}
-            >
-              ⭐️ 오늘의 챌린지 ⭐️
-            </div>
-            <div
-              style={{
-                width: '70vw',
-                height: '400px',
-                marginTop: '20px',
-                border: '2px solid var(--color-blue)',
-                background: 'white',
-                overflowY: 'auto',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                padding: '30px',
-              }}
-            >
-              {myChallengeList.map((challenge) => {
-                return (
-                  <ChallengeBox>
-                    <div style={{ fontSize: '20px' }}>{challenge.challengeTitle}</div>
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                      <DetailDiv onClick={() => navigate(`/challenge/${challenge.challengeId}`)}>상세보기</DetailDiv>
-                      <CursorDiv
-                        onClick={() => {
-                          onClickCheck(challenge.challengeStatus, challenge.challengeId);
-                        }}
-                      >
-                        {challenge.challengeStatus == 'SUCCESS' ? (
-                          <img style={{ width: '40px' }} src={IMAGE_URL.CHECK_YES_URL} />
-                        ) : (
-                          <img style={{ width: '40px' }} src={IMAGE_URL.CHECK_NO_URL} />
-                        )}
-                      </CursorDiv>
-                    </div>
-                  </ChallengeBox>
-                );
-              })}
-              {myChallengeList[0] ? (
-                <ChallengeBox
-                  style={{
-                    background: 'var(--color-blue)',
-                    border: 'none',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    fontSize: '20px',
-                    fontWeight: 'bolder',
-                    color: 'white',
-                    cursor: 'pointer',
-                  }}
-                  onClick={() => {
-                    navigate('/my-page');
-                  }}
-                >
-                  자세히보기
-                </ChallengeBox>
-              ) : (
-                <div
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                  }}
-                >
-                  <div
-                    style={{
-                      fontWeight: 'bold',
-                      fontSize: '20px',
-                      marginTop: '60px',
-                    }}
-                  >
-                    챌린지가 없습니다!
-                  </div>
-                  <ChallengeBox
-                    style={{
-                      background: 'var(--color-blue)',
-                      border: 'none',
-                      display: 'flex',
-                      justifyContent: 'center',
-                      fontSize: '20px',
-                      fontWeight: 'bolder',
-                      color: 'white',
-                      cursor: 'pointer',
-                    }}
-                    onClick={() => {
-                      navigate('/challengelist');
-                    }}
-                  >
-                    챌린지 추가하기
-                  </ChallengeBox>
-                </div>
-              )}
-            </div>
-          </div>
-        </Card>
+        <TodayChallenge myChallengeList={myChallengeList} onClickCheck={onClickCheck} />
       ) : (
-        <Card background="url('/main.jpg')" height="90vh">
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'flex-start',
-              margin: '200px',
-              color: 'black',
-              fontSize: '70px',
-            }}
-          >
-            <div>타인에게 공유하는</div>
-            <div>나만의 챌린지</div>
-            <div style={{ fontSize: '20px', color: 'black', fontWeight: 'bold' }}>나만의 데일리 챌린지를</div>
-            <div style={{ fontSize: '20px', color: 'black', fontWeight: 'bold' }}>사람들에게 공유하세요!</div>
-          </div>
-        </Card>
+        <S.Main>
+          <S.Title>원하는 챌린지를 찾아보세요</S.Title>
+          <S.InputContainer>
+            <S.Input placeholder="원하는 챌린지를 검색해보세요" autoComplete="off" ref={search} />
+            <S.Icon onClick={() => search.current?.value && navigate(`challengelist/${search.current.value}`)}>
+              <AiOutlineSearch size={40} />
+            </S.Icon>
+          </S.InputContainer>
+          <Icons />
+        </S.Main>
       )}
-      <Card background="white" height="50vh" {...animatedItem[0]}>
-        <div
-          {...animatedItem[0]}
-          style={{ display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'space-between' }}
-        >
-          {Category.map((category, index) => (
-            <CategoryBtn
-              {...animatedItem[index + 1]}
-              onClick={() => {
-                navigate(`/challengelist//${category}`);
-              }}
-            >
-              {category}
-            </CategoryBtn>
+      <S.BannerWrapper>
+        <Slick>
+          {items.map((item, index) => (
+            <S.BannerImage key={index} alt={item.name} src={item.item} />
           ))}
-        </div>
-      </Card>
-      <Card background="var(--color-white)" height="600px">
-        <div style={{ width: '100vw', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-          <div style={{ fontSize: '20px', fontWeight: '600' }}>인기 챌린지</div>
-          <div style={{ width: '100%', display: 'flex', marginTop: '50px', justifyContent: 'space-around' }}>
-            {popularChallenge.map((challenge, i) => {
-              return (
-                <Challenge key={i} onClick={() => (window.location.href = `/challenge/${challenge.id}`)}>
-                  {i <= 2 ? (
-                    <FaMedal
-                      style={{
-                        zIndex: '1',
-                        width: '30px',
-                        height: '30px',
-                        position: 'absolute',
-                        left: '5px',
-                        top: '5px',
-                        color: medal[i],
-                      }}
+        </Slick>
+      </S.BannerWrapper>
+      <S.Card background="white" height="40vh">
+        <S.FlexColumn>
+          <S.Text>카테고리로 보는 챌린지 ▶️</S.Text>
+          <S.CategoryWrapper>
+            {categories.map((category, index) => (
+              <S.CategoryContainer
+                key={index}
+                style={{ backgroundImage: `url(${category.image})` }}
+                onClick={() => {
+                  navigate(`/challengelist//${category.category}`);
+                }}
+              ></S.CategoryContainer>
+            ))}
+          </S.CategoryWrapper>
+        </S.FlexColumn>
+      </S.Card>
+      <S.Card background="white" height="500px">
+        <S.FlexColumn>
+          <S.SmallText>참여자 수로 보는</S.SmallText>
+          <S.Text>인기 챌린지 랭킹</S.Text>
+          <S.FlexRow>
+            <S.RankContainer>
+              {popularChallenge.map((challenge, index) => (
+                <S.RankChallengeCard onClick={() => (window.location.href = `/challenge/${challenge.id}`)}>
+                  <S.SmallText>{index + 1}</S.SmallText>
+                  <S.RankImageBox>
+                    <S.RankImage
+                      src={
+                        challenge.challengeImgUrls.length !== 0
+                          ? `${URL}` + `${challenge.challengeImgUrls[0]}`
+                          : `/logo.png`
+                      }
                     />
-                  ) : null}
-                  <img
-                    src={
-                      challenge.challengeImgUrls.length != 0
-                        ? `${URL}` + `${challenge.challengeImgUrls[0]}`
-                        : `/logo.png`
-                    }
-                    alt="noimage"
-                    style={{ width: '260px', height: '180px', objectFit: 'cover' }}
-                  />
-                  <div style={{ fontSize: '20px', fontWeight: 'bolder' }}>{challenge.title}</div>
-                  <div
-                    style={{
-                      fontSize: '13px',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'flex-start',
-                      position: 'absolute',
-                      bottom: '20px',
-                    }}
-                  >
-                    <div style={{ fontSize: '15px' }}>{challenge.challengeOwnerUser.userName}</div>
-                    <div>{replaceDateFormat(challenge.created_at)}</div>
-                  </div>
-                </Challenge>
-              );
-            })}
-          </div>
-        </div>
-      </Card>
-    </div>
+                  </S.RankImageBox>
+                  <S.Text style={{ fontWeight: '500', fontSize: '18px' }}>{challenge.title}</S.Text>
+                  <S.SmallText>🏃 {challenge.challengeCategory}</S.SmallText>
+                </S.RankChallengeCard>
+              ))}
+            </S.RankContainer>
+            <S.MiddleAdvertising src={'/advertising/image1.png'} />
+          </S.FlexRow>
+        </S.FlexColumn>
+      </S.Card>
+    </>
   );
 }
 
 export default Home;
-
-type Challenge = {
-  id: number;
-  title: string;
-  challengeCategory: string;
-  challengeLocation: string;
-  challengeDuration: string;
-  howManyUsersAreInThisChallenge: number;
-  challengeOwnerUser: ChallengeOwnerUser;
-  challengeImgUrls: string;
-  created_at: string;
-};
-
-type ChallengeOwnerUser = {
-  userName: string;
-  userId: number;
-  email: string;
-};
-
-const Card = styled.div<{ background: string; height: string }>`
-  width: 100%;
-  height: ${(props) => props.height};
-  background: ${(props) => props.background};
-  padding: 20px;
-  display: flex;
-  justify-content: flex-start;
-  background-size: cover;
-`;
-const CategoryBtn = styled.div`
-  width: 200px;
-  height: 200px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #f0ecec;
-  font-weight: bold;
-  font-size: 20px;
-  cursor: pointer;
-  &:hover {
-    background: var(--color-sky);
-    font-size: 25px;
-  }
-`;
-
-const Challenge = styled.div`
-  width: 300px;
-  height: 300px;
-  background: var(--color-sky);
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  position: relative;
-  border-radius: 10px;
-  :hover {
-    cursor: pointer;
-  }
-`;

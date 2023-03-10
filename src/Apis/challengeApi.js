@@ -23,6 +23,18 @@ const ChallengeApi = {
   participateChallenge(challengeId) {
     return Axios().post(PATH + `/${challengeId}/participate`);
   },
+
+  pauseChallenge(challengeId) {
+    return Axios().post(PATH + `/${challengeId}/pause`);
+  },
+
+  successChallenge(challengeId) {
+    return Axios().post(PATH + `/${challengeId}/success`);
+  },
+
+  getPopularChallenge(size) {
+    return Axios().get(PATH + `?size=${size}&page=0&sort=popular`);
+  },
 };
 
 export default ChallengeApi;
