@@ -18,6 +18,7 @@ import Recommendation from './Routes/Recommendation';
 import TestRecommendation from './Routes/Recommendation/Test';
 import HashTagRecommendation from './Routes/Recommendation/HashTag';
 import RandomRecommendation from './Routes/Recommendation/Random';
+import Achievement from './Routes/Achievement/Achivement';
 
 function App() {
   return (
@@ -43,6 +44,7 @@ function App() {
         <Route path="/get-recommendations/test" element={<TestRecommendation />} />
         <Route path="/get-recommendations/hashtag" element={<HashTagRecommendation />} />
         <Route path="/get-recommendations/random" element={<RandomRecommendation />} />
+        <Route path="/achievement" element={<Achievement />} />
         <Route path="*" element={<GetBadRoot />} />
       </Routes>
     </div>

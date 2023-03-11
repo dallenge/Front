@@ -75,10 +75,11 @@ function Navbar() {
           </Menu>
           <Menu
             onClick={() => {
+              navigate('/achievement');
               closeBar();
             }}
           >
-            베스트리뷰
+            성취
           </Menu>
         </div>
       </div>
