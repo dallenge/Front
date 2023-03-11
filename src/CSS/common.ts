@@ -15,3 +15,9 @@ export const FlexAlignCSS = css`
   display: flex;
   align-items: center;
 `;
+
+export const HoverCSS = css`
+  :hover {
+    cursor: pointer;
+  }
+`;

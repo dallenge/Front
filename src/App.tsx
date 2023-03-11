@@ -19,35 +19,37 @@ import TestRecommendation from './Pages/Recommendation/Test';
 import HashTagRecommendation from './Pages/Recommendation/HashTag';
 import RandomRecommendation from './Pages/Recommendation/Random';
 import Achievement from './Pages/Achievement/Achievement';
+import Layout from './Components/Layout';
 
 function App() {
   return (
-    <div className="App">
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup/select-account" element={<SignupSelect />} />
-        <Route path="/signup/user-email" element={<SingupEmail />} />
-        <Route path="/my-page" element={<Mypage />} />
-        <Route path="/challengelist/:title/:category" element={<ChallengeList />} />
-        <Route path="/challengelist/:title" element={<ChallengeList />} />
-        <Route path="/challengelist//:category" element={<ChallengeList />} />
-        <Route path="/challengelist" element={<ChallengeList />} />
-        <Route path="/challenge/:id" element={<DetailChallenge />} />
-        <Route path="/createchallenge" element={<CreateChallenge />} />
-        <Route path="/my-page/modify/profile-edit" element={<ProfileEdit />} />
-        <Route path="/my-page/modify/password-edit" element={<PwEdit />} />
-        <Route path="/my-page/modify/withdrawal" element={<Withdrawal />} />
-        <Route path="my-page/modify/progress-challenge-edit" element={<ProgressChallengeEdit />} />
-        <Route path="/get-recommendations" element={<Recommendation />} />
-        <Route path="/get-recommendations/test" element={<TestRecommendation />} />
-        <Route path="/get-recommendations/hashtag" element={<HashTagRecommendation />} />
-        <Route path="/get-recommendations/random" element={<RandomRecommendation />} />
-        <Route path="/achievement" element={<Achievement />} />
-        <Route path="*" element={<GetBadRoot />} />
-      </Routes>
-    </div>
+    <Layout>
+      <div className="App">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup/select-account" element={<SignupSelect />} />
+          <Route path="/signup/user-email" element={<SingupEmail />} />
+          <Route path="/my-page" element={<Mypage />} />
+          <Route path="/challengelist/:title/:category" element={<ChallengeList />} />
+          <Route path="/challengelist/:title" element={<ChallengeList />} />
+          <Route path="/challengelist//:category" element={<ChallengeList />} />
+          <Route path="/challengelist" element={<ChallengeList />} />
+          <Route path="/challenge/:id" element={<DetailChallenge />} />
+          <Route path="/createchallenge" element={<CreateChallenge />} />
+          <Route path="/my-page/modify/profile-edit" element={<ProfileEdit />} />
+          <Route path="/my-page/modify/password-edit" element={<PwEdit />} />
+          <Route path="/my-page/modify/withdrawal" element={<Withdrawal />} />
+          <Route path="my-page/modify/progress-challenge-edit" element={<ProgressChallengeEdit />} />
+          <Route path="/get-recommendations" element={<Recommendation />} />
+          <Route path="/get-recommendations/test" element={<TestRecommendation />} />
+          <Route path="/get-recommendations/hashtag" element={<HashTagRecommendation />} />
+          <Route path="/get-recommendations/random" element={<RandomRecommendation />} />
+          <Route path="/achievement" element={<Achievement />} />
+          <Route path="*" element={<GetBadRoot />} />
+        </Routes>
+      </div>
+    </Layout>
   );
 }
 
