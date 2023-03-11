@@ -29,11 +29,11 @@ function Icons() {
         </S.IconBox>
         <S.Text>추천받기</S.Text>
       </S.IconContainer>
-      <S.IconContainer>
+      <S.IconContainer onClick={() => navigate('/achievement')}>
         <S.IconBox>
           <GiAchievement size={50} />
         </S.IconBox>
-        <S.Text>뱃지</S.Text>
+        <S.Text>성취</S.Text>
       </S.IconContainer>
     </S.IconWrapper>
   );

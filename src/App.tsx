@@ -1,23 +1,24 @@
 import './CSS/App.css';
 import { Routes, Route } from 'react-router-dom';
 import Navbar from './Components/Navi/Navbar';
-import Home from './Routes/Home';
-import Login from './Routes/Login/Login';
-import SignupSelect from './Routes/Signup/SignupSelect';
-import SingupEmail from './Routes/Signup/SignupEmail';
-import Mypage from './Routes/MyPage/Mypage';
-import ProfileEdit from './Routes/Edit/ProfileEdit';
-import ChallengeList from './Routes/ChallengeList';
-import CreateChallenge from './Routes/CreateChallenge';
-import PwEdit from './Routes/Edit/PwEdit';
-import Withdrawal from './Routes/Edit/Withdrawal';
-import ProgressChallengeEdit from './Routes/Edit/ProgressChallengeEdit';
-import DetailChallenge from './Routes/DetailChallenge';
+import Home from './Pages/Home';
+import Login from './Pages/Login/Login';
+import SignupSelect from './Pages/Signup/SignupSelect';
+import SingupEmail from './Pages/Signup/SignupEmail';
+import Mypage from './Pages/MyPage/Mypage';
+import ProfileEdit from './Pages/Edit/ProfileEdit';
+import ChallengeList from './Pages/ChallengeList';
+import CreateChallenge from './Pages/CreateChallenge';
+import PwEdit from './Pages/Edit/PwEdit';
+import Withdrawal from './Pages/Edit/Withdrawal';
+import ProgressChallengeEdit from './Pages/Edit/ProgressChallengeEdit';
+import DetailChallenge from './Pages/DetailChallenge';
 import GetBadRoot from './Components/GetBadRoot';
-import Recommendation from './Routes/Recommendation';
-import TestRecommendation from './Routes/Recommendation/Test';
-import HashTagRecommendation from './Routes/Recommendation/HashTag';
-import RandomRecommendation from './Routes/Recommendation/Random';
+import Recommendation from './Pages/Recommendation';
+import TestRecommendation from './Pages/Recommendation/Test';
+import HashTagRecommendation from './Pages/Recommendation/HashTag';
+import RandomRecommendation from './Pages/Recommendation/Random';
+import Achievement from './Pages/Achievement/Achievement';
 
 function App() {
   return (
@@ -43,6 +44,7 @@ function App() {
         <Route path="/get-recommendations/test" element={<TestRecommendation />} />
         <Route path="/get-recommendations/hashtag" element={<HashTagRecommendation />} />
         <Route path="/get-recommendations/random" element={<RandomRecommendation />} />
+        <Route path="/achievement" element={<Achievement />} />
         <Route path="*" element={<GetBadRoot />} />
       </Routes>
     </div>
