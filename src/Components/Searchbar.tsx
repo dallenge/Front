@@ -2,42 +2,6 @@ import styled from 'styled-components';
 import React, { useState, useRef, useEffect } from 'react';
 import CONSTANT_INFO from '../Constant/Constant';
 
-const SearchbarDiv = styled.div`
-  display: inline-block;
-  position: absolute;
-  z-index: 9999;
-  height: 150px;
-  width: 100%;
-  background: #ffffff;
-  top: 100px;
-`;
-
-const Input = styled.input`
-  width: 60%;
-  border: none;
-  border-bottom: 1px solid rgb(209, 209, 209);
-  line-height: 50px;
-  font-size: 22px;
-  font-weight: bold;
-  color: rgb(97, 97, 97);
-  &:focus-visible {
-    outline: none;
-  }
-`;
-
-const Image = styled.img`
-  width: 30px;
-  &:hover {
-    cursor: pointer;
-  }
-`;
-
-const BottomDiv = styled.div`
-  height: 1807.69px;
-  opacity: 0.3;
-  background-color: rgb(0, 0, 0);
-`;
-
 interface Props {
   closeBar(): void;
 }
@@ -76,6 +40,7 @@ export default function Searchbar({ closeBar }: Props) {
           placeholder="관심있는 챌린지명을 검색해보세요!"
           onKeyUp={handleKeyPress}
           ref={inputRef}
+          style={{ marginLeft: '20%' }}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchText(e.target.value)}
         ></Input>
         <Image onClick={onClickSearch} src={SEARCH_IMAGE_URL} />
@@ -84,3 +49,39 @@ export default function Searchbar({ closeBar }: Props) {
     </SearchbarDiv>
   );
 }
+
+const SearchbarDiv = styled.div`
+  display: inline-block;
+  position: absolute;
+  z-index: 9999;
+  height: 150px;
+  width: 100%;
+  background: #ffffff;
+  top: 100px;
+`;
+
+const Input = styled.input`
+  width: 60%;
+  border: none;
+  border-bottom: 1px solid rgb(209, 209, 209);
+  line-height: 50px;
+  font-size: 22px;
+  font-weight: bold;
+  color: rgb(97, 97, 97);
+  &:focus-visible {
+    outline: none;
+  }
+`;
+
+const Image = styled.img`
+  width: 30px;
+  &:hover {
+    cursor: pointer;
+  }
+`;
+
+const BottomDiv = styled.div`
+  height: 1807.69px;
+  opacity: 0.3;
+  background-color: rgb(0, 0, 0);
+`;

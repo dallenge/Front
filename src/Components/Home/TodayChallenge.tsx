@@ -14,7 +14,7 @@ function TodayChallenge({ myChallengeList, onClickCheck }: Props) {
   const navigate = useNavigate();
 
   return (
-    <S.Card background="var(--color-white)" height="70vh">
+    <S.Card background="var(--color-white)" height="68vh">
       <S.TodayWrapper>
         <S.TodayTitle>⭐️ 오늘의 챌린지 ⭐️</S.TodayTitle>
         <S.TodayContainer>

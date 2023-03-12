@@ -46,6 +46,8 @@ export default SpreadMenu;
 const SpreadMenuBox = styled.div`
   padding: 15px;
   position: absolute;
+  display: flex;
+  flex-direction: column;
   z-index: 999;
   width: 240px;
   height: 250px;
@@ -59,7 +61,7 @@ const Layer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 14px 0;
+  margin: 8px auto;
 `;
 
 const SpreadDiv = styled.div`
@@ -74,7 +76,7 @@ const SpreadDiv = styled.div`
 const Line = styled.div`
   height: 1px;
   width: 80%;
-  background: rgb(200, 200, 200);
+  background: rgb(190, 190, 190);
 `;
 
 interface SetOpenFunc {

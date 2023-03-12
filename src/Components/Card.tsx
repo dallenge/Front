@@ -22,10 +22,12 @@ export default ChallengeCard;
 
 const Wrapper = styled.div`
   width: 30%;
+  min-height: 400px;
+  margin: 5px;
   background-color: #f1f6ff;
   border: 2px solid var(--color-sky);
   border-radius: 20px;
-  margin: 0 auto;
+  margin: 8px auto;
   :hover {
     cursor: pointer;
   }
@@ -42,6 +44,7 @@ const Box = styled.div`
 const Img = styled.img`
   width: 100%;
   margin: 0 auto;
+  max-height: 250px;
 `;
 
 const Title = styled.div`
