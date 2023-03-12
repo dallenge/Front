@@ -1,7 +1,7 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import CONSTANT_INFO from '../../Constant/Constant';
 import Searchbar from '../Searchbar';
 
@@ -107,25 +107,24 @@ function Navbar() {
         ) : (
           <div style={{ display: 'flex' }}>
             <span>
-              <Menu style={{ marginLeft: '50px', marginRight: '20px' }} onClick={() => navigate('/my-page')}>
+              <Menu
+                style={{ marginLeft: '50px', marginRight: '20px' }}
+                onClick={() => {
+                  navigate('/my-page');
+                  closeBar();
+                }}
+              >
                 {userName}님
               </Menu>
             </span>
-            {isSwitchOpen ? (
-              <SwitchCloseImg
-                onClick={() => setIsSwitchOpen(!isSwitchOpen)}
-                style={{ transform: 'rotate(180deg)' }}
-                src={SPREAD_MENU_SWITCH_IMAGE_URL}
-              />
-            ) : (
-              <SwitchCloseImg
-                onClick={() => {
-                  setIsSwitchOpen(!isSwitchOpen);
-                  setIsSearchOpen(false);
-                }}
-                src={SPREAD_MENU_SWITCH_IMAGE_URL}
-              />
-            )}
+            <SwitchCloseImg
+              src={SPREAD_MENU_SWITCH_IMAGE_URL}
+              state={isSwitchOpen}
+              onClick={() => {
+                setIsSwitchOpen((prev) => !prev);
+                setIsSearchOpen(false);
+              }}
+            />
             {isSwitchOpen && <SpreadMenu setOpen={setOpen} />}
           </div>
         )}
@@ -165,9 +164,10 @@ const Menu = styled.div`
   }
 `;
 
-const SwitchCloseImg = styled.img`
+const SwitchCloseImg = styled.img<{ state: boolean }>`
   width: 23px;
   margin-left: 20px;
+  transform: ${({ state }) => state && 'rotate(180deg)'};
   &:hover {
     cursor: pointer;
   }
