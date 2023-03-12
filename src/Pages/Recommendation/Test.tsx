@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import RecommendationApi from '../../Apis/recommendationApi';
+import ChallengeCard from '../../Components/Card';
+import { FlexAlignCSS, FlexCenterCSS } from '../../CSS/common';
 import Loading from './Components/Loading';
 import Questionnaire from './Components/Questionnaire';
 
@@ -27,7 +30,6 @@ function TestRecommendation() {
   };
 
   const onNextQuestion = (idx?: number) => {
-    console.log('선택됨 -->', idx);
     if (idx !== undefined) setAnsweredList([...answeredList, idx]);
     setQuestionsCount((prev) => prev + 1);
   };
@@ -40,18 +42,13 @@ function TestRecommendation() {
           challengeDurationIndex: answeredList[1],
           challengeCategoryIndex: answeredList[2],
         });
-        console.log(res);
+
         setResults(res.data);
       } catch (err) {
-        console.log(err);
+        console.trace(err);
       }
 
       setTimeout(async () => {
-        console.log({
-          challengeLocation: answeredList[0],
-          challengeDuration: answeredList[1],
-          challengeCategory: answeredList[2],
-        });
         setIsShowResult(true);
       }, 4000);
     }
@@ -98,7 +95,21 @@ function TestRecommendation() {
               <Loading />
             </>
           ) : (
-            <div>RESULT</div>
+            <>
+              <S.Title style={{ marginTop: '20px', marginBottom: '40px' }}>테스트 결과입니다!</S.Title>
+              <S.ResultWrapper>
+                {results.map((result) => (
+                  <ChallengeCard
+                    id={result.id}
+                    title={result.title}
+                    content={result.content}
+                    img={result.challengeImgUrls}
+                  />
+                ))}
+              </S.ResultWrapper>
+              <div>마음에 드는 챌린지가 없나요?</div>
+              <Link to="/createchallenge">직접 챌린지 만들러가기</Link>
+            </>
           ))}
       </S.Container>
     </S.Wrapper>
@@ -111,15 +122,14 @@ const Wrapper = styled.div`
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 80vh;
+  min-height: 80vh;
 `;
 
 const Container = styled.div`
   display: flex;
   justify-content: center;
   flex-direction: column;
-  width: 50%;
-  height: 90%;
+  width: 65%;
   margin-top: 100px;
 `;
 
@@ -145,7 +155,14 @@ const Button = styled.button`
   }
 `;
 
-const S = { Wrapper, Container, Title, Button };
+const ResultWrapper = styled.div`
+  ${FlexAlignCSS}
+  width: 100%;
+  flex-wrap: wrap;
+  margin-bottom: 50px;
+`;
+
+const S = { Wrapper, Container, Title, Button, ResultWrapper };
 
 interface Result {
   id: number;
