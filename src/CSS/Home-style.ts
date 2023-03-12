@@ -6,7 +6,6 @@ const Card = styled.div<{ background: string; height: string }>`
   height: ${(props) => props.height};
   background: ${(props) => props.background};
   padding: 20px;
-  margin-top: 50px;
   display: flex;
   justify-content: flex-start;
   background-size: cover;
@@ -101,6 +100,7 @@ const TodayWrapper = styled.div`
 const TodayTitle = styled.div`
   font-size: 30px;
   font-weight: bolder;
+  margin-top: 30px;
 `;
 
 const TodayContainer = styled.div`
@@ -117,7 +117,6 @@ const TodayContainer = styled.div`
 `;
 
 const Main = styled.div`
-  height: 55vh;
   width: 100%;
   padding: 50px;
   display: flex;
