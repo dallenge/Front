@@ -69,6 +69,8 @@ function Comment(props: Props) {
   };
 
   const onClickCommentHeart = async () => {
+    if (!localStorage.getItem('token')) return alert('로그인 후 이용해 주세요');
+
     if (!isHeart) {
       // 좋아요 추가
       try {
