@@ -34,7 +34,7 @@ export default function ChallengeList() {
   const [challengeArray, setChallengeArray] = useState<Challenge[]>([]);
   const [sortCondition, setSortCondition] = useState<string>('');
 
-  const { title, category } = useParams();
+  const { title, category, hashtag } = useParams();
   const categoryList = [undefined, '공부', '봉사', '운동', '경제', '건강'];
 
   const pageLoop = () => {
@@ -57,17 +57,26 @@ export default function ChallengeList() {
   };
 
   const getChallenges = useCallback(async () => {
-    const config = {
-      method: 'get',
-      url: `${URL}/challenge/condition?title=${title ?? ''}&category=${category ?? ''}&size=8&page=${page}&sort=${
-        sortCondition ?? ''
-      }`,
-      headers: {
-        Authorization: 'Bearer ' + localStorage.getItem('token'),
-      },
-    };
+    const config = hashtag
+      ? {
+          method: 'get',
+          url: `${URL}/challenge/hashtag?content=${hashtag ?? ''}&size=8&page=${page}&sort=${sortCondition ?? ''}`,
+          headers: {
+            Authorization: 'Bearer ' + localStorage.getItem('token'),
+          },
+        }
+      : {
+          method: 'get',
+          url: `${URL}/challenge/condition?title=${title ?? ''}&category=${category ?? ''}&size=8&page=${page}&sort=${
+            sortCondition ?? ''
+          }`,
+          headers: {
+            Authorization: 'Bearer ' + localStorage.getItem('token'),
+          },
+        };
     await axios(config)
       .then((res) => {
+        console.log(sortCondition);
         setChallengeArray([...res.data.content]);
         setTotalPage(Math.ceil(res.data.totalElements / 8));
       })
@@ -83,7 +92,11 @@ export default function ChallengeList() {
   };
 
   const onClickSearch = () => {
-    if (!category) {
+    if (searchText.split('')[0] === '#') {
+      const temp = searchText.split('');
+      temp.shift();
+      window.location.href = `/challengelist///${temp.join('')}`;
+    } else if (!category) {
       window.location.href = `/challengelist/${searchText}`;
     } else {
       window.location.href = `/challengelist/${searchText}/${category}`;

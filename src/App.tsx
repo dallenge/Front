@@ -34,6 +34,7 @@ function App() {
           <Route path="/challengelist/:title/:category" element={<ChallengeList />} />
           <Route path="/challengelist/:title" element={<ChallengeList />} />
           <Route path="/challengelist//:category" element={<ChallengeList />} />
+          <Route path="/challengelist///:hashtag" element={<ChallengeList />} />
           <Route path="/challengelist" element={<ChallengeList />} />
           <Route path="/challenge/:id" element={<DetailChallenge />} />
           <Route path="/createchallenge" element={<CreateChallenge />} />

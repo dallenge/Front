@@ -26,18 +26,22 @@ export default function Searchbar({ closeBar }: Props) {
   const onClickSearch = () => {
     if (!searchText) {
       alert('검색어를 입력해주세요');
+    } else if (searchText.split('')[0] === '#') {
+      const temp = searchText.split('');
+      temp.shift();
+      window.location.href = `/challengelist///${temp.join('')}`;
+      closeBar();
     } else {
       window.location.href = `/challengelist/${searchText}`;
       closeBar();
     }
   };
-
   return (
     <SearchbarDiv>
       <div style={{ height: '150px' }}>
         <div style={{ height: '40px' }}></div>
         <Input
-          placeholder="관심있는 챌린지명을 검색해보세요!"
+          placeholder="관심있는 해시태그 및 챌린지명을 검색해보세요!(ex. 제목, #해시태그)"
           onKeyUp={handleKeyPress}
           ref={inputRef}
           style={{ marginLeft: '20%' }}
