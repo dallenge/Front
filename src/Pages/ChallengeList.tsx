@@ -171,7 +171,7 @@ export default function ChallengeList() {
             <CategoryBtn
               className={category === e ? 'checked' : undefined}
               onClick={() => {
-                window.location.href = `/challengelist//${e ?? ''}`;
+                window.location.href = `/challengelist/${searchText ?? ''}/${e ?? ''}`;
               }}
             >
               {e === undefined ? '전체' : e}
