@@ -85,7 +85,7 @@ export default function CreateChallenge() {
       content: hashArr,
     };
     data.append('requestCreateChallenge', new Blob([JSON.stringify(challenge)], { type: 'application/json' }));
-    data.append('challengeImgFile', imgFile);
+    data.append('challengeImgFiles', imgFile);
     data.append('hashtagDto', new Blob([JSON.stringify(hashtagObj)], { type: 'application/json' }));
 
     const config = {
