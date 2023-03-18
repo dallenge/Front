@@ -52,9 +52,9 @@ function SingupEmail() {
 
   const onClickDupliConfirm = async (e: any) => {
     e.preventDefault();
-
     try {
       await AuthApi.duplicatedEmailConfirm(watch('email'));
+      alert('확인 완료');
       setDuplicatedEmail(false);
     } catch (err: any) {
       if (err.response.data.code === 409) setDuplicatedEmail(true);
@@ -143,7 +143,7 @@ const Container = styled.div`
 
 const Form = styled.form`
   margin-top: 30px;
-  width: 22%;
+  width: 25%;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -171,8 +171,10 @@ const FlexRow = styled.div`
 const DupliButton = styled.button`
   border: none;
   width: 26%;
+  margin-left: 5px;
   height: 100%;
   border-radius: 5px;
+  font-size: 0.8rem;
 `;
 
 const Input = styled.input`

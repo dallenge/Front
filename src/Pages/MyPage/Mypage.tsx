@@ -81,7 +81,7 @@ export default function Mypage() {
   const getMyChallenge = useCallback(async () => {
     const config = {
       method: 'get',
-      url: `${URL}/user/participate`,
+      url: `${URL}/user/inProgress`,
       headers: {
         Authorization: 'Bearer ' + localStorage.getItem('token'),
       },
@@ -106,6 +106,7 @@ export default function Mypage() {
 
     // 자식 컴포넌트에서 체크박스를 체크했을 경우
     if (status === 'add') {
+      console.log('o');
       setCompleted(completed + 1);
       copyArray.push(id);
       setCheckedArr(copyArray);
@@ -272,9 +273,9 @@ const ChallengeItem = ({
           style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
         >
           {isOpen ? (
-            <TogleImageUp src={IMAGE_URL.TOGLE_IMAGE_URL} />
-          ) : (
             <TogleImageDown src={IMAGE_URL.TOGLE_IMAGE_URL} />
+          ) : (
+            <TogleImageUp src={IMAGE_URL.TOGLE_IMAGE_URL} />
           )}
         </div>
       </ChallengeBox>

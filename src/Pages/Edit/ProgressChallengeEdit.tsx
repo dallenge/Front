@@ -18,7 +18,7 @@ function ProgressChallengeEdit() {
   const getMyParticipate = () => {
     const config = {
       method: 'get',
-      url: `${URL}/user/participate`,
+      url: `${URL}/user/inProgress`,
       headers: {
         Authorization: 'Bearer ' + localStorage.getItem('token'),
       },

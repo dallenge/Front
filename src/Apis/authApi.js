@@ -22,7 +22,7 @@ const AuthApi = {
   },
 
   getMyParticipatedChallenge() {
-    return Axios().get(PATH + `/participate`);
+    return Axios().get(PATH + `/inProgress`);
   },
 
   getMyBookmarkedChallenge() {
