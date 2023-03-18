@@ -2,26 +2,45 @@ import styled from 'styled-components';
 import { BiDotsHorizontalRounded } from 'react-icons/bi';
 import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import Modal from './Modal';
 import CommentArea from './Components/CommentArea';
-import axios from 'axios';
 import CommentApi from '../../Apis/commentApi';
+import { CommentLikeUsersInfoINTERFACE } from '../../Interfaces';
 
 function Comment(props: Props) {
   const URL = process.env.REACT_APP_URL;
 
-  const { challengeId, commentId, content, likes, createdAt, img, owner, myComment, getComments } = props;
+  const {
+    challengeId,
+    commentId,
+    content,
+    likes,
+    createdAt,
+    img,
+    owner,
+    myComment,
+    commentLikeUsersInfo,
+    getComments,
+  } = props;
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isEditComment, setIsEditComment] = useState<boolean>(false);
   const [isEditOk, setIsEditOk] = useState<boolean>(false);
   const [isHeart, setIsHeart] = useState<boolean>(false);
+  const [likeCount, setLikeCount] = useState<number>(likes);
 
   const [editCommentText, setEditCommentText] = useState<string>(content);
   const editImageRef = useRef<HTMLInputElement>(null);
   const [editImage, setEditImage] = useState<any>();
+
+  useEffect(() => {
+    commentLikeUsersInfo.forEach((user) => {
+      const userId = localStorage.getItem('userId');
+      userId && user.userId === +userId ? setIsHeart(true) : setIsHeart(false);
+    });
+  }, []);
 
   const onClickModal = () => setIsModalOpen((prev) => !prev);
 
@@ -76,6 +95,7 @@ function Comment(props: Props) {
       try {
         await CommentApi.commentLikes(commentId, 1);
         setIsHeart(true);
+        setLikeCount((prev) => prev + 1);
       } catch (err) {
         console.trace(err);
       }
@@ -84,6 +104,7 @@ function Comment(props: Props) {
       try {
         await CommentApi.commentLikes(commentId, 0);
         setIsHeart(false);
+        setLikeCount((prev) => prev - 1);
       } catch (err) {
         console.trace(err);
       }
@@ -119,7 +140,7 @@ function Comment(props: Props) {
             <S.IconBox onClick={onClickCommentHeart}>
               {isHeart ? <AiFillHeart size={28} color={'red'} /> : <AiOutlineHeart size={28} />}
             </S.IconBox>
-            <SmallText>{likes}</SmallText>
+            <SmallText>{likeCount}</SmallText>
           </S.Text>
         </S.Form>
       ) : (
@@ -235,5 +256,6 @@ interface Props {
     userId: number;
   };
   myComment: boolean;
+  commentLikeUsersInfo: CommentLikeUsersInfoINTERFACE[];
   getComments: () => void;
 }

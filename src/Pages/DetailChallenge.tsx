@@ -13,6 +13,7 @@ import { Pagination } from 'react-bootstrap';
 import ChallengeApi from '../Apis/challengeApi';
 import Loading from './Recommendation/Components/Loading';
 import AuthApi from '../Apis/authApi';
+import { DetailChallengeINTERFACE, CommentINTERFACE } from '../Interfaces';
 
 let bookmarkId: number;
 
@@ -22,8 +23,8 @@ function DetailChallenge() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const [challengeInfo, setChallengeInfo] = useState<Challenge>();
-  const [commentList, setCommentList] = useState<Comment[]>([]);
+  const [challengeInfo, setChallengeInfo] = useState<DetailChallengeINTERFACE>();
+  const [commentList, setCommentList] = useState<CommentINTERFACE[]>([]);
 
   const [page, setPage] = useState<number>(0);
   const [totalPage, setTotalPage] = useState<number>(0);
@@ -132,7 +133,7 @@ function DetailChallenge() {
   };
 
   // 오늘 몇개의 후기가 남겨졌는지 구하는 함수
-  const getTodayComment = (comments: Comment[]): number => {
+  const getTodayComment = (comments: CommentINTERFACE[]): number => {
     return comments.filter((comment) => comment.createdAt === '오늘').length;
   };
 
@@ -221,6 +222,7 @@ function DetailChallenge() {
                 img={comment.commentImgUrls}
                 owner={comment.commentOwnerUser}
                 myComment={comment.commentOwnerUser.userId === Number(localStorage.getItem('userId'))}
+                commentLikeUsersInfo={comment.commentLikeUsersInfo}
                 getComments={getComments}
               />
             );
@@ -342,44 +344,3 @@ const S = {
   Image,
   Button,
 };
-
-interface Challenge {
-  responseChallenge: {
-    id: string;
-    title: string;
-    content: string;
-    challengeCategory: string;
-    challengeLocation: string;
-    challengeDuration: string;
-    created_at: string;
-    challengeImgUrls: string[];
-    challengeHashtags: string[];
-    howManyUsersAreInThisChallenge: number;
-    challengeOwnerUser: {
-      userName: string;
-      email: string;
-      userId: number;
-    };
-  };
-  responseUserChallenges: {
-    challengeStatus: string;
-    participatedUser: {
-      userName: string;
-      email: string;
-      userId: number;
-    };
-  }[];
-}
-
-interface Comment {
-  id: string;
-  content: string;
-  likes: number;
-  createdAt: string;
-  commentImgUrls: string[];
-  commentOwnerUser: {
-    userName: string;
-    email: string;
-    userId: number;
-  };
-}
