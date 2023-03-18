@@ -3,91 +3,46 @@ import styled from 'styled-components';
 import AchievementApi from '../../Apis/achievement';
 import { FlexAlignCSS, FlexCenterCSS, FlexColumnCenterCSS } from '../../CSS/common';
 
-interface MedalType {
-  name: string;
-  url: string;
-  state: boolean;
-}
+const URL = process.env.REACT_APP_URL;
 
 interface Medal {
-  title: string;
-  content: string;
-  medal: MedalType[];
+  badgeName: string;
+  badgeStatus: boolean;
+  badgeImgUrl: string[];
 }
 
+const MEDAL_TITLE = ['🔥 챌린지 습관 만들기', '✍️ 기록하는 습관', '💡 나만의 챌린지 완성!'];
+const MEDAL_CONTENT = ['진행 챌린지를 수행하면 돼요', '진행 챌린지에 기록을 하면 돼요', '챌린지를 등록하면 돼요'];
+
 function Achievement() {
-  const [medals, setMedals] = useState<Medal[]>([
-    {
-      title: '🔥 챌린지 습관 만들기',
-      content: '진행 챌린지를 모두 수행하면 돼요',
-      medal: [
-        { name: '챌린지 10개 달성', url: '/medal/routine/10.svg', state: false },
-        { name: '챌린지 20개 달성', url: '/medal/routine/20.svg', state: false },
-        { name: '챌린지 30개 달성', url: '/medal/routine/30.svg', state: false },
-        { name: '챌린지 40개 달성', url: '/medal/routine/40.svg', state: false },
-        { name: '챌린지 50개 달성', url: '/medal/routine/50.svg', state: false },
-      ],
-    },
-    {
-      title: '✍️ 기록하는 습관',
-      content: '진행 챌린지에 기록을 하면 돼요',
-      medal: [
-        { name: '댓글 10개 등록', url: '/medal/record/10.svg', state: false },
-        { name: '댓글 20개 등록', url: '/medal/record/20.svg', state: false },
-        { name: '댓글 30개 등록', url: '/medal/record/30.svg', state: false },
-        { name: '댓글 40개 등록', url: '/medal/record/40.svg', state: false },
-        { name: '댓글 50개 등록', url: '/medal/record/50.svg', state: false },
-      ],
-    },
-    {
-      title: '💡 나만의 챌린지 완성!',
-      content: '챌린지를 등록하면 돼요',
-      medal: [
-        { name: '챌린지 10개 생성', url: '/medal/write/10.svg', state: false },
-        { name: '챌린지 15개 생성', url: '/medal/write/15.svg', state: false },
-        { name: '챌린지 20개 생성', url: '/medal/write/20.svg', state: false },
-        { name: '챌린지 25개 생성', url: '/medal/write/25.svg', state: false },
-        { name: '챌린지 30개 생성', url: '/medal/write/30.svg', state: false },
-      ],
-    },
-  ]);
+  const [medalsList, setMedalsList] = useState<Medal[][]>([]);
 
   useEffect(() => {
-    const getAchievement = async () => {
+    const getBadges = async () => {
       try {
-        const { data }: { data: AchievementData } = await AchievementApi.getUserBadge();
-
-        const newMedals = [...medals];
-
-        newMedals.map((medal) =>
-          medal.medal.map((type) => {
-            if (
-              data.achievementBadgeNames.includes(type.name) ||
-              data.challengeCreateBadgeNames.includes(type.name) ||
-              data.writeCommentBadgeNames?.includes(type.name) // api 수정되면 다시 수정할 예정
-            ) {
-              type.state = true;
-            }
-          }),
-        );
-        setMedals(newMedals);
+        const { data } = await AchievementApi.getUserBadge();
+        const splicedList: Medal[][] = [];
+        for (let i = 0; i < data.length; i += 5) {
+          splicedList.push(data.slice(i, i + 5));
+        }
+        setMedalsList(splicedList);
       } catch (err) {
         console.log(err);
       }
     };
-
-    getAchievement();
+    getBadges();
   }, []);
+
   return (
     <S.Wrapper>
       <S.Container>
-        {medals.map((medal, idx) => (
+        {medalsList.map((medals, idx) => (
           <S.Box key={idx}>
-            <S.Title>{medal.title}</S.Title>
-            <div style={{ marginLeft: '50px' }}>{medal.content}</div>
+            <S.Title>{MEDAL_TITLE[idx]}</S.Title>
+            <div style={{ marginLeft: '50px' }}>{MEDAL_CONTENT[idx]}</div>
             <S.MedalContainer>
-              {medal.medal.map((type, idx) => (
-                <S.Image key={idx} src={`${type.url}`} alt="" state={type.state} />
+              {medals.map((medal, idx) => (
+                <S.Image key={idx} src={`${URL}/${medal.badgeImgUrl}`} alt="" state={medal.badgeStatus} />
               ))}
             </S.MedalContainer>
           </S.Box>
@@ -133,7 +88,7 @@ const Title = styled.div`
 `;
 
 const Image = styled.img<{ state: boolean }>`
-  width: 160px;
+  width: 17%;
   margin: 10px;
   background-color: ${({ state }) => state && '#bdcff1'};
   padding: 10px;
@@ -141,9 +96,3 @@ const Image = styled.img<{ state: boolean }>`
 `;
 
 const S = { Wrapper, Container, Box, Title, MedalContainer, Image };
-
-interface AchievementData {
-  challengeCreateBadgeNames: string[];
-  achievementBadgeNames: string[];
-  writeCommentBadgeNames: string[];
-}
