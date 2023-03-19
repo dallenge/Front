@@ -1,7 +1,8 @@
-import axios from 'axios';
 import { useRef, useState } from 'react';
 import styled from 'styled-components';
 import CommentApi from '../../Apis/commentApi';
+import { BadgeInfoINTERFACE } from '../../Interfaces';
+import AchieveModal from '../Achievement/Modal';
 import CommentArea from './Components/CommentArea';
 
 interface Props {
@@ -14,6 +15,14 @@ function CommentInput({ postId, getComments, isParticipatedChallenge }: Props) {
   const imageRef = useRef<HTMLInputElement>(null);
   const [uploadImage, setUploadImage] = useState<any>();
   const [writeText, setWriteText] = useState<string>('');
+
+  const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
+  const [resBadgeInfo, setResBadgeInfo] = useState<BadgeInfoINTERFACE>();
+
+  const onCloseModal = () => {
+    setIsOpenModal(false);
+    window.location.reload();
+  };
 
   const onClickSubmitComment = async () => {
     if (!writeText && imageRef.current?.files?.length === 0) {
@@ -37,8 +46,13 @@ function CommentInput({ postId, getComments, isParticipatedChallenge }: Props) {
     }
 
     try {
-      await CommentApi.addNewComment(postId, formData);
-      window.location.reload();
+      const { data } = await CommentApi.addNewComment(postId, formData);
+      if (data.badgeInfo) {
+        setResBadgeInfo(data.badgeInfo);
+        setIsOpenModal(true);
+      } else {
+        window.location.reload();
+      }
     } catch (err) {
       console.trace(err);
     }
@@ -55,17 +69,26 @@ function CommentInput({ postId, getComments, isParticipatedChallenge }: Props) {
   };
 
   return (
-    <S.Form>
-      <CommentArea
-        imageRef={imageRef}
-        onUploadImage={onUploadImage}
-        textValue={writeText}
-        onChangeWriteComment={onChangeWriteComment}
-        placeholder={'댓글로 기록하기..'}
-        onClickSubmitComment={onClickSubmitComment}
-        children={'기록하기'}
-      />
-    </S.Form>
+    <>
+      {isOpenModal && resBadgeInfo && (
+        <AchieveModal
+          onClickToggleModal={onCloseModal}
+          name={resBadgeInfo.createBadgeName}
+          url={resBadgeInfo.badgeImgUrl}
+        />
+      )}
+      <S.Form>
+        <CommentArea
+          imageRef={imageRef}
+          onUploadImage={onUploadImage}
+          textValue={writeText}
+          onChangeWriteComment={onChangeWriteComment}
+          placeholder={'댓글로 기록하기..'}
+          onClickSubmitComment={onClickSubmitComment}
+          children={'기록하기'}
+        />
+      </S.Form>
+    </>
   );
 }
 export default CommentInput;

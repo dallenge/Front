@@ -15,7 +15,7 @@ function AchieveModal({ onClickToggleModal, url, name }: Props) {
         <S.IconBox onClick={() => onClickToggleModal()}>
           <AiOutlineClose size={30} />
         </S.IconBox>
-        <S.Image src={url} alt="" />
+        <S.Image src={`${process.env.REACT_APP_URL}/${url}`} alt="" />
         <S.Text>{name} !</S.Text>
         <S.SmallText>획득한 뱃지는 성취 페이지에서 확인할 수 있습니다 :)</S.SmallText>
         <S.LinkText onClick={() => (window.location.href = '/achievement')}>성취 페이지에서 확인하기</S.LinkText>
@@ -42,11 +42,12 @@ const ModalContainer = styled.div`
   justify-content: center;
   position: fixed;
   top: 30px;
+  z-index: 9999;
 `;
 
 const DialogBox = styled.dialog`
   width: 800px;
-  height: 440px;
+  height: 480px;
   display: flex;
   flex-direction: column;
   align-items: center;

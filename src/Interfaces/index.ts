@@ -70,3 +70,22 @@ export interface UserInfoINTERFACE {
   email: string;
   userId: number;
 }
+
+export interface BadgeInfoINTERFACE {
+  createBadgeName: string;
+  badgeImgUrl: string;
+}
+
+export interface CreatedChallengeResponseINTERFACE {
+  id: string;
+  title: string;
+  content: string;
+  challengeCategory: string;
+  challengeLocation: string;
+  challengeDuration: string;
+  challengeStatus: string;
+  challengeImgUrls: string[];
+  challengeHashtags: string[];
+  challengeOwnerUser: UserInfoINTERFACE;
+  badgeInfo?: BadgeInfoINTERFACE;
+}

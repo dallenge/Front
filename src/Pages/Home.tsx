@@ -5,11 +5,12 @@ import { AiOutlineSearch } from 'react-icons/ai';
 import S from '../CSS/Home-style';
 import Slick from '../Components/Slider';
 
-import { ChallengeList, Challenge } from '../Interfaces';
+import { ChallengeList, Challenge, BadgeInfoINTERFACE } from '../Interfaces';
 import TodayChallenge from '../Components/Home/TodayChallenge';
 import Icons from '../Components/Home/Icons';
 import AuthApi from '../Apis/authApi';
 import ChallengeApi from '../Apis/challengeApi';
+import AchieveModal from '../Components/Achievement/Modal';
 
 const URL = process.env.REACT_APP_URL;
 
@@ -58,6 +59,13 @@ function Home() {
   const [popularChallenge, setPopularChallenge] = useState<Challenge[]>([]);
   const [myChallengeList, setMyChallengeList] = useState<ChallengeList[]>([]);
 
+  const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
+  const [resBadgeInfo, setResBadgeInfo] = useState<BadgeInfoINTERFACE>();
+
+  const onCloseModal = () => {
+    setIsOpenModal(false);
+  };
+
   const getMyChallenge = useCallback(async () => {
     try {
       const { data } = await AuthApi.getMyParticipatedChallenge();
@@ -76,7 +84,11 @@ function Home() {
       }
     } else {
       try {
-        await ChallengeApi.successChallenge(id);
+        const { data } = await ChallengeApi.successChallenge(id);
+        if (data.badgeInfo) {
+          setResBadgeInfo(data.badgeInfo);
+          setIsOpenModal(true);
+        }
       } catch (err) {
         console.trace(err);
       }
@@ -104,7 +116,16 @@ function Home() {
   return (
     <>
       {localStorage.getItem('token') ? (
-        <TodayChallenge myChallengeList={myChallengeList} onClickCheck={onClickCheck} />
+        <>
+          {isOpenModal && resBadgeInfo && (
+            <AchieveModal
+              onClickToggleModal={onCloseModal}
+              name={resBadgeInfo.createBadgeName}
+              url={resBadgeInfo.badgeImgUrl}
+            />
+          )}
+          <TodayChallenge myChallengeList={myChallengeList} onClickCheck={onClickCheck} />
+        </>
       ) : (
         <S.Main>
           <S.Title>원하는 챌린지를 찾아보세요</S.Title>
