@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from 'react';
 import Modal from './Modal';
 import CommentArea from './Components/CommentArea';
 import CommentApi from '../../Apis/commentApi';
-import { CommentLikeUsersInfoINTERFACE } from '../../Interfaces';
+import { UserInfoINTERFACE } from '../../Interfaces';
 
 function Comment(props: Props) {
   const URL = process.env.REACT_APP_URL;
@@ -256,6 +256,6 @@ interface Props {
     userId: number;
   };
   myComment: boolean;
-  commentLikeUsersInfo: CommentLikeUsersInfoINTERFACE[];
+  commentLikeUsersInfo: UserInfoINTERFACE[];
   getComments: () => void;
 }

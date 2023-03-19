@@ -62,10 +62,10 @@ export interface CommentINTERFACE {
     email: string;
     userId: number;
   };
-  commentLikeUsersInfo: CommentLikeUsersInfoINTERFACE[];
+  commentLikeUsersInfo: UserInfoINTERFACE[];
 }
 
-export interface CommentLikeUsersInfoINTERFACE {
+export interface UserInfoINTERFACE {
   userName: string;
   email: string;
   userId: number;
