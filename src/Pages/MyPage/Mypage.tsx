@@ -58,15 +58,27 @@ const TogleImageUp = styled.img`
 
 const DailyBox = styled.div`
   width: 96%;
-  height: 50px;
-  border: 1px solid black;
+  height: 110px;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
 `;
-
+const DayBox = styled.div<{ background: string }>`
+  width: 100px;
+  height: 100px;
+  border-radius: 15px;
+  background: ${(props) => props.background};
+  font-size: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 interface ChallengeList {
   challengeId: number;
   challengeTitle: string;
   challengeContent: string;
   challengeStatus: string;
+  weeklyAchievement: boolean[];
 }
 
 export default function Mypage() {
@@ -88,6 +100,7 @@ export default function Mypage() {
     };
     await axios(config)
       .then((res) => {
+        console.log(res.data);
         let countCompleted = 0;
         res.data.map((challenge: ChallengeList) => {
           if (challenge.challengeStatus === 'SUCCESS') {
@@ -182,6 +195,7 @@ export default function Mypage() {
                   content={challenge.challengeContent}
                   pushChallenge={pushChallenge}
                   status={challenge.challengeStatus}
+                  weeklyAchievement={challenge.weeklyAchievement}
                 />
               );
             })}
@@ -205,12 +219,14 @@ const ChallengeItem = ({
   content,
   status,
   pushChallenge,
+  weeklyAchievement,
 }: {
   id: number;
   title: string;
   content: string;
   status: string;
   pushChallenge: any;
+  weeklyAchievement: boolean[];
 }) => {
   const URL = process.env.REACT_APP_URL;
   const [challengeStatus, setChallengeStatus] = useState<string>(status);
@@ -243,7 +259,6 @@ const ChallengeItem = ({
 
     axios(config)
       .then((res) => {
-        console.log(res);
         if (challengeStatus === 'SUCCESS') {
           setChallengeStatus('PUASE');
         } else {
@@ -285,12 +300,22 @@ const ChallengeItem = ({
             <TogleImageUp src={IMAGE_URL.TOGLE_IMAGE_URL} />
           )}
         </div>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          {isOpen && <DailyInfo weeklyAchievement={weeklyAchievement} />}
+        </div>
       </ChallengeBox>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{isOpen && <DailyInfo />}</div>
     </div>
   );
 };
 
-const DailyInfo = () => {
-  return <DailyBox>데일리인포 자리~~~~!!</DailyBox>;
+const DailyInfo = ({ weeklyAchievement }: { weeklyAchievement: boolean[] }) => {
+  const weeksday = ['월', '화', '수', '목', '금', '토', '일'];
+  return (
+    <DailyBox>
+      {weeklyAchievement.map((achievement, i) => {
+        if (achievement) return <DayBox background="var(--color-blue)">{weeksday[i]}</DayBox>;
+        else return <DayBox background="white">{weeksday[i]}</DayBox>;
+      })}
+    </DailyBox>
+  );
 };
