@@ -28,6 +28,9 @@ const AuthApi = {
   getMyBookmarkedChallenge() {
     return Axios().get(PATH + `/${USER_ID}/bookmark`);
   },
+  deleteMyBookmarkedChallenge(id) {
+    return Axios().delete(PATH + `/${USER_ID}/bookmark/${id}`);
+  },
 };
 
 export default AuthApi;
