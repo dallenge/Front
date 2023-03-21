@@ -124,7 +124,7 @@ export default function Mypage() {
 
   useEffect(() => {
     getMyChallenge();
-  });
+  }, []);
 
   return (
     <div style={{ marginTop: '40px' }}>
@@ -213,12 +213,15 @@ const ChallengeItem = ({
   pushChallenge: any;
 }) => {
   const URL = process.env.REACT_APP_URL;
-  const [isChecked, setIsChecked] = useState<boolean>(status === 'SUCCESS' ? true : false);
+  const [challengeStatus, setChallengeStatus] = useState<string>(status);
+  const [isChecked, setIsChecked] = useState<boolean>(challengeStatus === 'SUCCESS' ? true : false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const onClickCheck = () => {
     let config = {};
-    if (status === 'SUCCESS') {
+    if (challengeStatus === 'SUCCESS') {
+      pushChallenge(id, 'delete');
+      setIsChecked(false);
       config = {
         method: 'post',
         url: `${URL}/challenge/${id}/pause`,
@@ -227,6 +230,8 @@ const ChallengeItem = ({
         },
       };
     } else {
+      pushChallenge(id, 'add');
+      setIsChecked(true);
       config = {
         method: 'post',
         url: `${URL}/challenge/${id}/success`,
@@ -239,9 +244,11 @@ const ChallengeItem = ({
     axios(config)
       .then((res) => {
         console.log(res);
-        // 체크X 상태인데 체크버튼이 눌렸다면 -> 선택이 되어야 함
-        if (status === 'SUCCESS') pushChallenge(id, 'delete');
-        else pushChallenge(id, 'add');
+        if (challengeStatus === 'SUCCESS') {
+          setChallengeStatus('PUASE');
+        } else {
+          setChallengeStatus('SUCCESS');
+        }
       })
       .catch((err) => {
         console.log(err);
