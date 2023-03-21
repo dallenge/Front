@@ -11,7 +11,6 @@ const ChallengeApi = {
   getComments(challengeId, size, page) {
     return Axios().get(`/${challengeId}/comment?size=${size}&page=${page}&sort=time`);
   },
-
   addBookmark(challengeId) {
     return Axios().post(`${challengeId}/bookmark/new`);
   },

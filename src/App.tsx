@@ -20,6 +20,7 @@ import HashTagRecommendation from './Pages/Recommendation/HashTag';
 import RandomRecommendation from './Pages/Recommendation/Random';
 import Achievement from './Pages/Achievement/Achievement';
 import Layout from './Components/Layout';
+import BookMarkList from './Pages/BookMarkList';
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
           <Route path="/challenge/:id" element={<DetailChallenge />} />
           <Route path="/createchallenge" element={<CreateChallenge />} />
           <Route path="/my-page/modify/profile-edit" element={<ProfileEdit />} />
+          <Route path="/bookmark" element={<BookMarkList />} />
           <Route path="/my-page/modify/password-edit" element={<PwEdit />} />
           <Route path="/my-page/modify/withdrawal" element={<Withdrawal />} />
           <Route path="my-page/modify/progress-challenge-edit" element={<ProgressChallengeEdit />} />

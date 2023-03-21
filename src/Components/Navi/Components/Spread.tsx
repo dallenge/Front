@@ -6,7 +6,14 @@ function SpreadMenu({ setOpen }: { setOpen: SetOpenFunc }) {
   return (
     <SpreadMenuBox>
       <Layer>
-        <SpreadDiv>관심있는 챌린지</SpreadDiv>
+        <SpreadDiv
+          onClick={() => {
+            navigate('/bookmark');
+            setOpen();
+          }}
+        >
+          관심있는 챌린지
+        </SpreadDiv>
       </Layer>
       <Layer>
         <SpreadDiv>내가 시작한 챌린지</SpreadDiv>
