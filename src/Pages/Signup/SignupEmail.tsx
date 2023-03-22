@@ -22,8 +22,13 @@ function SingupEmail() {
 
   const navigate = useNavigate();
 
+  const [confirmEmail, setConfirmEmail] = useState<string>('');
   const [isEmailError, setIsEmailError] = useState<boolean>(false);
   const [isDuplicatedEmail, setDuplicatedEmail] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    if (watch('email') !== confirmEmail) setDuplicatedEmail(null);
+  }, [watch('email')]);
 
   useEffect(() => {
     if (errors.email) {
@@ -54,7 +59,7 @@ function SingupEmail() {
     e.preventDefault();
     try {
       await AuthApi.duplicatedEmailConfirm(watch('email'));
-      alert('확인 완료');
+      setConfirmEmail(watch('email'));
       setDuplicatedEmail(false);
     } catch (err: any) {
       if (err.response.data.code === 409) setDuplicatedEmail(true);
