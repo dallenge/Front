@@ -7,6 +7,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import GetBadRoot from '../Components/GetBadRoot';
 import CommentInput from '../Components/Comment/CommentInput';
 import Comment from '../Components/Comment/Comment';
+import AccessModal from '../Components/Home/Modal';
 
 import { pageLoop } from '../Utils/pagination';
 import { Pagination } from 'react-bootstrap';
@@ -33,6 +34,7 @@ function DetailChallenge() {
   const [isBookmark, setIsBookmark] = useState<boolean>(false);
 
   const [isBadRoot, setIsBadRoot] = useState<boolean | null>(null);
+  const [isOpenAccessModal, setIsOpenAccessModal] = useState<boolean>(false);
 
   const getChallengeInfo = useCallback(async () => {
     try {
@@ -108,8 +110,10 @@ function DetailChallenge() {
         const { data } = await ChallengeApi.addBookmark(id);
         bookmarkId = data.id;
         setIsBookmark(true);
-      } catch (err) {
-        alert('로그인 후 이용해주세요');
+      } catch (err: any) {
+        if (err.response.status === 500) {
+          setIsOpenAccessModal(true);
+        }
       }
     } else {
       // 북마크 삭제
@@ -127,8 +131,10 @@ function DetailChallenge() {
       await ChallengeApi.participateChallenge(id);
       alert('참여하기가 완료되었습니다');
       setIsParticipatedChallenge(true);
-    } catch (err) {
-      if (!localStorage.getItem('token')) return alert('로그인 후 이용해주세요');
+    } catch (err: any) {
+      if (err.response.status === 500) {
+        setIsOpenAccessModal(true);
+      }
     }
   };
 
@@ -140,119 +146,122 @@ function DetailChallenge() {
   return (
     <>
       {!isBadRoot && challengeInfo ? (
-        <S.Container>
-          <S.Wrapper>
-            <div>
-              <S.Text style={{ marginTop: '20px' }}>
-                <S.Line w={'12%'} />
-                <S.HoverText size={'14px'} onClick={() => navigate('/challengelist')}>
-                  목록
-                </S.HoverText>
-                <S.Text size={'14px'}>/</S.Text>
-                <S.HoverText
-                  size={'14px'}
-                  style={{ color: 'var(--color-blue)' }}
-                  onClick={() => navigate(`/challengelist//${challengeInfo.responseChallenge.challengeCategory}`)}
-                >
-                  {challengeInfo.responseChallenge.challengeCategory}
-                </S.HoverText>
-                <S.Line grow={1} />
-              </S.Text>
-            </div>
-            <S.Form state={'content'}>
-              {/* Form 왼쪽 */}
-              <S.ContentBox>
-                <S.Image
-                  src={
-                    challengeInfo.responseChallenge.challengeImgUrls.length !== 0
-                      ? `${URL}` + `${challengeInfo.responseChallenge.challengeImgUrls}`
-                      : '/logo.png'
-                  }
-                  alt="challenge_img"
-                ></S.Image>
-              </S.ContentBox>
-              {/* Form 오른쪽 */}
-              <S.ContentBox padding={'50px'}>
-                <Text size={'25px'} padding={'15px 0'} style={{ justifyContent: 'space-between' }}>
-                  <Text>{challengeInfo.responseChallenge.title}</Text>
-                  <HoverText onClick={onClickBookmark}>
-                    {isBookmark ? <BsBookmarkFill color={'var(--color-blue)'} /> : <BsBookmark />}
-                  </HoverText>
-                </Text>
-                <S.Text padding={'15px 0'}>{challengeInfo.responseChallenge.content}</S.Text>
-                <S.Text>📍 {challengeInfo.responseChallenge.challengeLocation}</S.Text>
-                <S.Text>🕒 {challengeInfo.responseChallenge.challengeDuration}</S.Text>
-                <S.Text>🏃🏻 지금 {challengeInfo.responseChallenge.howManyUsersAreInThisChallenge}명 참여중</S.Text>
+        <>
+          {isOpenAccessModal && <AccessModal setOpen={setIsOpenAccessModal} />}
+          <S.Container>
+            <S.Wrapper>
+              <div>
                 <S.Text style={{ marginTop: '20px' }}>
-                  {challengeInfo.responseChallenge.challengeHashtags.map((hashtage) => (
-                    <span>#{hashtage}</span>
-                  ))}
+                  <S.Line w={'12%'} />
+                  <S.HoverText size={'14px'} onClick={() => navigate('/challengelist')}>
+                    목록
+                  </S.HoverText>
+                  <S.Text size={'14px'}>/</S.Text>
+                  <S.HoverText
+                    size={'14px'}
+                    style={{ color: 'var(--color-blue)' }}
+                    onClick={() => navigate(`/challengelist//${challengeInfo.responseChallenge.challengeCategory}`)}
+                  >
+                    {challengeInfo.responseChallenge.challengeCategory}
+                  </S.HoverText>
+                  <S.Line grow={1} />
                 </S.Text>
-                <S.Text padding={'15px 0'} color={'rgb(130, 130, 130)'}>
-                  <S.Text style={{ marginRight: '20px' }}>
-                    시작한 델린저: {challengeInfo.responseChallenge.challengeOwnerUser.userName}
+              </div>
+              <S.Form state={'content'}>
+                {/* Form 왼쪽 */}
+                <S.ContentBox>
+                  <S.Image
+                    src={
+                      challengeInfo.responseChallenge.challengeImgUrls.length !== 0
+                        ? `${URL}` + `${challengeInfo.responseChallenge.challengeImgUrls}`
+                        : '/logo.png'
+                    }
+                    alt="challenge_img"
+                  ></S.Image>
+                </S.ContentBox>
+                {/* Form 오른쪽 */}
+                <S.ContentBox padding={'50px'}>
+                  <Text size={'25px'} padding={'15px 0'} style={{ justifyContent: 'space-between' }}>
+                    <Text>{challengeInfo.responseChallenge.title}</Text>
+                    <HoverText onClick={onClickBookmark}>
+                      {isBookmark ? <BsBookmarkFill color={'var(--color-blue)'} /> : <BsBookmark />}
+                    </HoverText>
+                  </Text>
+                  <S.Text padding={'15px 0'}>{challengeInfo.responseChallenge.content}</S.Text>
+                  <S.Text>📍 {challengeInfo.responseChallenge.challengeLocation}</S.Text>
+                  <S.Text>🕒 {challengeInfo.responseChallenge.challengeDuration}</S.Text>
+                  <S.Text>🏃🏻 지금 {challengeInfo.responseChallenge.howManyUsersAreInThisChallenge}명 참여중</S.Text>
+                  <S.Text style={{ marginTop: '20px' }}>
+                    {challengeInfo.responseChallenge.challengeHashtags.map((hashtage) => (
+                      <span>#{hashtage}</span>
+                    ))}
                   </S.Text>
-                  <S.Text>{challengeInfo.responseChallenge.created_at}</S.Text>
-                </S.Text>
-                <S.Button
-                  state={isParticipatedChallenge}
-                  onClick={onClickParticipate}
-                  disabled={isParticipatedChallenge}
-                >
-                  {isParticipatedChallenge ? '이미 참여중입니다' : '지금 바로 참여하기'}
-                </S.Button>
-              </S.ContentBox>
+                  <S.Text padding={'15px 0'} color={'rgb(130, 130, 130)'}>
+                    <S.Text style={{ marginRight: '20px' }}>
+                      시작한 델린저: {challengeInfo.responseChallenge.challengeOwnerUser.userName}
+                    </S.Text>
+                    <S.Text>{challengeInfo.responseChallenge.created_at}</S.Text>
+                  </S.Text>
+                  <S.Button
+                    state={isParticipatedChallenge}
+                    onClick={onClickParticipate}
+                    disabled={isParticipatedChallenge}
+                  >
+                    {isParticipatedChallenge ? '이미 참여중입니다' : '지금 바로 참여하기'}
+                  </S.Button>
+                </S.ContentBox>
+              </S.Form>
+              <S.Line w={'100%'}></S.Line>
+            </S.Wrapper>
+            <S.Text padding={'20px 0 5px 0'}>오늘 {getTodayComment(commentList)}개의 기록🏃🏻</S.Text>
+            <CommentInput
+              postId={Number(id)}
+              getComments={getComments}
+              isParticipatedChallenge={isParticipatedChallenge}
+            />
+            {commentList.map((comment) => {
+              return (
+                <Comment
+                  challengeId={challengeInfo.responseChallenge.id}
+                  commentId={comment.id}
+                  content={comment.content}
+                  likes={comment.likes}
+                  createdAt={comment.createdAt}
+                  img={comment.commentImgUrls}
+                  owner={comment.commentOwnerUser}
+                  myComment={comment.commentOwnerUser.userId === Number(localStorage.getItem('userId'))}
+                  commentLikeUsersInfo={comment.commentLikeUsersInfo}
+                  getComments={getComments}
+                />
+              );
+            })}
+            <S.Form>
+              <Pagination>
+                <Pagination.First
+                  onClick={() => {
+                    setPage(0);
+                  }}
+                />
+                <Pagination.Prev
+                  onClick={() => {
+                    if (page !== 0) setPage(page - 1);
+                  }}
+                />
+                {pageLoop(page, totalPage, setPage)}
+                <Pagination.Next
+                  onClick={() => {
+                    if (page !== totalPage - 1) setPage(page + 1);
+                  }}
+                />
+                <Pagination.Last
+                  onClick={() => {
+                    setPage(totalPage - 1);
+                  }}
+                />
+              </Pagination>
             </S.Form>
-            <S.Line w={'100%'}></S.Line>
-          </S.Wrapper>
-          <S.Text padding={'20px 0 5px 0'}>오늘 {getTodayComment(commentList)}개의 기록🏃🏻</S.Text>
-          <CommentInput
-            postId={Number(id)}
-            getComments={getComments}
-            isParticipatedChallenge={isParticipatedChallenge}
-          />
-          {commentList.map((comment) => {
-            return (
-              <Comment
-                challengeId={challengeInfo.responseChallenge.id}
-                commentId={comment.id}
-                content={comment.content}
-                likes={comment.likes}
-                createdAt={comment.createdAt}
-                img={comment.commentImgUrls}
-                owner={comment.commentOwnerUser}
-                myComment={comment.commentOwnerUser.userId === Number(localStorage.getItem('userId'))}
-                commentLikeUsersInfo={comment.commentLikeUsersInfo}
-                getComments={getComments}
-              />
-            );
-          })}
-          <S.Form>
-            <Pagination>
-              <Pagination.First
-                onClick={() => {
-                  setPage(0);
-                }}
-              />
-              <Pagination.Prev
-                onClick={() => {
-                  if (page !== 0) setPage(page - 1);
-                }}
-              />
-              {pageLoop(page, totalPage, setPage)}
-              <Pagination.Next
-                onClick={() => {
-                  if (page !== totalPage - 1) setPage(page + 1);
-                }}
-              />
-              <Pagination.Last
-                onClick={() => {
-                  setPage(totalPage - 1);
-                }}
-              />
-            </Pagination>
-          </S.Form>
-        </S.Container>
+          </S.Container>
+        </>
       ) : (
         <>{isBadRoot ? <GetBadRoot /> : <Loading />}</>
       )}

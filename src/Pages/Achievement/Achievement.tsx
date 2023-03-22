@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import AchievementApi from '../../Apis/achievement';
+import AccessModal from '../../Components/Home/Modal';
 import { FlexAlignCSS, FlexCenterCSS, FlexColumnCenterCSS } from '../../CSS/common';
 
 const URL = process.env.REACT_APP_URL;
@@ -16,6 +17,11 @@ const MEDAL_CONTENT = ['진행 챌린지를 수행하면 돼요', '진행 챌린
 
 function Achievement() {
   const [medalsList, setMedalsList] = useState<Medal[][]>([]);
+  const [isOpenAccessModal, setIsOpenAccessModal] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (!localStorage.getItem('token')) setIsOpenAccessModal(true);
+  }, []);
 
   useEffect(() => {
     const getBadges = async () => {
@@ -34,21 +40,24 @@ function Achievement() {
   }, []);
 
   return (
-    <S.Wrapper>
-      <S.Container>
-        {medalsList.map((medals, idx) => (
-          <S.Box key={idx}>
-            <S.Title>{MEDAL_TITLE[idx]}</S.Title>
-            <div style={{ marginLeft: '50px' }}>{MEDAL_CONTENT[idx]}</div>
-            <S.MedalContainer>
-              {medals.map((medal, idx) => (
-                <S.Image key={idx} src={`${URL}/${medal.badgeImgUrl}`} alt="" state={medal.badgeStatus} />
-              ))}
-            </S.MedalContainer>
-          </S.Box>
-        ))}
-      </S.Container>
-    </S.Wrapper>
+    <>
+      {isOpenAccessModal && <AccessModal setOpen={setIsOpenAccessModal} />}
+      <S.Wrapper>
+        <S.Container>
+          {medalsList.map((medals, idx) => (
+            <S.Box key={idx}>
+              <S.Title>{MEDAL_TITLE[idx]}</S.Title>
+              <div style={{ marginLeft: '50px' }}>{MEDAL_CONTENT[idx]}</div>
+              <S.MedalContainer>
+                {medals.map((medal, idx) => (
+                  <S.Image key={idx} src={`${URL}/${medal.badgeImgUrl}`} alt="" state={medal.badgeStatus} />
+                ))}
+              </S.MedalContainer>
+            </S.Box>
+          ))}
+        </S.Container>
+      </S.Wrapper>
+    </>
   );
 }
 export default Achievement;
