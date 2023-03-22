@@ -111,7 +111,7 @@ function DetailChallenge() {
         bookmarkId = data.id;
         setIsBookmark(true);
       } catch (err: any) {
-        if (err.response.status === 500) {
+        if (err.response.status === 500 || err.response.status === 401) {
           setIsOpenAccessModal(true);
         }
       }
@@ -132,7 +132,7 @@ function DetailChallenge() {
       alert('참여하기가 완료되었습니다');
       setIsParticipatedChallenge(true);
     } catch (err: any) {
-      if (err.response.status === 500) {
+      if (err.response.status === 500 || err.response.status === 401) {
         setIsOpenAccessModal(true);
       }
     }

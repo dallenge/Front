@@ -32,8 +32,10 @@ function Achievement() {
           splicedList.push(data.slice(i, i + 5));
         }
         setMedalsList(splicedList);
-      } catch (err) {
-        console.log(err);
+      } catch (err: any) {
+        if (err.response.status === 401) {
+          setIsOpenAccessModal(true);
+        }
       }
     };
     getBadges();
