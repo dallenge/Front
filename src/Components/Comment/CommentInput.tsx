@@ -53,8 +53,10 @@ function CommentInput({ postId, getComments, isParticipatedChallenge }: Props) {
       } else {
         window.location.reload();
       }
-    } catch (err) {
-      console.trace(err);
+    } catch (err: any) {
+      if (err.response.status === 400) {
+        alert('기록은 하루에 한번씩 작성할 수 있어요!');
+      }
     }
   };
 
