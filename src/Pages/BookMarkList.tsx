@@ -90,12 +90,32 @@ export default function BookMarkList() {
                 onClick={() => (window.location.href = `/challenge/${challenge.challengeId}`)}
               />
               <div
-                style={{ fontSize: '20px', fontWeight: 'bolder', cursor: 'pointer', marginBottom: '4px' }}
+                style={{
+                  maxWidth: '100%',
+                  fontSize: '20px',
+                  fontWeight: 'bolder',
+                  cursor: 'pointer',
+                  marginBottom: '4px',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                }}
                 onClick={() => (window.location.href = `/challenge/${challenge.challengeId}`)}
               >
                 {challenge.title}
               </div>
-              <div style={{ fontSize: '13px', cursor: 'pointer' }}>{challenge.challengeContent}</div>
+              <div
+                style={{
+                  maxWidth: '100%',
+                  fontSize: '13px',
+                  cursor: 'pointer',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {challenge.challengeContent}
+              </div>
             </Challenge>
           );
         })}

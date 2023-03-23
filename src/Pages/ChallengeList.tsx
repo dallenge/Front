@@ -137,7 +137,7 @@ export default function ChallengeList() {
           name="search"
           value={searchText}
           autoSave="off"
-          placeholder="관심있는 챌린지명을 검색해보세요!"
+          placeholder="관심있는 해시태그 및 챌린지명을 검색해보세요!(ex. 제목, #해시태그)"
           onChange={(e) => setSearchText(e.target.value)}
           onKeyDown={handleKeyPress}
         ></Input>
@@ -190,7 +190,18 @@ export default function ChallengeList() {
                 alt="noimage"
                 style={{ width: '260px', height: '180px', objectFit: 'cover' }}
               />
-              <div style={{ fontSize: '20px', fontWeight: 'bolder' }}>{challenge.title}</div>
+              <div
+                style={{
+                  maxWidth: '100%',
+                  fontSize: '20px',
+                  fontWeight: 'bolder',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {challenge.title}
+              </div>
               <div
                 style={{
                   fontSize: '13px',
