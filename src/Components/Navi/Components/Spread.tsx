@@ -12,11 +12,8 @@ function SpreadMenu({ setOpen }: { setOpen: SetOpenFunc }) {
             setOpen();
           }}
         >
-          관심있는 챌린지
+          북마크 한 챌린지
         </SpreadDiv>
-      </Layer>
-      <Layer>
-        <SpreadDiv>내가 시작한 챌린지</SpreadDiv>
       </Layer>
       <Layer>
         <SpreadDiv>내가 쓴 후기</SpreadDiv>
@@ -57,7 +54,6 @@ const SpreadMenuBox = styled.div`
   flex-direction: column;
   z-index: 999;
   width: 240px;
-  height: 250px;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
   background: #ffffff;
   right: 40px;
@@ -65,14 +61,15 @@ const SpreadMenuBox = styled.div`
 `;
 
 const Layer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 100%;
   margin: 8px auto;
 `;
 
 const SpreadDiv = styled.div`
   width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   font-size: 16px;
   font-weight: 600;
   &:hover {
@@ -81,9 +78,8 @@ const SpreadDiv = styled.div`
 `;
 
 const Line = styled.div`
-  height: 1px;
-  width: 80%;
-  background: rgb(190, 190, 190);
+  width: 100%;
+  border-bottom: 1px solid rgb(190, 190, 190);
 `;
 
 interface SetOpenFunc {
