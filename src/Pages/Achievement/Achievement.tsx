@@ -20,24 +20,37 @@ function Achievement() {
   const [isOpenAccessModal, setIsOpenAccessModal] = useState<boolean>(false);
 
   useEffect(() => {
-    if (!localStorage.getItem('token')) setIsOpenAccessModal(true);
-  }, []);
-
-  useEffect(() => {
     const getBadges = async () => {
-      try {
-        const { data } = await AchievementApi.getUserBadge();
-        const splicedList: Medal[][] = [];
-        for (let i = 0; i < data.length; i += 5) {
-          splicedList.push(data.slice(i, i + 5));
+      if (!localStorage.getItem('token')) {
+        setIsOpenAccessModal(true);
+        try {
+          const { data } = await AchievementApi.getAnyBadge();
+          const splicedList: Medal[][] = [];
+          for (let i = 0; i < data.length; i += 5) {
+            splicedList.push(data.slice(i, i + 5));
+          }
+          setMedalsList(splicedList);
+        } catch (err: any) {
+          if (err.response.status === 401) {
+            setIsOpenAccessModal(true);
+          }
         }
-        setMedalsList(splicedList);
-      } catch (err: any) {
-        if (err.response.status === 401) {
-          setIsOpenAccessModal(true);
+      } else {
+        try {
+          const { data } = await AchievementApi.getUserBadge();
+          const splicedList: Medal[][] = [];
+          for (let i = 0; i < data.length; i += 5) {
+            splicedList.push(data.slice(i, i + 5));
+          }
+          setMedalsList(splicedList);
+        } catch (err: any) {
+          if (err.response.status === 401) {
+            setIsOpenAccessModal(true);
+          }
         }
       }
     };
+
     getBadges();
   }, []);
 
