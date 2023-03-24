@@ -62,8 +62,6 @@ function Footer() {
 export default Footer;
 
 const Wrapper = styled.div`
-  width: 100%;
-  margin-top: 80px;
   padding: 0 20%;
   display: flex;
   padding-top: 50px;
