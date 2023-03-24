@@ -29,11 +29,7 @@ export interface DetailChallengeINTERFACE {
     challengeImgUrls: string[];
     challengeHashtags: string[];
     howManyUsersAreInThisChallenge: number;
-    challengeOwnerUser: {
-      userName: string;
-      email: string;
-      userId: number;
-    };
+    challengeOwnerUser: ChallengeOwnerUser;
   };
   responseUserChallenges: {
     challengeStatus: string;

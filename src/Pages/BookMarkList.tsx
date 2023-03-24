@@ -2,8 +2,9 @@ import { useCallback, useEffect, useState } from 'react';
 import { GiCancel } from 'react-icons/gi';
 import AuthApi from '../Apis/authApi';
 import styled from 'styled-components';
+import { ChallengeOwnerUser } from '../Interfaces';
 
-type Challenge = {
+interface Challenge {
   challengeId: number;
   id: number;
   title: string;
@@ -15,14 +16,9 @@ type Challenge = {
   challengeOwnerUser: ChallengeOwnerUser;
   challengeImgUrls: string;
   created_at: string;
-};
-type ChallengeOwnerUser = {
-  userName: string;
-  userId: number;
-  email: string;
-};
+}
 
-const Challenge = styled.div`
+const ChallengeCard = styled.div`
   width: 300px;
   height: 300px;
   background: var(--color-sky);
@@ -70,7 +66,7 @@ export default function BookMarkList() {
       }
   };
   return (
-    <div style={{ minHeight: '500px', width: '1200px', margin: '50px' }}>
+    <div style={{ minHeight: '500px', margin: '50px' }}>
       <div style={{ display: 'flex', justifyContent: 'flex-start', padding: '10px' }}>
         <div style={{ fontSize: '30px' }}>내가 북마크 한 챌린지</div>
       </div>
@@ -78,7 +74,7 @@ export default function BookMarkList() {
       <PostContainer>
         {challengeArray.map((challenge, i) => {
           return (
-            <Challenge key={i}>
+            <ChallengeCard key={i}>
               <GiCancel
                 style={{ position: 'absolute', top: '3px', right: '3px', zIndex: '1', cursor: 'pointer' }}
                 onClick={() => doDeleteBookmark(challenge.id)}
@@ -116,7 +112,7 @@ export default function BookMarkList() {
               >
                 {challenge.challengeContent}
               </div>
-            </Challenge>
+            </ChallengeCard>
           );
         })}
       </PostContainer>
