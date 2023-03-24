@@ -21,6 +21,7 @@ import RandomRecommendation from './Pages/Recommendation/Random';
 import Achievement from './Pages/Achievement/Achievement';
 import Layout from './Components/Layout';
 import BookMarkList from './Pages/BookMarkList';
+import FindPw from './Pages/Login/FindPw';
 
 function App() {
   return (
@@ -49,6 +50,7 @@ function App() {
           <Route path="/get-recommendations/hashtag" element={<HashTagRecommendation />} />
           <Route path="/get-recommendations/random" element={<RandomRecommendation />} />
           <Route path="/achievement" element={<Achievement />} />
+          <Route path="/login/find-password" element={<FindPw />} />
           <Route path="*" element={<GetBadRoot />} />
         </Routes>
       </div>

@@ -81,7 +81,7 @@ function Login() {
         <S.Button style={{ background: 'var(--color-blue)', color: 'white' }}>로그인</S.Button>
       </form>
 
-      <S.smallText>비밀번호 찾기</S.smallText>
+      <S.smallText onClick={() => navigate('/login/find-password')}>비밀번호 찾기</S.smallText>
 
       <S.BtnsWrapper>
         <S.BtnBox background="#F7E600" border={false}>
@@ -107,6 +107,7 @@ const Container = styled.div`
   display: inline-block;
   width: 320px;
   margin-top: 70px;
+  min-height: 80vh;
 `;
 
 const smallText = styled.div`
