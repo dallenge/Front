@@ -16,7 +16,14 @@ function SpreadMenu({ setOpen }: { setOpen: SetOpenFunc }) {
         </SpreadDiv>
       </Layer>
       <Layer>
-        <SpreadDiv>내가 쓴 후기</SpreadDiv>
+        <SpreadDiv
+          onClick={() => {
+            navigate('/comment');
+            setOpen();
+          }}
+        >
+          내가 쓴 후기
+        </SpreadDiv>
       </Layer>
       <Layer>
         <Line></Line>

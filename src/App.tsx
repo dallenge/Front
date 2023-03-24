@@ -22,6 +22,7 @@ import Achievement from './Pages/Achievement/Achievement';
 import Layout from './Components/Layout';
 import BookMarkList from './Pages/BookMarkList';
 import FindPw from './Pages/Login/FindPw';
+import CommentList from './Pages/CommentList';
 
 function App() {
   return (
@@ -42,6 +43,7 @@ function App() {
           <Route path="/createchallenge" element={<CreateChallenge />} />
           <Route path="/my-page/modify/profile-edit" element={<ProfileEdit />} />
           <Route path="/bookmark" element={<BookMarkList />} />
+          <Route path="/comment" element={<CommentList />} />
           <Route path="/my-page/modify/password-edit" element={<PwEdit />} />
           <Route path="/my-page/modify/withdrawal" element={<Withdrawal />} />
           <Route path="my-page/modify/progress-challenge-edit" element={<ProgressChallengeEdit />} />
