@@ -1,7 +1,6 @@
 import { Axios } from './@core';
 
 const PATH = '/challenge';
-const USER_ID = localStorage.getItem('userId');
 
 const ChallengeApi = {
   getChallengeData(challengeId) {
@@ -16,6 +15,7 @@ const ChallengeApi = {
   },
 
   deleteBookmark(bookmarkId) {
+    const USER_ID = localStorage.getItem('userId');
     return Axios().delete(`/user/${USER_ID}/bookmark/${bookmarkId}`);
   },
 

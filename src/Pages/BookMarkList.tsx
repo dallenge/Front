@@ -3,6 +3,7 @@ import { GiCancel } from 'react-icons/gi';
 import AuthApi from '../Apis/authApi';
 import styled from 'styled-components';
 import { ChallengeOwnerUser } from '../Interfaces';
+import ChallengeApi from '../Apis/challengeApi';
 
 interface Challenge {
   challengeId: number;
@@ -39,9 +40,11 @@ const PostContainer = styled.div`
   row-gap: 50px;
 `;
 
+const URL = process.env.REACT_APP_URL;
+
 export default function BookMarkList() {
-  const URL = process.env.REACT_APP_URL;
   const [challengeArray, setChallengeArray] = useState<Challenge[]>([]);
+
   const getMyBookmarkedChallenge = useCallback(async () => {
     try {
       const { data } = await AuthApi.getMyBookmarkedChallenge();
@@ -59,7 +62,7 @@ export default function BookMarkList() {
   const doDeleteBookmark = async (id: number) => {
     if (window.confirm('해당 챌린지를 북마크에서 제거하시겠습니까?'))
       try {
-        await AuthApi.deleteMyBookmarkedChallenge(id);
+        await ChallengeApi.deleteBookmark(id);
         await getMyBookmarkedChallenge();
       } catch (err) {
         console.log(err);

@@ -1,7 +1,6 @@
 import { Axios } from './@core';
 
 const PATH = '/user';
-const USER_ID = localStorage.getItem('userId');
 const JSON_TYPE = 'application/json';
 
 const AuthApi = {
@@ -18,6 +17,7 @@ const AuthApi = {
   },
 
   changePassword(oldPassword, newPassword) {
+    const USER_ID = localStorage.getItem('userId');
     return Axios(JSON_TYPE).post(PATH + `/${USER_ID}/change?oldPassword=${oldPassword}&newPassword=${newPassword}`);
   },
 
@@ -26,10 +26,8 @@ const AuthApi = {
   },
 
   getMyBookmarkedChallenge() {
+    const USER_ID = localStorage.getItem('userId');
     return Axios().get(PATH + `/${USER_ID}/bookmark`);
-  },
-  deleteMyBookmarkedChallenge(id) {
-    return Axios().delete(PATH + `/${USER_ID}/bookmark/${id}`);
   },
 };
 
