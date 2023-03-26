@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import RecommendationApi from '../../Apis/recommendationApi';
 import ChallengeCard from '../../Components/Card';
+import { FlexRowCenterCSS } from '../../CSS/common';
 import Loading from './Components/Loading';
 
 let testCount = 0;
@@ -87,8 +88,7 @@ function RandomRecommendation() {
 export default RandomRecommendation;
 
 const Wrapper = styled.div`
-  display: flex;
-  justify-content: center;
+  ${FlexRowCenterCSS}
   height: 80vh;
 `;
 

@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { FlexCenterCSS } from '../../../CSS/common';
 
 function SpreadMenu({ setOpen }: { setOpen: SetOpenFunc }) {
   const navigate = useNavigate();
@@ -74,9 +75,7 @@ const Layer = styled.div`
 
 const SpreadDiv = styled.div`
   width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  ${FlexCenterCSS}
   font-size: 16px;
   font-weight: 600;
   &:hover {

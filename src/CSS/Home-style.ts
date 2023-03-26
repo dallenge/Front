@@ -12,9 +12,8 @@ const Card = styled.div<{ background: string; height: string }>`
 `;
 
 const FlexCenterSpace = styled.div`
-  display: flex;
+  ${FlexAlignCSS}
   width: 100%;
-  align-items: center;
   justify-content: space-around;
 `;
 const CategoryBtn = styled.div`

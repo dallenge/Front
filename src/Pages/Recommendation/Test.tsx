@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import RecommendationApi from '../../Apis/recommendationApi';
 import ChallengeCard from '../../Components/Card';
-import { FlexAlignCSS, FlexCenterCSS } from '../../CSS/common';
+import { FlexAlignCSS } from '../../CSS/common';
 import Loading from './Components/Loading';
 import Questionnaire from './Components/Questionnaire';
 

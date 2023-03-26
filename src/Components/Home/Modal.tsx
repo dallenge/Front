@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router';
 import styled from 'styled-components';
 import { RxCross1 } from 'react-icons/rx';
+import { FlexCenterCSS, FlexColumnCenterCSS } from '../../CSS/common';
 
 interface Props {
   setOpen: (isOpen: boolean) => void;
@@ -32,18 +33,13 @@ const Wrapper = styled.div`
   background-color: rgba(0, 0, 0, 0.3);
   width: 100%;
   height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  ${FlexCenterCSS}
   z-index: 100000;
 `;
 
 const Container = styled.div`
   position: absolute;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  ${FlexColumnCenterCSS}
   z-index: 99999;
   width: 450px;
   height: 450px;

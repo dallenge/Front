@@ -5,6 +5,7 @@ import RecommendationApi from '../../Apis/recommendationApi';
 
 import ChallengeCard from '../../Components/Card';
 import FadeText from '../../Components/FadeText';
+import { FlexAlignCSS, FlexColumnCenterCSS, FlexRowCenterCSS } from '../../CSS/common';
 
 const textArray = ['누르시면 관련 챌린지 3개를 추천해드려요!', '지금 인기있는 해시태그들이에요!'];
 
@@ -67,10 +68,7 @@ export default HashTagRecommendation;
 
 const Wrapper = styled.div`
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  ${FlexColumnCenterCSS}
 `;
 
 const TextFadeIn = keyframes`
@@ -107,9 +105,8 @@ const Title = styled.div`
 const FlexBox = styled.div`
   margin-top: 30px;
   width: 100%;
-  display: flex;
+  ${FlexAlignCSS}
   justify-content: space-evenly;
-  align-items: center;
 `;
 const ItemBox = styled.div`
   display: flex;
@@ -118,8 +115,7 @@ const ItemBox = styled.div`
 `;
 
 const FlexCardBox = styled.div`
-  display: flex;
-  justify-content: center;
+  ${FlexRowCenterCSS}
   width: 80%;
   margin-bottom: 35px;
 `;

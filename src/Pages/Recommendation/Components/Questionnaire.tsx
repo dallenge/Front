@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { FlexBetweenCSS } from '../../../CSS/common';
 
 function Questionnaire({ question, answers, onNext }: Props) {
   return (
@@ -23,8 +24,7 @@ const QuestionText = styled.div`
 `;
 
 const Box = styled.div`
-  display: flex;
-  justify-content: space-between;
+  ${FlexBetweenCSS}
   align-items: center;
 `;
 
