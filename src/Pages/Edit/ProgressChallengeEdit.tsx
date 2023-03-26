@@ -52,7 +52,7 @@ function ProgressChallengeEdit() {
     getMyParticipate();
   }, [getMyParticipate]);
   return (
-    <div>
+    <div style={{ marginBottom: '50px' }}>
       <Modify active={'challengeEdit'} />
       <div style={{ height: '80px' }}></div>
       <div style={{ fontWeight: 'bold', fontSize: '14px', marginBottom: '40px', color: '#f15a69' }}>

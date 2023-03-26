@@ -144,6 +144,7 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   margin-top: 50px;
+  margin-bottom: 100px;
 `;
 
 const Form = styled.form`

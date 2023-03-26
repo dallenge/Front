@@ -45,7 +45,7 @@ function PwEdit() {
     }
   };
   return (
-    <div>
+    <div style={{ marginBottom: '50px' }}>
       <Modify active={'password'} />
       <div style={{ marginTop: '80px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <InputBox>
