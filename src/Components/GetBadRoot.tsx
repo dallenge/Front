@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { FlexColumnCenterCSS } from '../CSS/common';
 
 function GetBadRoot() {
   return (
@@ -32,11 +33,8 @@ const Wrapper = styled.div`
 `;
 
 const Container = styled.div`
-  display: flex;
   height: 700px;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
+  ${FlexColumnCenterCSS}
 `;
 
 const Text = styled.div`

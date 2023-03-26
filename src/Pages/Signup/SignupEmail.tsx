@@ -1,14 +1,13 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios, { AxiosResponse } from 'axios';
 import styled from 'styled-components';
 import CONSTANT_INFO from '../../Constant/Constant';
-import URL from '../../Url';
 
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import AuthApi from '../../Apis/authApi';
 
 import Regex from '../../Constant/Regex';
+import { FlexCenterCSS, FlexColumnCenterCSS } from '../../CSS/common';
 
 const SIGNUP_MESSAGE = CONSTANT_INFO.SIGNUP_MESSAGE;
 
@@ -138,11 +137,8 @@ function SingupEmail() {
 export default SingupEmail;
 
 const Container = styled.div`
-  display: flex;
-  flex-direction: column;
+  ${FlexColumnCenterCSS}
   width: 100%;
-  align-items: center;
-  justify-content: center;
   margin-top: 50px;
 `;
 
@@ -166,9 +162,7 @@ const SubTitle = styled.div<{ state?: string }>`
 `;
 
 const FlexRow = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  ${FlexCenterCSS}
   width: 100%;
   height: 42px;
 `;

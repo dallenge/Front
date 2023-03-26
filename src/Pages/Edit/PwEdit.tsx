@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import CONSTANT_INFO from '../../Constant/Constant';
 
 import AuthApi from '../../Apis/authApi';
+import { FlexAlignCSS } from '../../CSS/common';
 
 function PwEdit() {
   const navigate = useNavigate();
@@ -47,7 +48,7 @@ function PwEdit() {
   return (
     <div>
       <Modify active={'password'} />
-      <div style={{ marginTop: '80px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <Wrapper>
         <InputBox>
           <Input
             type="password"
@@ -67,7 +68,7 @@ function PwEdit() {
         </InputBox>
 
         <Button onClick={changePassword}>확인</Button>
-      </div>
+      </Wrapper>
     </div>
   );
 }
@@ -81,7 +82,11 @@ const ValidationView = ({ text }: { text: string }) => {
     </div>
   );
 };
-
+const Wrapper = styled.div`
+  ${FlexAlignCSS}
+  margin: 80px 0;
+  flex-direction: column;
+`;
 const Button = styled.button`
   border: 1px solid var(--color-sky);
   background: rgba(63, 114, 175, 0.1);
@@ -112,7 +117,6 @@ const Input = styled.input`
 const InputBox = styled.div`
   width: 450px;
   height: 100px;
-  display: flex;
   flex-direction: column;
-  align-items: center;
+  ${FlexAlignCSS}
 `;

@@ -15,6 +15,7 @@ import ChallengeApi from '../Apis/challengeApi';
 import Loading from './Recommendation/Components/Loading';
 import AuthApi from '../Apis/authApi';
 import { DetailChallengeINTERFACE, CommentINTERFACE } from '../Interfaces';
+import { FlexAlignCSS, FlexCenterCSS, FlexRowCenterCSS } from '../CSS/common';
 
 let bookmarkId: number;
 
@@ -286,17 +287,14 @@ const Wrapper = styled.div`
 `;
 
 const Form = styled.div<{ state?: string }>`
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  ${FlexCenterCSS}
   padding: 40px;
   background-color: ${({ state }) => (state === 'content' ? '#f9fafb' : '#ffffff')};
 `;
 
 const ContentBox = styled.div<{ padding?: string }>`
-  display: flex;
+  ${FlexRowCenterCSS}
   flex-direction: column;
-  justify-content: center;
   width: 50%;
   padding: ${({ padding }) => padding};
 `;
@@ -313,8 +311,7 @@ const Line = styled.div<{ w?: string; grow?: number }>`
 `;
 
 const Text = styled.div<{ padding?: string; size?: string; color?: string }>`
-  display: flex;
-  align-items: center;
+  ${FlexAlignCSS}
   color: ${({ color }) => color};
   /* color: rgb(120, 120, 120); */
   padding: ${({ padding }) => padding};

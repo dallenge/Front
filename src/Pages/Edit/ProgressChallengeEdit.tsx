@@ -2,6 +2,7 @@ import Modify from '../../Components/Modify';
 import styled from 'styled-components';
 import { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
+import { FlexCenterCSS, FlexRowCenterCSS } from '../../CSS/common';
 
 interface myParticipateChallgen {
   challengeContent: string;
@@ -61,7 +62,7 @@ function ProgressChallengeEdit() {
       <Container>
         {challengeList.map((challenge) => {
           return (
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <Wrapper>
               <Box>
                 <div>
                   <div style={{ fontSize: '20px', fontWeight: 'bold', display: 'inline-block' }}>
@@ -79,7 +80,7 @@ function ProgressChallengeEdit() {
               >
                 그만하기
               </StopBox>
-            </div>
+            </Wrapper>
           );
         })}
       </Container>
@@ -87,10 +88,12 @@ function ProgressChallengeEdit() {
   );
 }
 
+const Wrapper = styled.div`
+  ${FlexRowCenterCSS}
+`;
+
 const StopBox = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  ${FlexCenterCSS}
   background: var(--color-dark-blue);
   color: #ffffff;
   border-radius: 3px;

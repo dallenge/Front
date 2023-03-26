@@ -1,8 +1,8 @@
-import React from 'react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
 import CONSTANT_INFO from '../../Constant/Constant';
+import { FlexAlignCSS, FlexBetweenCSS } from '../../CSS/common';
 import Searchbar from '../Searchbar';
 
 import SpreadMenu from './Components/Spread';
@@ -138,18 +138,16 @@ export default Navbar;
 
 const Container = styled.div`
   height: 100px;
-  display: flex;
+  ${FlexBetweenCSS}
   align-items: center;
   border-bottom: 2px solid black;
-  justify-content: space-between;
 `;
 
 const Logo = styled.div`
   font-size: 40px;
   color: var(--color-blue);
   font-weight: 700;
-  display: flex;
-  align-items: center;
+  ${FlexAlignCSS}
   padding: 20px;
   cursor: pointer;
 `;

@@ -6,6 +6,7 @@ import { AiOutlineClose, AiFillHeart } from 'react-icons/ai';
 import { IoIosArrowDown } from 'react-icons/io';
 import CommentApi from '../Apis/commentApi';
 import { useNavigate } from 'react-router-dom';
+import { FlexAlignCSS } from '../CSS/common';
 
 const URL = process.env.REACT_APP_URL;
 
@@ -147,9 +148,8 @@ const Wrapper = styled.div`
   width: 100%;
   min-height: 80vh;
   position: relative;
-  display: flex;
+  ${FlexAlignCSS}
   flex-direction: column;
-  align-items: center;
   padding-top: 170px;
 `;
 

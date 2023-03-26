@@ -1,6 +1,7 @@
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 import Regex from '../../Constant/Regex';
+import { FlexAlignCSS, FlexColumnCenterCSS } from '../../CSS/common';
 
 interface Input {
   email: string;
@@ -43,8 +44,7 @@ export default FindPw;
 const Wrapper = styled.div`
   width: 100%;
   min-height: 80vh;
-  display: flex;
-  align-items: center;
+  ${FlexAlignCSS}
   background-color: rgb(245, 245, 245);
 `;
 
@@ -52,9 +52,7 @@ const Form = styled.form`
   width: 25%;
   padding: 60px 10px 30px;
   margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  ${FlexColumnCenterCSS}
   background-color: rgb(254, 254, 254);
 
   & > input {

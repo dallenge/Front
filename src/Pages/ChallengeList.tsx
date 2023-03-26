@@ -6,6 +6,7 @@ import axios from 'axios';
 import Pagination from 'react-bootstrap/Pagination';
 import { useNavigate, useParams } from 'react-router-dom';
 import CONSTANT_INFO from '../Constant/Constant';
+import { FlexCenterCSS } from '../CSS/common';
 
 export default function ChallengeList() {
   const URL = process.env.REACT_APP_URL;
@@ -255,13 +256,11 @@ export default function ChallengeList() {
 }
 
 const CategoryBtn = styled.div`
+  ${FlexCenterCSS}
   width: 70px;
   height: 30px;
   margin-right: 10px;
-  display: flex;
   font-weight: bold;
-  justify-content: center;
-  align-items: center;
   &:hover {
     cursor: pointer;
   }
@@ -292,9 +291,7 @@ const Challenge = styled.div`
 const InputContainer = styled.div`
   // background: var(--color-sky);
   height: 100px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  ${FlexCenterCSS}
 `;
 
 const Input = styled.input`
