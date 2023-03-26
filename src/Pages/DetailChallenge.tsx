@@ -161,14 +161,13 @@ function DetailChallenge() {
       {!isBadRoot && challengeInfo ? (
         <>
           {isOpenAccessModal && <AccessModal setOpen={setIsOpenAccessModal} />}
-          {/* {isOpenBadgeModal && resBadgeInfo && (
+          {isOpenBadgeModal && resBadgeInfo && (
             <AchieveModal
               onClickToggleModal={onCloseModal}
               name={resBadgeInfo.createBadgeName}
               url={resBadgeInfo.badgeImgUrl}
             />
-          )} */}
-          <AchieveModal onClickToggleModal={onCloseModal} name={'안녕하세요'} url={'/'} />
+          )}
           <S.Container>
             <S.Wrapper>
               <div>
