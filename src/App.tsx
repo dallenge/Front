@@ -23,6 +23,7 @@ import Layout from './Components/Layout';
 import BookMarkList from './Pages/BookMarkList';
 import FindPw from './Pages/Login/FindPw';
 import CommentList from './Pages/CommentList';
+import FindPwDone from './Pages/Login/FindPw-done';
 
 function App() {
   return (
@@ -53,6 +54,7 @@ function App() {
           <Route path="/get-recommendations/random" element={<RandomRecommendation />} />
           <Route path="/achievement" element={<Achievement />} />
           <Route path="/login/find-password" element={<FindPw />} />
+          <Route path="/login/find-password-done" element={<FindPwDone />} />
           <Route path="*" element={<GetBadRoot />} />
         </Routes>
       </div>

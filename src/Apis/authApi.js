@@ -8,6 +8,10 @@ const AuthApi = {
     return Axios(JSON_TYPE).post(PATH + '/login', JSON.stringify({ email, password }));
   },
 
+  resetPassword(email) {
+    return Axios(JSON_TYPE).post(PATH + `/resetPassword?email=${email}`);
+  },
+
   signup({ email, password, userName }) {
     return Axios(JSON_TYPE).post(PATH + '/new', JSON.stringify({ email, password, userName }));
   },

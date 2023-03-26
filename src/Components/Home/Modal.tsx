@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router';
 import styled from 'styled-components';
 import { RxCross1 } from 'react-icons/rx';
+import { ModalBackgroundSetCSS, ModalCSS } from '../../CSS/common';
 
 interface Props {
   setOpen: (isOpen: boolean) => void;
@@ -27,29 +28,13 @@ function AccessModal({ setOpen }: Props) {
 export default AccessModal;
 
 const Wrapper = styled.div`
-  position: fixed;
-  inset: 0px;
-  background-color: rgba(0, 0, 0, 0.3);
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 100000;
+  ${ModalBackgroundSetCSS}
 `;
 
 const Container = styled.div`
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  z-index: 99999;
+  ${ModalCSS}
   width: 450px;
   height: 450px;
-  background-color: var(--color-dark-blue);
-  box-shadow: rgba(0, 0, 0, 0.2) 0px 6px 10px;
-  background-color: rgb(254, 254, 254);
 `;
 
 const Logo = styled.div`
