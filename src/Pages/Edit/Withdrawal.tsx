@@ -45,6 +45,7 @@ export default function Withdrawal() {
 
     await axios(config)
       .then(() => {
+        alert('탈퇴가 완료되었습니다.');
         navigate('/');
         localStorage.clear();
       })
@@ -53,12 +54,12 @@ export default function Withdrawal() {
       });
   };
   return (
-    <div>
+    <div style={{ marginBottom: '250px' }}>
       <Modify active={'withdrawal'} />
       <div style={{ height: '80px' }}></div>
       <Container>
         <div style={{ fontSize: '20px', fontWeight: '600', color: 'rgb(38, 38, 38)' }}>
-          정말 챌린지를 탈퇴하시겠어요?
+          정말 델린지를 탈퇴하시겠어요?
         </div>
         <div style={{ height: '15px' }}></div>
         <div style={{ fontSize: '15px', color: 'rgb(50, 50, 50)', fontWeight: '600' }}>

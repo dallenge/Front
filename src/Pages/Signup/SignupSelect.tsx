@@ -10,6 +10,7 @@ const Container = styled.div`
   margin: auto 0;
   display: inline-block;
   width: 400px;
+  margin-bottom: 100px;
 `;
 
 const DivHover = styled.div`
