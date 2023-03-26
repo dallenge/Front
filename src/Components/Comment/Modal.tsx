@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { BiEditAlt } from 'react-icons/bi';
 import { AiOutlineDelete } from 'react-icons/ai';
 import axios from 'axios';
+import { FlexCenterCSS, FlexColumnCenterCSS } from '../../CSS/common';
 
 interface Props {
   state: boolean;
@@ -59,13 +60,10 @@ function Modal({ state, challengeId, commentId, getComments, setIsModalOpen, set
 export default Modal;
 
 const Wrapper = styled.div<{ state?: boolean }>`
-  display: flex;
-  flex-direction: column;
+  ${FlexColumnCenterCSS}
   position: relative;
   top: -28px;
   margin-left: auto;
-  justify-content: center;
-  align-items: center;
   width: 105px;
   height: 60px;
   border-radius: 10px;
@@ -85,9 +83,7 @@ const Line = styled.div`
 `;
 
 const Text = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  ${FlexCenterCSS}
   margin-left: 3px;
   :hover {
     cursor: pointer;

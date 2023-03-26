@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import BeatLoader from 'react-spinners/BeatLoader';
+import { FlexCenterCSS } from '../../../CSS/common';
 
 function Loading() {
   return (
@@ -14,9 +15,7 @@ const Container = styled.div`
   width: 80%;
   height: 50%;
   margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  ${FlexCenterCSS}
 `;
 
 const S = { Container };

@@ -1,10 +1,10 @@
 import styled from 'styled-components';
+import { FlexBetweenCSS, FlexCenterCSS } from '../../CSS/common';
 
 const DailyBox = styled.div`
   width: 96%;
   height: 110px;
-  display: flex;
-  justify-content: space-between;
+  ${FlexBetweenCSS}
   padding: 10px;
 `;
 const DayBox = styled.div<{ background: string }>`
@@ -13,9 +13,7 @@ const DayBox = styled.div<{ background: string }>`
   border-radius: 15px;
   background: ${(props) => props.background};
   font-size: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  ${FlexCenterCSS}
 `;
 
 const DailyInfo = ({ weeklyAchievement }: { weeklyAchievement: boolean[] }) => {

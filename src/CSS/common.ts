@@ -6,9 +6,14 @@ export const FlexCenterCSS = css`
   justify-content: center;
 `;
 
-export const FlexColumnCSS = css`
+export const FlexRowCenterCSS = css`
   display: flex;
-  flex-direction: column;
+  justify-content: center;
+`;
+
+export const FlexBetweenCSS = css`
+  display: flex;
+  justify-content: space-between;
 `;
 
 export const FlexColumnCenterCSS = css`

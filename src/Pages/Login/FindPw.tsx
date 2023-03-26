@@ -5,7 +5,7 @@ import AuthApi from '../../Apis/authApi';
 import Regex from '../../Constant/Regex';
 import DupliModal from './Components/Modal';
 import { RxCross1 } from 'react-icons/rx';
-import { FlexCenterCSS, HoverCSS } from '../../CSS/common';
+import { FlexAlignCSS, FlexCenterCSS, FlexColumnCenterCSS, HoverCSS } from '../../CSS/common';
 import { useNavigate } from 'react-router-dom';
 
 interface Input {
@@ -83,9 +83,8 @@ export default FindPw;
 
 const Wrapper = styled.div`
   width: 100%;
-  min-height: 90vh;
-  display: flex;
-  align-items: center;
+  min-height: 80vh;
+  ${FlexAlignCSS}
   background-color: rgb(245, 245, 245);
 `;
 
@@ -93,10 +92,7 @@ const Form = styled.form`
   width: 25%;
   padding: 60px 10px 30px;
   margin: 0 auto;
-  margin-top: -20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  ${FlexColumnCenterCSS}
   background-color: rgb(254, 254, 254);
 
   & > button {

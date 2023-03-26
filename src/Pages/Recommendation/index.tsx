@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { FlexAlignCSS, FlexColumnCenterCSS } from '../../CSS/common';
 import useScrollFadeIn from '../../Hooks/useScrollFadeIn';
 
 function Recommendation() {
@@ -48,12 +49,9 @@ function Recommendation() {
 export default Recommendation;
 
 const Wrapper = styled.div`
-  display: flex;
+  ${FlexColumnCenterCSS}
   margin-top: 100px;
-  align-items: center;
-  justify-content: center;
   margin-top: -40px;
-  flex-direction: column;
   height: 95vh;
 `;
 
@@ -64,9 +62,8 @@ const Title = styled.div`
 `;
 
 const Container = styled.div`
-  display: flex;
+  ${FlexAlignCSS}
   justify-content: space-around;
-  align-items: center;
   width: 100%;
 `;
 

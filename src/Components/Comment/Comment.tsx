@@ -8,6 +8,7 @@ import Modal from './Modal';
 import CommentArea from './Components/CommentArea';
 import CommentApi from '../../Apis/commentApi';
 import { UserInfoINTERFACE } from '../../Interfaces';
+import { FlexAlignCSS } from '../../CSS/common';
 
 function Comment(props: Props) {
   const URL = process.env.REACT_APP_URL;
@@ -175,8 +176,7 @@ const Wrapper = styled.div`
 `;
 
 const Text = styled.div<{ size?: string }>`
-  display: flex;
-  align-items: center;
+  ${FlexAlignCSS}
   font-size: ${({ size }) => size};
   font-weight: bold;
 `;
