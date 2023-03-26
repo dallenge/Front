@@ -1,6 +1,6 @@
 import { AiOutlineClose } from 'react-icons/ai';
 import styled from 'styled-components';
-import { HoverCSS } from '../../CSS/common';
+import { FlexCenterCSS, FlexColumnCenterCSS, HoverCSS } from '../../CSS/common';
 
 interface Props {
   onClickToggleModal: () => void;
@@ -35,23 +35,18 @@ function AchieveModal({ onClickToggleModal, url, name }: Props) {
 export default AchieveModal;
 
 const ModalContainer = styled.div`
+  ${FlexCenterCSS}
+  position: fixed;
   width: 100%;
   height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: fixed;
   top: 30px;
   z-index: 9999;
 `;
 
 const DialogBox = styled.dialog`
+  ${FlexColumnCenterCSS}
   width: 800px;
   height: 480px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
   border: none;
   border-radius: 3px;
   box-shadow: 0 0 30px rgba(30, 30, 30, 0.185);
@@ -61,10 +56,10 @@ const DialogBox = styled.dialog`
 `;
 
 const Backdrop = styled.div`
-  width: 100vw;
-  height: 100vh;
   position: fixed;
   top: 0;
+  width: 100vw;
+  height: 100vh;
   z-index: 9999;
   background-color: rgba(0, 0, 0, 0.2);
 `;
@@ -100,7 +95,6 @@ const LinkText = styled.div`
 const IconBox = styled.div`
   display: inline-block;
   margin-left: auto;
-  margin-right: 10px;
   ${HoverCSS}
 `;
 

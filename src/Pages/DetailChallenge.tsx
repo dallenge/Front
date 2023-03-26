@@ -14,8 +14,9 @@ import { Pagination } from 'react-bootstrap';
 import ChallengeApi from '../Apis/challengeApi';
 import Loading from './Recommendation/Components/Loading';
 import AuthApi from '../Apis/authApi';
-import { DetailChallengeINTERFACE, CommentINTERFACE } from '../Interfaces';
+import { DetailChallengeINTERFACE, CommentINTERFACE, BadgeInfoINTERFACE } from '../Interfaces';
 import { FlexAlignCSS, FlexCenterCSS, FlexRowCenterCSS } from '../CSS/common';
+import AchieveModal from '../Components/Achievement/Modal';
 
 let bookmarkId: number;
 
@@ -36,6 +37,8 @@ function DetailChallenge() {
 
   const [isBadRoot, setIsBadRoot] = useState<boolean | null>(null);
   const [isOpenAccessModal, setIsOpenAccessModal] = useState<boolean>(false);
+  const [isOpenBadgeModal, setIsOpenBadgeModal] = useState<boolean>(false);
+  const [resBadgeInfo, setResBadgeInfo] = useState<BadgeInfoINTERFACE>();
 
   const getChallengeInfo = useCallback(async () => {
     try {
@@ -144,11 +147,28 @@ function DetailChallenge() {
     return comments.filter((comment) => comment.createdAt === '오늘').length;
   };
 
+  const onCloseModal = () => {
+    setIsOpenBadgeModal(false);
+    window.location.reload();
+  };
+
+  const getBadgeInfo = (badgeInfo: BadgeInfoINTERFACE) => {
+    setResBadgeInfo(badgeInfo);
+  };
+
   return (
     <>
       {!isBadRoot && challengeInfo ? (
         <>
           {isOpenAccessModal && <AccessModal setOpen={setIsOpenAccessModal} />}
+          {/* {isOpenBadgeModal && resBadgeInfo && (
+            <AchieveModal
+              onClickToggleModal={onCloseModal}
+              name={resBadgeInfo.createBadgeName}
+              url={resBadgeInfo.badgeImgUrl}
+            />
+          )} */}
+          <AchieveModal onClickToggleModal={onCloseModal} name={'안녕하세요'} url={'/'} />
           <S.Container>
             <S.Wrapper>
               <div>
@@ -216,6 +236,8 @@ function DetailChallenge() {
             </S.Wrapper>
             <S.Text padding={'20px 0 5px 0'}>오늘 {getTodayComment(commentList)}개의 기록🏃🏻</S.Text>
             <CommentInput
+              getBadgeInfo={getBadgeInfo}
+              setIsOpenBadgeModal={setIsOpenBadgeModal}
               postId={Number(id)}
               getComments={getComments}
               isParticipatedChallenge={isParticipatedChallenge}

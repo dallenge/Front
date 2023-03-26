@@ -2,27 +2,20 @@ import { useRef, useState } from 'react';
 import styled from 'styled-components';
 import CommentApi from '../../Apis/commentApi';
 import { BadgeInfoINTERFACE } from '../../Interfaces';
-import AchieveModal from '../Achievement/Modal';
 import CommentArea from './Components/CommentArea';
 
 interface Props {
   postId: number;
   getComments: () => void;
   isParticipatedChallenge: boolean;
+  setIsOpenBadgeModal: (state: boolean) => void;
+  getBadgeInfo: (data: BadgeInfoINTERFACE) => void;
 }
 
-function CommentInput({ postId, getComments, isParticipatedChallenge }: Props) {
+function CommentInput({ postId, getComments, isParticipatedChallenge, setIsOpenBadgeModal, getBadgeInfo }: Props) {
   const imageRef = useRef<HTMLInputElement>(null);
   const [uploadImage, setUploadImage] = useState<any>();
   const [writeText, setWriteText] = useState<string>('');
-
-  const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
-  const [resBadgeInfo, setResBadgeInfo] = useState<BadgeInfoINTERFACE>();
-
-  const onCloseModal = () => {
-    setIsOpenModal(false);
-    window.location.reload();
-  };
 
   const onClickSubmitComment = async () => {
     if (!writeText && imageRef.current?.files?.length === 0) {
@@ -48,8 +41,8 @@ function CommentInput({ postId, getComments, isParticipatedChallenge }: Props) {
     try {
       const { data } = await CommentApi.addNewComment(postId, formData);
       if (data.badgeInfo) {
-        setResBadgeInfo(data.badgeInfo);
-        setIsOpenModal(true);
+        getBadgeInfo(data.badgeInfo);
+        setIsOpenBadgeModal(true);
       } else {
         window.location.reload();
       }
@@ -71,26 +64,17 @@ function CommentInput({ postId, getComments, isParticipatedChallenge }: Props) {
   };
 
   return (
-    <>
-      {isOpenModal && resBadgeInfo && (
-        <AchieveModal
-          onClickToggleModal={onCloseModal}
-          name={resBadgeInfo.createBadgeName}
-          url={resBadgeInfo.badgeImgUrl}
-        />
-      )}
-      <S.Form>
-        <CommentArea
-          imageRef={imageRef}
-          onUploadImage={onUploadImage}
-          textValue={writeText}
-          onChangeWriteComment={onChangeWriteComment}
-          placeholder={'댓글로 기록하기..'}
-          onClickSubmitComment={onClickSubmitComment}
-          children={'기록하기'}
-        />
-      </S.Form>
-    </>
+    <S.Form>
+      <CommentArea
+        imageRef={imageRef}
+        onUploadImage={onUploadImage}
+        textValue={writeText}
+        onChangeWriteComment={onChangeWriteComment}
+        placeholder={'댓글로 기록하기..'}
+        onClickSubmitComment={onClickSubmitComment}
+        children={'기록하기'}
+      />
+    </S.Form>
   );
 }
 export default CommentInput;
