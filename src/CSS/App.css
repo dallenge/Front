@@ -7,6 +7,18 @@
   font-family: '1009';
 }
 
+button {
+  border: none;
+}
+
+input {
+  border: none;
+}
+
+input:focus-visible {
+  outline: none;
+}
+
 :root {
   --color-light-white: #fefefe;
   --color-white: #f9f7f7;
