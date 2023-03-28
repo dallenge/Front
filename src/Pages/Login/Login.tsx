@@ -43,7 +43,7 @@ function Login() {
           localStorage.setItem('email', res.data.email);
           localStorage.setItem('info', res.data.info);
           localStorage.setItem('imageUrl', res.data.imageUrl);
-          window.history.back();
+          window.location.replace('/');
         })
         .catch((err) => {
           console.log(err);

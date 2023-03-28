@@ -48,7 +48,7 @@ function SingupEmail() {
         userName: watch('nickname'),
       });
       alert('회원가입이 완료되었습니다.');
-      navigate('/');
+      window.location.replace('/login');
     } catch (err) {
       alert('입력한 내용을 다시 확인해 주세요');
     }

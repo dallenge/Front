@@ -39,7 +39,7 @@ function PwEdit() {
       try {
         await AuthApi.changePassword(oldPassword, newPassword);
         alert('변경 완료');
-        navigate('/');
+        window.location.replace('/');
       } catch (err: any) {
         alert(JSON.parse(err.request.response)?.message);
       }
