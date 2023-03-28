@@ -137,11 +137,10 @@ export default function CreateChallenge() {
               width: '500px',
               height: '300px',
               border: '1px solid black',
-              objectFit: 'contain',
               marginBottom: '50px',
             }}
           >
-            {view ? <img src={view} style={{ width: '500px', height: '300px' }} /> : null}
+            {view ? <img src={view} style={{ width: '500px', height: '300px', objectFit: 'contain' }} /> : null}
           </div>
           <input type="file" accept="image/jpg, image/jpeg, image/png" onChange={uploadImgFile} />
         </div>
