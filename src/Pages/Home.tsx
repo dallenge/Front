@@ -11,6 +11,9 @@ import Icons from '../Components/Home/Icons';
 import AuthApi from '../Apis/authApi';
 import ChallengeApi from '../Apis/challengeApi';
 import AchieveModal from '../Components/Achievement/Modal';
+import AlertModal from '../Components/Modal';
+import { useRecoilState } from 'recoil';
+import { alertMessageAtom, isAlertModalAtom } from '../Atoms/modal.atom';
 
 const URL = process.env.REACT_APP_URL;
 
@@ -62,16 +65,22 @@ function Home() {
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
   const [resBadgeInfo, setResBadgeInfo] = useState<BadgeInfoINTERFACE>();
 
+  const [isAlertModal, setIsAlertModal] = useRecoilState<boolean>(isAlertModalAtom);
+  const [alertMessage, setAlertMessage] = useRecoilState<string>(alertMessageAtom);
+
   const onCloseModal = () => {
     setIsOpenModal(false);
   };
 
   const getMyChallenge = useCallback(async () => {
-    try {
-      const { data } = await AuthApi.getMyParticipatedChallenge();
-      setMyChallengeList(data);
-    } catch (err) {
-      console.trace(err);
+    if (localStorage.getItem('token')) {
+      try {
+        const { data } = await AuthApi.getMyParticipatedChallenge();
+        setMyChallengeList(data);
+      } catch (err: any) {
+        setAlertMessage(err.response.data.message || '토큰');
+        setIsAlertModal(true);
+      }
     }
   }, []);
 
@@ -79,8 +88,11 @@ function Home() {
     if (status === 'SUCCESS') {
       try {
         await ChallengeApi.pauseChallenge(id);
-      } catch (err) {
-        console.trace(err);
+      } catch (err: any) {
+        if (err.response.status === 500) {
+          setAlertMessage(err.response.data.message || '토큰');
+          setIsAlertModal(true);
+        }
       }
     } else {
       try {
@@ -89,8 +101,11 @@ function Home() {
           setResBadgeInfo(data.badgeInfo);
           setIsOpenModal(true);
         }
-      } catch (err) {
-        console.trace(err);
+      } catch (err: any) {
+        if (err.response.status === 500) {
+          setAlertMessage(err.response.data.message || '토큰');
+          setIsAlertModal(true);
+        }
       }
     }
     getMyChallenge();
@@ -104,8 +119,9 @@ function Home() {
     try {
       const { data } = await ChallengeApi.getPopularChallenge(4);
       setPopularChallenge(data.content);
-    } catch (err) {
-      console.trace(err);
+    } catch (err: any) {
+      setAlertMessage(err.response.data.message);
+      setIsAlertModal(true);
     }
   };
 
@@ -113,8 +129,11 @@ function Home() {
     getPopularChallenge();
   }, []);
 
+  console.log(alertMessage);
+
   return (
     <>
+      {isAlertModal && <AlertModal content={alertMessage} />}
       {localStorage.getItem('token') ? (
         <>
           {isOpenModal && resBadgeInfo && (

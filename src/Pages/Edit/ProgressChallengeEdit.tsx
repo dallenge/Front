@@ -3,6 +3,11 @@ import styled from 'styled-components';
 import { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import { FlexCenterCSS, FlexRowCenterCSS } from '../../CSS/common';
+import AuthApi from '../../Apis/authApi';
+
+import { useRecoilState } from 'recoil';
+import { alertMessageAtom, isAlertModalAtom } from '../../Atoms/modal.atom';
+import AlertModal from '../../Components/Modal';
 
 interface myParticipateChallgen {
   challengeContent: string;
@@ -15,24 +20,24 @@ function ProgressChallengeEdit() {
   const URL = process.env.REACT_APP_URL;
 
   const [challengeList, setChallengeList] = useState<myParticipateChallgen[]>([]);
+  const [isAlertModal, setIsAlertModal] = useRecoilState<boolean>(isAlertModalAtom);
+  const [alertMessage, setAlertMessage] = useRecoilState<string>(alertMessageAtom);
 
-  const getMyParticipate = () => {
-    const config = {
-      method: 'get',
-      url: `${URL}/user/inProgress`,
-      headers: {
-        Authorization: 'Bearer ' + localStorage.getItem('token'),
-      },
-    };
-
-    axios(config).then((res) => {
+  const getMyParticipate = useCallback(async () => {
+    try {
+      const res = await AuthApi.getMyParticipatedChallenge();
       setChallengeList(res.data);
-    });
-  };
+    } catch (err) {
+      console.log(err);
+    }
+  }, []);
+
+  useEffect(() => {
+    getMyParticipate();
+  });
 
   const onClickStopChallenge = (id: number) => {
-    const confirm = window.confirm('선택한 챌린지를 정말 그만하시겠습니까?');
-    if (confirm) {
+    if (window.confirm('선택한 챌린지를 정말 그만하시겠습니까?')) {
       const config = {
         method: 'delete',
         url: `${URL}/challenge/${id}/leave`,
@@ -42,49 +47,52 @@ function ProgressChallengeEdit() {
       };
       axios(config)
         .then((res) => {
-          alert(res.data.message);
+          setAlertMessage(res.data.message);
+          setIsAlertModal(true);
         })
-        .catch((err) => {
-          console.log(err);
+        .catch((err: any) => {
+          setAlertMessage(err.response.data.message || '토큰');
+          setIsAlertModal(true);
         });
     }
   };
-  useEffect(() => {
-    getMyParticipate();
-  }, [getMyParticipate]);
+
   return (
-    <div style={{ marginBottom: '50px' }}>
-      <Modify active={'challengeEdit'} />
-      <div style={{ height: '80px' }}></div>
-      <div style={{ fontWeight: 'bold', fontSize: '14px', marginBottom: '40px', color: '#f15a69' }}>
-        그만하기를 누르시면 마이페이지 챌린지 목록에서 사라지며 모든 기록이 삭제됩니다
-      </div>
-      <Container>
-        {challengeList.map((challenge) => {
-          return (
-            <Wrapper>
-              <Box>
-                <div>
-                  <div style={{ fontSize: '20px', fontWeight: 'bold', display: 'inline-block' }}>
-                    {challenge.challengeTitle}
+    <>
+      {isAlertModal && <AlertModal content={alertMessage} />}
+      <div style={{ marginBottom: '50px', minHeight: '90vh' }}>
+        <Modify active={'challengeEdit'} />
+        <div style={{ height: '80px' }}></div>
+        <div style={{ fontWeight: 'bold', fontSize: '14px', marginBottom: '40px', color: '#f15a69' }}>
+          그만하기를 누르시면 마이페이지 챌린지 목록에서 사라지며 모든 기록이 삭제됩니다
+        </div>
+        <Container>
+          {challengeList.map((challenge) => {
+            return (
+              <Wrapper>
+                <Box>
+                  <div>
+                    <div style={{ fontSize: '20px', fontWeight: 'bold', display: 'inline-block' }}>
+                      {challenge.challengeTitle}
+                    </div>
                   </div>
-                </div>
-                <div>
-                  <div style={{ fontSize: '15px', display: 'inline-block' }}>{challenge.challengeContent}</div>
-                </div>
-              </Box>
-              <StopBox
-                onClick={() => {
-                  onClickStopChallenge(challenge.challengeId);
-                }}
-              >
-                그만하기
-              </StopBox>
-            </Wrapper>
-          );
-        })}
-      </Container>
-    </div>
+                  <div>
+                    <div style={{ fontSize: '15px', display: 'inline-block' }}>{challenge.challengeContent}</div>
+                  </div>
+                </Box>
+                <StopBox
+                  onClick={() => {
+                    onClickStopChallenge(challenge.challengeId);
+                  }}
+                >
+                  그만하기
+                </StopBox>
+              </Wrapper>
+            );
+          })}
+        </Container>
+      </div>
+    </>
   );
 }
 

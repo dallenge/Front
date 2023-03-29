@@ -18,6 +18,10 @@ import { DetailChallengeINTERFACE, CommentINTERFACE, BadgeInfoINTERFACE } from '
 import { FlexAlignCSS, FlexCenterCSS, FlexRowCenterCSS } from '../CSS/common';
 import AchieveModal from '../Components/Achievement/Modal';
 
+import { useRecoilState } from 'recoil';
+import AlertModal from '../Components/Modal';
+import { alertMessageAtom, isAlertModalAtom } from '../Atoms/modal.atom';
+
 let bookmarkId: number;
 
 function DetailChallenge() {
@@ -39,6 +43,9 @@ function DetailChallenge() {
   const [isOpenAccessModal, setIsOpenAccessModal] = useState<boolean>(false);
   const [isOpenBadgeModal, setIsOpenBadgeModal] = useState<boolean>(false);
   const [resBadgeInfo, setResBadgeInfo] = useState<BadgeInfoINTERFACE>();
+
+  const [isAlertModal, setIsAlertModal] = useRecoilState<boolean>(isAlertModalAtom);
+  const [alertMessage, setAlertMessage] = useRecoilState<string>(alertMessageAtom);
 
   const getChallengeInfo = useCallback(async () => {
     try {
@@ -88,8 +95,9 @@ function DetailChallenge() {
           console.log(bookmarkId);
           setIsBookmark(true);
         }
-      } catch (err) {
-        console.trace(err);
+      } catch (err: any) {
+        setAlertMessage(err.response.data.message || '다시 시도해주세요');
+        setIsAlertModal(true);
       }
     };
 
@@ -115,8 +123,14 @@ function DetailChallenge() {
         bookmarkId = data.id;
         setIsBookmark(true);
       } catch (err: any) {
-        if (err.response.status === 500 || err.response.status === 401) {
+        if (!localStorage.getItem('token')) {
+          // 아예 로그인 X
           setIsOpenAccessModal(true);
+          return;
+        }
+        if (err.response.status === 500) {
+          setAlertMessage('토큰');
+          setIsAlertModal(true);
         }
       }
     } else {
@@ -124,8 +138,16 @@ function DetailChallenge() {
       try {
         await ChallengeApi.deleteBookmark(bookmarkId);
         setIsBookmark(false);
-      } catch (err) {
-        alert('잠시후 다시 이용해주세요');
+      } catch (err: any) {
+        if (!localStorage.getItem('token')) {
+          // 아예 로그인 X
+          setIsOpenAccessModal(true);
+          return;
+        }
+        if (err.response.status === 500) {
+          setAlertMessage('토큰');
+          setIsAlertModal(true);
+        }
       }
     }
   };
@@ -136,8 +158,14 @@ function DetailChallenge() {
       alert('참여하기가 완료되었습니다');
       setIsParticipatedChallenge(true);
     } catch (err: any) {
-      if (err.response.status === 500 || err.response.status === 401) {
+      if (!localStorage.getItem('token')) {
+        // 아예 로그인 X
         setIsOpenAccessModal(true);
+        return;
+      }
+      if (err.response.status === 401) {
+        setAlertMessage(err.response.data.message);
+        setIsAlertModal(true);
       }
     }
   };
@@ -160,6 +188,7 @@ function DetailChallenge() {
     <>
       {!isBadRoot && challengeInfo ? (
         <>
+          {isAlertModal && <AlertModal content={alertMessage} />}
           {isOpenAccessModal && <AccessModal setOpen={setIsOpenAccessModal} />}
           {isOpenBadgeModal && resBadgeInfo && (
             <AchieveModal

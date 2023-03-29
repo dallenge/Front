@@ -4,6 +4,9 @@ import CommentApi from '../../Apis/commentApi';
 import { BadgeInfoINTERFACE } from '../../Interfaces';
 import CommentArea from './Components/CommentArea';
 
+import { useSetRecoilState } from 'recoil';
+import { alertMessageAtom, isAlertModalAtom } from '../../Atoms/modal.atom';
+
 interface Props {
   postId: number;
   getComments: () => void;
@@ -17,9 +20,14 @@ function CommentInput({ postId, getComments, isParticipatedChallenge, setIsOpenB
   const [uploadImage, setUploadImage] = useState<any>();
   const [writeText, setWriteText] = useState<string>('');
 
+  const setIsAlertModal = useSetRecoilState<boolean>(isAlertModalAtom);
+  const setAlertMessage = useSetRecoilState<string>(alertMessageAtom);
+
   const onClickSubmitComment = async () => {
     if (!writeText && imageRef.current?.files?.length === 0) {
-      return alert('사진을 업로드하거나, 내용을 입력해주세요');
+      setAlertMessage('사진 혹은 글을 입력해주세요!');
+      setIsAlertModal(true);
+      return;
     }
 
     if (!localStorage.getItem('token')) return alert('로그인 후 이용해주세요');
@@ -48,7 +56,11 @@ function CommentInput({ postId, getComments, isParticipatedChallenge, setIsOpenB
       }
     } catch (err: any) {
       if (err.response.status === 400) {
-        alert('기록은 하루에 한번씩 작성할 수 있어요!');
+        setAlertMessage('기록은 하루에 한번씩 작성할 수 있어요!');
+        setIsAlertModal(true);
+      } else {
+        setAlertMessage(err.response.data.message || '토큰');
+        setIsAlertModal(true);
       }
     }
   };

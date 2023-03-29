@@ -9,6 +9,25 @@ import CommentArea from './Components/CommentArea';
 import CommentApi from '../../Apis/commentApi';
 import { UserInfoINTERFACE } from '../../Interfaces';
 import { FlexAlignCSS } from '../../CSS/common';
+import { useSetRecoilState } from 'recoil';
+import { alertMessageAtom, isAlertModalAtom } from '../../Atoms/modal.atom';
+
+interface Props {
+  challengeId: string;
+  commentId: string;
+  content: string;
+  likes: number;
+  createdAt: string;
+  img: string[];
+  owner: {
+    userName: string;
+    email: string;
+    userId: number;
+  };
+  myComment: boolean;
+  commentLikeUsersInfo: UserInfoINTERFACE[];
+  getComments: () => void;
+}
 
 function Comment(props: Props) {
   const URL = process.env.REACT_APP_URL;
@@ -35,6 +54,9 @@ function Comment(props: Props) {
   const [editCommentText, setEditCommentText] = useState<string>(content);
   const editImageRef = useRef<HTMLInputElement>(null);
   const [editImage, setEditImage] = useState<any>();
+
+  const setIsAlertModal = useSetRecoilState<boolean>(isAlertModalAtom);
+  const setAlertMessage = useSetRecoilState<string>(alertMessageAtom);
 
   useEffect(() => {
     commentLikeUsersInfo.forEach((user) => {
@@ -76,8 +98,9 @@ function Comment(props: Props) {
       getComments();
       setIsEditOk(false);
       setIsEditComment(false);
-    } catch (err) {
-      alert('잠시후 다시 시도해주세요');
+    } catch (err: any) {
+      setIsAlertModal(true);
+      setAlertMessage(err.response.data.message || '토큰');
     }
   };
 
@@ -97,8 +120,9 @@ function Comment(props: Props) {
         await CommentApi.commentLikes(commentId, 1);
         setIsHeart(true);
         setLikeCount((prev) => prev + 1);
-      } catch (err) {
-        console.trace(err);
+      } catch (err: any) {
+        setIsAlertModal(true);
+        setAlertMessage(err.response.data.message || '토큰');
       }
     } else {
       // 좋아요 취소
@@ -106,8 +130,9 @@ function Comment(props: Props) {
         await CommentApi.commentLikes(commentId, 0);
         setIsHeart(false);
         setLikeCount((prev) => prev - 1);
-      } catch (err) {
-        console.trace(err);
+      } catch (err: any) {
+        setIsAlertModal(true);
+        setAlertMessage(err.response.data.message || '토큰');
       }
     }
   };
@@ -242,20 +267,3 @@ const S = {
   SmallText,
   IconBox,
 };
-
-interface Props {
-  challengeId: string;
-  commentId: string;
-  content: string;
-  likes: number;
-  createdAt: string;
-  img: string[];
-  owner: {
-    userName: string;
-    email: string;
-    userId: number;
-  };
-  myComment: boolean;
-  commentLikeUsersInfo: UserInfoINTERFACE[];
-  getComments: () => void;
-}
