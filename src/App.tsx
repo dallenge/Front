@@ -24,41 +24,44 @@ import BookMarkList from './Pages/BookMarkList';
 import FindPw from './Pages/Login/FindPw';
 import CommentList from './Pages/CommentList';
 import FindPwDone from './Pages/Login/FindPw-done';
+import { RecoilRoot } from 'recoil';
 
 function App() {
   return (
-    <Layout>
-      <div className="App">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup/select-account" element={<SignupSelect />} />
-          <Route path="/signup/user-email" element={<SingupEmail />} />
-          <Route path="/my-page" element={<Mypage />} />
-          <Route path="/challengelist/:title/:category" element={<ChallengeList />} />
-          <Route path="/challengelist/:title" element={<ChallengeList />} />
-          <Route path="/challengelist//:category" element={<ChallengeList />} />
-          <Route path="/challengelist///:hashtag" element={<ChallengeList />} />
-          <Route path="/challengelist" element={<ChallengeList />} />
-          <Route path="/challenge/:id" element={<DetailChallenge />} />
-          <Route path="/createchallenge" element={<CreateChallenge />} />
-          <Route path="/my-page/modify/profile-edit" element={<ProfileEdit />} />
-          <Route path="/bookmark" element={<BookMarkList />} />
-          <Route path="/comment" element={<CommentList />} />
-          <Route path="/my-page/modify/password-edit" element={<PwEdit />} />
-          <Route path="/my-page/modify/withdrawal" element={<Withdrawal />} />
-          <Route path="my-page/modify/progress-challenge-edit" element={<ProgressChallengeEdit />} />
-          <Route path="/get-recommendations" element={<Recommendation />} />
-          <Route path="/get-recommendations/test" element={<TestRecommendation />} />
-          <Route path="/get-recommendations/hashtag" element={<HashTagRecommendation />} />
-          <Route path="/get-recommendations/random" element={<RandomRecommendation />} />
-          <Route path="/achievement" element={<Achievement />} />
-          <Route path="/login/find-password" element={<FindPw />} />
-          <Route path="/login/find-password-done" element={<FindPwDone />} />
-          <Route path="*" element={<GetBadRoot />} />
-        </Routes>
-      </div>
-    </Layout>
+    <RecoilRoot>
+      <Layout>
+        <div className="App">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup/select-account" element={<SignupSelect />} />
+            <Route path="/signup/user-email" element={<SingupEmail />} />
+            <Route path="/my-page" element={<Mypage />} />
+            <Route path="/challengelist/:title/:category" element={<ChallengeList />} />
+            <Route path="/challengelist/:title" element={<ChallengeList />} />
+            <Route path="/challengelist//:category" element={<ChallengeList />} />
+            <Route path="/challengelist///:hashtag" element={<ChallengeList />} />
+            <Route path="/challengelist" element={<ChallengeList />} />
+            <Route path="/challenge/:id" element={<DetailChallenge />} />
+            <Route path="/createchallenge" element={<CreateChallenge />} />
+            <Route path="/my-page/modify/profile-edit" element={<ProfileEdit />} />
+            <Route path="/bookmark" element={<BookMarkList />} />
+            <Route path="/comment" element={<CommentList />} />
+            <Route path="/my-page/modify/password-edit" element={<PwEdit />} />
+            <Route path="/my-page/modify/withdrawal" element={<Withdrawal />} />
+            <Route path="my-page/modify/progress-challenge-edit" element={<ProgressChallengeEdit />} />
+            <Route path="/get-recommendations" element={<Recommendation />} />
+            <Route path="/get-recommendations/test" element={<TestRecommendation />} />
+            <Route path="/get-recommendations/hashtag" element={<HashTagRecommendation />} />
+            <Route path="/get-recommendations/random" element={<RandomRecommendation />} />
+            <Route path="/achievement" element={<Achievement />} />
+            <Route path="/login/find-password" element={<FindPw />} />
+            <Route path="/login/find-password-done" element={<FindPwDone />} />
+            <Route path="*" element={<GetBadRoot />} />
+          </Routes>
+        </div>
+      </Layout>
+    </RecoilRoot>
   );
 }
 

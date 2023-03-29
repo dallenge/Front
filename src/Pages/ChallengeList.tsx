@@ -27,7 +27,7 @@ export default function ChallengeList() {
     userId: number;
     email: string;
   };
-  const navigate = useNavigate();
+
   const SEARCH_IMAGE_URL = CONSTANT_INFO.IMAGE_URL.SEARCH_IMAGE_URL;
   const [searchText, setSearchText] = useState<string>('');
   const [page, setPage] = useState<number>(0);

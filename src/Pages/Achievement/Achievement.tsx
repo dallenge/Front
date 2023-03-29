@@ -2,7 +2,11 @@ import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import AchievementApi from '../../Apis/achievement';
 import AccessModal from '../../Components/Home/Modal';
+import AlertModal from '../../Components/Modal';
 import { FlexAlignCSS, FlexCenterCSS, FlexColumnCenterCSS } from '../../CSS/common';
+
+import { useRecoilState } from 'recoil';
+import { alertMessageAtom, isAlertModalAtom } from '../../Atoms/modal.atom';
 
 const URL = process.env.REACT_APP_URL;
 
@@ -18,6 +22,9 @@ const MEDAL_CONTENT = ['진행 챌린지를 수행하면 돼요', '진행 챌린
 function Achievement() {
   const [medalsList, setMedalsList] = useState<Medal[][]>([]);
   const [isOpenAccessModal, setIsOpenAccessModal] = useState<boolean>(false);
+
+  const [isAlertModal, setIsAlertModal] = useRecoilState<boolean>(isAlertModalAtom);
+  const [alertMessage, setAlertMessage] = useRecoilState<string>(alertMessageAtom);
 
   useEffect(() => {
     const getBadges = async () => {
@@ -44,8 +51,14 @@ function Achievement() {
           }
           setMedalsList(splicedList);
         } catch (err: any) {
-          if (err.response.status === 401) {
+          if (!localStorage.getItem('token')) {
+            // 아예 로그인 X
             setIsOpenAccessModal(true);
+            return;
+          }
+          if (err.response.status === 500) {
+            setAlertMessage(err.response.data.response || '토큰');
+            setIsAlertModal(true);
           }
         }
       }
@@ -56,6 +69,7 @@ function Achievement() {
 
   return (
     <>
+      {isAlertModal && <AlertModal content={alertMessage} />}
       {isOpenAccessModal && <AccessModal setOpen={setIsOpenAccessModal} />}
       <S.Wrapper>
         <S.Container>

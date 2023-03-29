@@ -8,6 +8,10 @@ import CommentApi from '../Apis/commentApi';
 import { useNavigate } from 'react-router-dom';
 import { FlexAlignCSS } from '../CSS/common';
 
+import { useRecoilState } from 'recoil';
+import { isAlertModalAtom, alertMessageAtom } from '../Atoms/modal.atom';
+import AlertModal from '../Components/Modal';
+
 const URL = process.env.REACT_APP_URL;
 
 interface CommentINTERFACE {
@@ -28,6 +32,9 @@ function CommentList() {
 
   const [commentsList, setCommentsList] = useState<CommentINTERFACE[]>([]);
 
+  const [isAlertModal, setIsAlertModal] = useRecoilState<boolean>(isAlertModalAtom);
+  const [alertMessage, setAlertMessage] = useRecoilState<string>(alertMessageAtom);
+
   const navigate = useNavigate();
 
   const getUserComments = useCallback(
@@ -37,8 +44,9 @@ function CommentList() {
         const { data } = await CommentApi.getUserComments(localStorage.getItem('userId'), { size, page, sort });
         setCommentsList(data.content);
         setTotalPage(Math.ceil(data.totalElements / 10));
-      } catch (err) {
-        console.log(err);
+      } catch (err: any) {
+        setAlertMessage(err.response.data.message || '토큰');
+        setIsAlertModal(true);
       }
     },
     [page],
@@ -53,8 +61,9 @@ function CommentList() {
       try {
         await CommentApi.deleteComment(challengeId, commentId);
         getUserComments(selectedFilter === '최신순' ? 'time' : 'likes');
-      } catch (err) {
-        alert('잠시후 다시 이용해주세요');
+      } catch (err: any) {
+        setAlertMessage(err.response.data.message || '토큰');
+        setIsAlertModal(true);
       }
     }
   };
@@ -73,73 +82,76 @@ function CommentList() {
   };
 
   return (
-    <S.Wrapper>
-      <S.PageTitle>내가 쓴 후기</S.PageTitle>
-      <S.FilterBox>
-        <span>{selectedFilter}</span>
-        <span onClick={() => setIsOpenFilter((prev) => !prev)}>
-          <IoIosArrowDown size={20} />
-        </span>
-      </S.FilterBox>
-      <S.FilterOpenBox state={isOpenFilter}>
-        <S.FilterText onClick={() => onClickFilter('최신순')} state={'최신순' === selectedFilter}>
-          최신순
-        </S.FilterText>
-        <S.FilterText onClick={() => onClickFilter('좋아요순')} state={'좋아요순' === selectedFilter}>
-          좋아요순
-        </S.FilterText>
-      </S.FilterOpenBox>
-      {commentsList.map((comment) => (
-        <>
-          <S.Container>
-            <S.CommentBox>
-              <S.FlexLine>
-                <S.Title onClick={() => navigate(`/challenge/${comment.challengeId}`)}>
-                  {comment.challengeTitle}
-                  <span>{comment.createdAt}</span>
-                </S.Title>
-                <S.IconBox onClick={() => onDeleteComment(comment.challengeId, comment.id)}>
-                  <AiOutlineClose size={25} />
-                </S.IconBox>
-              </S.FlexLine>
-              <S.ContentBox>
-                <S.ImageBox
-                  image={comment.commentImgUrls.length > 0 ? `${URL}${comment.commentImgUrls[0]}` : `/logo.png`}
-                />
-                <S.TextBox>{comment.content}</S.TextBox>
-              </S.ContentBox>
-              <S.FlexLine style={{ justifyContent: 'flex-end' }}>
-                <AiFillHeart size={28} />
-                <span>{comment.likes}</span>
-              </S.FlexLine>
-            </S.CommentBox>
-          </S.Container>
-        </>
-      ))}
-      <Pagination>
-        <Pagination.First
-          onClick={() => {
-            setPage(0);
-          }}
-        />
-        <Pagination.Prev
-          onClick={() => {
-            if (page !== 0) setPage(page - 1);
-          }}
-        />
-        {pageLoop(page, totalPage, setPage)}
-        <Pagination.Next
-          onClick={() => {
-            if (page !== totalPage - 1) setPage(page + 1);
-          }}
-        />
-        <Pagination.Last
-          onClick={() => {
-            setPage(totalPage - 1);
-          }}
-        />
-      </Pagination>
-    </S.Wrapper>
+    <>
+      {isAlertModal && <AlertModal content={alertMessage} />}
+      <S.Wrapper>
+        <S.PageTitle>내가 쓴 후기</S.PageTitle>
+        <S.FilterBox>
+          <span>{selectedFilter}</span>
+          <span onClick={() => setIsOpenFilter((prev) => !prev)}>
+            <IoIosArrowDown size={20} />
+          </span>
+        </S.FilterBox>
+        <S.FilterOpenBox state={isOpenFilter}>
+          <S.FilterText onClick={() => onClickFilter('최신순')} state={'최신순' === selectedFilter}>
+            최신순
+          </S.FilterText>
+          <S.FilterText onClick={() => onClickFilter('좋아요순')} state={'좋아요순' === selectedFilter}>
+            좋아요순
+          </S.FilterText>
+        </S.FilterOpenBox>
+        {commentsList.map((comment) => (
+          <>
+            <S.Container>
+              <S.CommentBox>
+                <S.FlexLine>
+                  <S.Title onClick={() => navigate(`/challenge/${comment.challengeId}`)}>
+                    {comment.challengeTitle}
+                    <span>{comment.createdAt}</span>
+                  </S.Title>
+                  <S.IconBox onClick={() => onDeleteComment(comment.challengeId, comment.id)}>
+                    <AiOutlineClose size={25} />
+                  </S.IconBox>
+                </S.FlexLine>
+                <S.ContentBox>
+                  <S.ImageBox
+                    image={comment.commentImgUrls.length > 0 ? `${URL}${comment.commentImgUrls[0]}` : `/logo.png`}
+                  />
+                  <S.TextBox>{comment.content}</S.TextBox>
+                </S.ContentBox>
+                <S.FlexLine style={{ justifyContent: 'flex-end' }}>
+                  <AiFillHeart size={28} />
+                  <span>{comment.likes}</span>
+                </S.FlexLine>
+              </S.CommentBox>
+            </S.Container>
+          </>
+        ))}
+        <Pagination>
+          <Pagination.First
+            onClick={() => {
+              setPage(0);
+            }}
+          />
+          <Pagination.Prev
+            onClick={() => {
+              if (page !== 0) setPage(page - 1);
+            }}
+          />
+          {pageLoop(page, totalPage, setPage)}
+          <Pagination.Next
+            onClick={() => {
+              if (page !== totalPage - 1) setPage(page + 1);
+            }}
+          />
+          <Pagination.Last
+            onClick={() => {
+              setPage(totalPage - 1);
+            }}
+          />
+        </Pagination>
+      </S.Wrapper>
+    </>
   );
 }
 export default CommentList;

@@ -7,6 +7,10 @@ import { useNavigate } from 'react-router-dom';
 import { BadgeInfoINTERFACE, CreatedChallengeResponseINTERFACE } from '../Interfaces';
 import AchieveModal from '../Components/Achievement/Modal';
 
+import { useRecoilState } from 'recoil';
+import { isAlertModalAtom, alertMessageAtom } from '../Atoms/modal.atom';
+import AlertModal from '../Components/Modal';
+
 const SelectBox = styled.select`
   width: 100px;
   margin: 0 10px;
@@ -26,6 +30,9 @@ export default function CreateChallenge() {
 
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
   const [resBadgeInfo, setResBadgeInfo] = useState<BadgeInfoINTERFACE>();
+
+  const [isAlertModal, setIsAlertModal] = useRecoilState<boolean>(isAlertModalAtom);
+  const [alertMessage, setAlertMessage] = useRecoilState<string>(alertMessageAtom);
 
   const onCloseModal = () => {
     setIsOpenModal(false);
@@ -117,12 +124,14 @@ export default function CreateChallenge() {
           navigate('/challengeList');
         }
       })
-      .catch((err) => {
-        console.log(err);
+      .catch((err: any) => {
+        setAlertMessage(err.response.data.message || '토큰');
+        setIsAlertModal(true);
       });
   };
   return (
     <>
+      {isAlertModal && <AlertModal content={alertMessage} />}
       {isOpenModal && resBadgeInfo && (
         <AchieveModal
           onClickToggleModal={onCloseModal}
@@ -141,7 +150,7 @@ export default function CreateChallenge() {
               marginBottom: '50px',
             }}
           >
-            {view ? <img src={view} style={{ width: '500px', height: '300px' }} /> : null}
+            {view ? <img src={view} alt="" style={{ width: '500px', height: '300px' }} /> : null}
           </div>
           <input type="file" accept="image/jpg, image/jpeg, image/png" onChange={uploadImgFile} />
         </div>

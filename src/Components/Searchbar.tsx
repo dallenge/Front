@@ -10,7 +10,6 @@ export default function Searchbar({ closeBar }: Props) {
   const SEARCH_IMAGE_URL = CONSTANT_INFO.IMAGE_URL.SEARCH_IMAGE_URL;
 
   const [searchText, setSearchText] = useState<string>('');
-
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -25,7 +24,6 @@ export default function Searchbar({ closeBar }: Props) {
 
   const onClickSearch = () => {
     if (!searchText) {
-      alert('검색어를 입력해주세요');
     } else if (searchText.split('')[0] === '#') {
       const temp = searchText.split('');
       temp.shift();

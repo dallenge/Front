@@ -9,13 +9,19 @@ import CONSTANT_INFO from '../../Constant/Constant';
 import AuthApi from '../../Apis/authApi';
 import { FlexAlignCSS } from '../../CSS/common';
 
-function PwEdit() {
-  const navigate = useNavigate();
+import { useRecoilState } from 'recoil';
+import { alertMessageAtom, isAlertModalAtom } from '../../Atoms/modal.atom';
+import AlertModal from '../../Components/Modal';
 
+function PwEdit() {
   const [oldPassword, setOldPassword] = useState<string>('');
   const [newPassword, setNewPassword] = useState<string>('');
+  const [newPasswordConfirm, setNewPasswordConfirm] = useState<string>('');
   const [pwError, setPwError] = useState<boolean>(false);
   const [checkPwError, setCheckPwError] = useState<boolean>(false);
+
+  const [isAlertModal, setIsAlertModal] = useRecoilState<boolean>(isAlertModalAtom);
+  const [alertMessage, setAlertMessage] = useRecoilState<string>(alertMessageAtom);
 
   const SIGNUP_MESSAGE = CONSTANT_INFO.SIGNUP_MESSAGE;
   const onChangePw = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -28,6 +34,7 @@ function PwEdit() {
   };
 
   const onChangeCheckPw = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewPasswordConfirm(e.target.value);
     if (!e.target.value || newPassword === e.target.value) {
       setCheckPwError(false);
     } else {
@@ -38,38 +45,53 @@ function PwEdit() {
     if (!pwError && !checkPwError && oldPassword && newPassword) {
       try {
         await AuthApi.changePassword(oldPassword, newPassword);
-        alert('변경 완료');
-        navigate('/');
+        setAlertMessage('변경 완료!');
+        setIsAlertModal(true);
+        // clear
+        setOldPassword('');
+        setNewPassword('');
+        setNewPasswordConfirm('');
       } catch (err: any) {
-        alert(JSON.parse(err.request.response)?.message);
+        console.log(err.response.data.message);
+        setAlertMessage(err.response.data.message || '토큰');
+        setIsAlertModal(true);
       }
     }
   };
   return (
-    <div style={{ marginBottom: '50px' }}>
-      <Modify active={'password'} />
-      <Wrapper>
-        <InputBox>
-          <Input
-            type="password"
-            placeholder="현재 비밀번호"
-            onChange={(e) => {
-              setOldPassword(e.target.value);
-            }}
-          />
-        </InputBox>
-        <InputBox>
-          <Input type="password" placeholder="새 비밀번호" onChange={onChangePw} />
-          {pwError && <ValidationView text={SIGNUP_MESSAGE.SHORT_PASSWORD} />}
-        </InputBox>
-        <InputBox>
-          <Input type="password" placeholder="새 비밀번호 확인" onChange={onChangeCheckPw} />
-          {checkPwError && <ValidationView text={SIGNUP_MESSAGE.WRONG_PASSWORD} />}
-        </InputBox>
+    <>
+      {isAlertModal && <AlertModal content={alertMessage} />}
+      <div style={{ marginBottom: '50px' }}>
+        <Modify active={'password'} />
+        <Wrapper>
+          <InputBox>
+            <Input
+              type="password"
+              placeholder="현재 비밀번호"
+              value={oldPassword}
+              onChange={(e) => {
+                setOldPassword(e.target.value);
+              }}
+            />
+          </InputBox>
+          <InputBox>
+            <Input type="password" placeholder="새 비밀번호" onChange={onChangePw} value={newPassword} />
+            {pwError && <ValidationView text={SIGNUP_MESSAGE.SHORT_PASSWORD} />}
+          </InputBox>
+          <InputBox>
+            <Input
+              type="password"
+              placeholder="새 비밀번호 확인"
+              onChange={onChangeCheckPw}
+              value={newPasswordConfirm}
+            />
+            {checkPwError && <ValidationView text={SIGNUP_MESSAGE.WRONG_PASSWORD} />}
+          </InputBox>
 
-        <Button onClick={changePassword}>확인</Button>
-      </Wrapper>
-    </div>
+          <Button onClick={changePassword}>확인</Button>
+        </Wrapper>
+      </div>
+    </>
   );
 }
 
