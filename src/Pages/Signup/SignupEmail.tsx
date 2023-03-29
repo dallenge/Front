@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import CONSTANT_INFO from '../../Constant/Constant';
 
@@ -18,8 +17,6 @@ function SingupEmail() {
     watch,
     formState: { errors },
   } = useForm<Inputs>();
-
-  const navigate = useNavigate();
 
   const [confirmEmail, setConfirmEmail] = useState<string>('');
   const [isEmailError, setIsEmailError] = useState<boolean>(false);

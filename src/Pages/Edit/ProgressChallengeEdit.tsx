@@ -16,7 +16,7 @@ function ProgressChallengeEdit() {
 
   const [challengeList, setChallengeList] = useState<myParticipateChallgen[]>([]);
 
-  const getMyParticipate = () => {
+  const getMyParticipate = useCallback(() => {
     const config = {
       method: 'get',
       url: `${URL}/user/inProgress`,
@@ -28,7 +28,7 @@ function ProgressChallengeEdit() {
     axios(config).then((res) => {
       setChallengeList(res.data);
     });
-  };
+  }, [URL]);
 
   const onClickStopChallenge = (id: number) => {
     const confirm = window.confirm('선택한 챌린지를 정말 그만하시겠습니까?');
@@ -43,6 +43,7 @@ function ProgressChallengeEdit() {
       axios(config)
         .then((res) => {
           alert(res.data.message);
+          getMyParticipate();
         })
         .catch((err) => {
           console.log(err);

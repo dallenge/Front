@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import Modify from '../../Components/Modify';
 import styled from 'styled-components';
@@ -10,8 +9,6 @@ import AuthApi from '../../Apis/authApi';
 import { FlexAlignCSS } from '../../CSS/common';
 
 function PwEdit() {
-  const navigate = useNavigate();
-
   const [oldPassword, setOldPassword] = useState<string>('');
   const [newPassword, setNewPassword] = useState<string>('');
   const [pwError, setPwError] = useState<boolean>(false);

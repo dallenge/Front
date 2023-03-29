@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { useCallback, useState, useEffect } from 'react';
 import axios from 'axios';
 import Pagination from 'react-bootstrap/Pagination';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import CONSTANT_INFO from '../Constant/Constant';
 import { FlexCenterCSS } from '../CSS/common';
 
@@ -27,7 +27,6 @@ export default function ChallengeList() {
     userId: number;
     email: string;
   };
-  const navigate = useNavigate();
   const SEARCH_IMAGE_URL = CONSTANT_INFO.IMAGE_URL.SEARCH_IMAGE_URL;
   const [searchText, setSearchText] = useState<string>('');
   const [page, setPage] = useState<number>(0);
