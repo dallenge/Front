@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
+import { useState } from 'react';
 
 import styled from 'styled-components';
 import { RiKakaoTalkFill } from 'react-icons/ri';
@@ -9,12 +10,14 @@ import AuthApi from '../../Apis/authApi';
 import Regex from '../../Constant/Regex';
 import axios from 'axios';
 
+const URL = process.env.REACT_APP_URL;
+
 function Login() {
-  const URL = process.env.REACT_APP_URL;
+  const [alertMessage, setAlertMessage] = useState<boolean>(false);
   const {
     register,
     handleSubmit,
-    watch,
+    getValues,
     formState: { errors },
   } = useForm<Inputs>();
 
@@ -22,13 +25,14 @@ function Login() {
 
   const onClickLogin = async () => {
     try {
-      const res = await AuthApi.login(watch('email'), watch('password'));
+      const res = await AuthApi.login(getValues('email'), getValues('password'));
       localStorage.clear();
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('expire', (Date.now() + 7200000).toString());
       localStorage.setItem('userId', res.data.userId);
+      setAlertMessage(false);
     } catch (err: any) {
-      alert(JSON.parse(err.request.response).message);
+      setAlertMessage(true);
     } finally {
       const config = {
         method: 'get',
@@ -57,6 +61,7 @@ function Login() {
       <form onSubmit={handleSubmit(onClickLogin)}>
         <Input
           type="text"
+          onFocus={() => setAlertMessage(false)}
           placeholder="아이디를 입력해주세요"
           {...register('email', {
             required: { value: true, message: '🔥 이메일을 입력해주세요' },
@@ -70,6 +75,7 @@ function Login() {
 
         <Input
           type="password"
+          onFocus={() => setAlertMessage(false)}
           placeholder="비밀번호를 입력해주세요"
           {...register('password', {
             required: { value: true, message: '🔥 비밀번호를 입력해주세요' },
@@ -77,6 +83,7 @@ function Login() {
           })}
         ></Input>
         {errors.password && <S.P>{errors.password.message}</S.P>}
+        {alertMessage && <S.P>아이디 또는 비밀번호를 다시 확인해주세요</S.P>}
 
         <S.Button style={{ background: 'var(--color-blue)', color: 'white' }}>로그인</S.Button>
       </form>
