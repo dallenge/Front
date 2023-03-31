@@ -22,7 +22,7 @@ const AuthApi = {
 
   changePassword(oldPassword, newPassword) {
     const USER_ID = localStorage.getItem('userId');
-    return Axios(JSON_TYPE).post(PATH + `/${USER_ID}/change?oldPassword=${oldPassword}&newPassword=${newPassword}`);
+    return Axios(JSON_TYPE).post(PATH + `/${USER_ID}/change`, { oldPassword, newPassword });
   },
 
   getMyParticipatedChallenge() {

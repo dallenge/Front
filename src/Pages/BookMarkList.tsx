@@ -6,7 +6,7 @@ import { ChallengeOwnerUser } from '../Interfaces';
 import ChallengeApi from '../Apis/challengeApi';
 
 import { useRecoilState } from 'recoil';
-import { isAlertModalAtom, alertMessageAtom, isDeleteConfirmAtom } from '../Atoms/modal.atom';
+import { isAlertModalAtom, alertMessageAtom } from '../Atoms/modal.atom';
 import AlertModal from '../Components/Modal';
 
 interface Challenge {
