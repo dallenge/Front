@@ -5,8 +5,9 @@ import AccessModal from '../../Components/Home/Modal';
 import AlertModal from '../../Components/Modal';
 import { FlexAlignCSS, FlexCenterCSS, FlexColumnCenterCSS } from '../../CSS/common';
 
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { alertMessageAtom, isAlertModalAtom } from '../../Atoms/modal.atom';
+import { isLoggedInAtom } from '../../Atoms/user.atom';
 
 const URL = process.env.REACT_APP_URL;
 
@@ -25,10 +26,11 @@ function Achievement() {
 
   const [isAlertModal, setIsAlertModal] = useRecoilState<boolean>(isAlertModalAtom);
   const [alertMessage, setAlertMessage] = useRecoilState<string>(alertMessageAtom);
+  const isLoggedIn = useRecoilValue<boolean>(isLoggedInAtom);
 
   useEffect(() => {
     const getBadges = async () => {
-      if (!localStorage.getItem('token')) {
+      if (!isLoggedIn) {
         setIsOpenAccessModal(true);
         try {
           const { data } = await AchievementApi.getAnyBadge();
@@ -51,7 +53,7 @@ function Achievement() {
           }
           setMedalsList(splicedList);
         } catch (err: any) {
-          if (!localStorage.getItem('token')) {
+          if (!isLoggedIn) {
             // 아예 로그인 X
             setIsOpenAccessModal(true);
             return;

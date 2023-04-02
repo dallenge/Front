@@ -9,6 +9,8 @@ import { FcGoogle } from 'react-icons/fc';
 import AuthApi from '../../Apis/authApi';
 import Regex from '../../Constant/Regex';
 import axios from 'axios';
+import { useRecoilState } from 'recoil';
+import { isLoggedInAtom } from '../../Atoms/user.atom';
 
 const URL = process.env.REACT_APP_URL;
 const KAKAO_URL = process.env.REACT_APP_KAKAO_LOGIN_URL;
@@ -16,6 +18,7 @@ const GOOGLE_URL = process.env.REACT_APP_GOOGLE_LOGIN_URL;
 
 function Login() {
   const [alertMessage, setAlertMessage] = useState<boolean>(false);
+  const [, setIsLoggedIn] = useRecoilState<boolean>(isLoggedInAtom);
   const {
     register,
     handleSubmit,
@@ -28,6 +31,7 @@ function Login() {
   const onClickLogin = async () => {
     try {
       const res = await AuthApi.login(getValues('email'), getValues('password'));
+      setIsLoggedIn(true);
       localStorage.clear();
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('expire', (Date.now() + 7200000).toString());

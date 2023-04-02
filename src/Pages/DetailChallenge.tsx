@@ -18,9 +18,10 @@ import { DetailChallengeINTERFACE, CommentINTERFACE, BadgeInfoINTERFACE } from '
 import { FlexAlignCSS, FlexCenterCSS, FlexRowCenterCSS } from '../CSS/common';
 import AchieveModal from '../Components/Achievement/Modal';
 
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import AlertModal from '../Components/Modal';
 import { alertMessageAtom, isAlertModalAtom } from '../Atoms/modal.atom';
+import { isLoggedInAtom } from '../Atoms/user.atom';
 
 let bookmarkId: number;
 
@@ -46,6 +47,7 @@ function DetailChallenge() {
 
   const [isAlertModal, setIsAlertModal] = useRecoilState<boolean>(isAlertModalAtom);
   const [alertMessage, setAlertMessage] = useRecoilState<string>(alertMessageAtom);
+  const isLoggedIn = useRecoilValue<boolean>(isLoggedInAtom);
 
   const getChallengeInfo = useCallback(async () => {
     try {
@@ -123,7 +125,7 @@ function DetailChallenge() {
         bookmarkId = data.id;
         setIsBookmark(true);
       } catch (err: any) {
-        if (!localStorage.getItem('token')) {
+        if (!isLoggedIn) {
           // 아예 로그인 X
           setIsOpenAccessModal(true);
           return;
@@ -139,7 +141,7 @@ function DetailChallenge() {
         await ChallengeApi.deleteBookmark(bookmarkId);
         setIsBookmark(false);
       } catch (err: any) {
-        if (!localStorage.getItem('token')) {
+        if (!isLoggedIn) {
           // 아예 로그인 X
           setIsOpenAccessModal(true);
           return;
@@ -158,7 +160,7 @@ function DetailChallenge() {
       alert('참여하기가 완료되었습니다');
       setIsParticipatedChallenge(true);
     } catch (err: any) {
-      if (!localStorage.getItem('token')) {
+      if (!isLoggedIn) {
         // 아예 로그인 X
         setIsOpenAccessModal(true);
         return;

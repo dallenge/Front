@@ -12,8 +12,9 @@ import AuthApi from '../Apis/authApi';
 import ChallengeApi from '../Apis/challengeApi';
 import AchieveModal from '../Components/Achievement/Modal';
 import AlertModal from '../Components/Modal';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { alertMessageAtom, isAlertModalAtom } from '../Atoms/modal.atom';
+import { isLoggedInAtom } from '../Atoms/user.atom';
 
 const URL = process.env.REACT_APP_URL;
 
@@ -67,13 +68,14 @@ function Home() {
 
   const [isAlertModal, setIsAlertModal] = useRecoilState<boolean>(isAlertModalAtom);
   const [alertMessage, setAlertMessage] = useRecoilState<string>(alertMessageAtom);
+  const isLoggedIn = useRecoilValue<boolean>(isLoggedInAtom);
 
   const onCloseModal = () => {
     setIsOpenModal(false);
   };
 
   const getMyChallenge = useCallback(async () => {
-    if (localStorage.getItem('token')) {
+    if (isLoggedIn) {
       try {
         const { data } = await AuthApi.getMyParticipatedChallenge();
         setMyChallengeList(data);
@@ -134,7 +136,7 @@ function Home() {
   return (
     <>
       {isAlertModal && <AlertModal content={alertMessage} />}
-      {localStorage.getItem('token') ? (
+      {isLoggedIn ? (
         <>
           {isOpenModal && resBadgeInfo && (
             <AchieveModal

@@ -6,6 +6,8 @@ import { FlexAlignCSS, FlexBetweenCSS } from '../../CSS/common';
 import Searchbar from '../Searchbar';
 
 import SpreadMenu from './Components/Spread';
+import { useRecoilState } from 'recoil';
+import { isLoggedInAtom } from '../../Atoms/user.atom';
 
 function Navbar() {
   const SPREAD_MENU_SWITCH_IMAGE_URL = CONSTANT_INFO.IMAGE_URL.SPREAD_MENU_SWITCH_IMAGE_URL;
@@ -16,9 +18,13 @@ function Navbar() {
   const [isSwitchOpen, setIsSwitchOpen] = useState<boolean>(false);
   const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
   const [userName, setUserName] = useState<string | null>(username);
+  const [isLoggedIn, setIsLoggedIn] = useRecoilState<boolean>(isLoggedInAtom);
 
   useEffect(() => {
-    if (Date.now() >= Number(localStorage.getItem('expire'))) localStorage.clear();
+    if (Date.now() >= Number(localStorage.getItem('expire'))) {
+      setIsLoggedIn(false);
+      localStorage.clear();
+    }
   });
   useEffect(() => {
     setUserName(localStorage.getItem('userName'));
@@ -59,7 +65,7 @@ function Navbar() {
           </Menu>
           <Menu
             onClick={() => {
-              localStorage.getItem('token') ? navigate('/createchallenge') : navigate('/login');
+              isLoggedIn ? navigate('/createchallenge') : navigate('/login');
               closeBar();
             }}
           >
@@ -99,7 +105,7 @@ function Navbar() {
             검색
           </div>
         </Menu>
-        {!localStorage.getItem('token') ? (
+        {!isLoggedIn ? (
           <div style={{ display: 'flex', alignItems: 'center', marginRight: '30px' }}>
             <Menu onClick={() => navigate('/login')}>로그인</Menu>
             <Menu onClick={() => navigate('/signup/select-account')}>회원가입</Menu>
