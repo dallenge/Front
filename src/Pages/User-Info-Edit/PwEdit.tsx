@@ -53,7 +53,11 @@ function PwEdit() {
         setNewPasswordConfirm('');
         window.location.replace('/');
       } catch (err: any) {
-        console.log(err.response.data.message);
+        if (err.response.status === 400) {
+          setAlertMessage(err.response.data.message);
+          setIsAlertModal(true);
+          return;
+        }
         setAlertMessage(err.response.data.message || '토큰');
         setIsAlertModal(true);
       }

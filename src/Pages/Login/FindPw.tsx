@@ -1,12 +1,13 @@
-import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 import AuthApi from '../../Apis/authApi';
 import Regex from '../../Constant/Regex';
-import DupliModal from './Components/Modal';
 import { RxCross1 } from 'react-icons/rx';
 import { FlexAlignCSS, FlexCenterCSS, FlexColumnCenterCSS, HoverCSS } from '../../CSS/common';
 import { useNavigate } from 'react-router-dom';
+import { alertMessageAtom, isAlertModalAtom } from '../../Atoms/modal.atom';
+import { useRecoilState } from 'recoil';
+import AlertModal from '../../Components/Modal';
 
 interface Input {
   email: string;
@@ -22,17 +23,18 @@ function FindPw() {
     getValues,
     formState: { errors },
   } = useForm<Input>();
-  const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
+  const [isAlertModal, setIsAlertModal] = useRecoilState<boolean>(isAlertModalAtom);
+  const [alertMessage, setAlertMessage] = useRecoilState<string>(alertMessageAtom);
 
   const onSubmitTemporaryPw = async () => {
     try {
       const { status } = await AuthApi.duplicatedEmailConfirm(watch('email'));
       if (status === 200) {
         // 가입되지 않은 이메일
-        setIsOpenModal(true);
+        setIsAlertModal(true);
+        setAlertMessage('요청하신 회원을 찾을 수 없습니다');
       }
     } catch (err: any) {
-      console.log(err);
       if (err.response.status === 409) {
         // 가입된 이메일
         const successEmail = getValues('email');
@@ -45,15 +47,21 @@ function FindPw() {
             },
           });
         } catch (err) {
-          alert('잠시후 다시 시도해주세요');
+          setIsAlertModal(true);
+          setAlertMessage('잠시후 다시 시도해주세요');
         }
+      }
+
+      if (err.response.status === 400) {
+        setIsAlertModal(true);
+        setAlertMessage(err.response.data.message);
       }
     }
   };
 
   return (
     <S.Wrapper>
-      {isOpenModal && <DupliModal setOpen={setIsOpenModal} />}
+      {isAlertModal && <AlertModal content={alertMessage} />}
       <S.Form onSubmit={handleSubmit(onSubmitTemporaryPw)}>
         <S.Title>비밀번호 찾기</S.Title>
         <S.FlexLine>
