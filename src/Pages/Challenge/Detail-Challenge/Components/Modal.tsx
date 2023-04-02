@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { BiEditAlt } from 'react-icons/bi';
 import { AiOutlineDelete } from 'react-icons/ai';
 import axios from 'axios';
-import { FlexCenterCSS, FlexColumnCenterCSS } from '../../CSS/common';
+import { FlexCenterCSS, FlexColumnCenterCSS } from '../../../../CSS/common';
 
 interface Props {
   state: boolean;

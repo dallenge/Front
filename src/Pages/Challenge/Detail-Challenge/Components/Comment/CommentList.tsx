@@ -1,16 +1,16 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Pagination } from 'react-bootstrap';
-import { pageLoop } from '../Utils/pagination';
+import { pageLoop } from '../../../../../Utils/pagination';
 import styled from 'styled-components';
 import { AiOutlineClose, AiFillHeart } from 'react-icons/ai';
 import { IoIosArrowDown } from 'react-icons/io';
-import CommentApi from '../Apis/commentApi';
+import CommentApi from '../../../../../Apis/commentApi';
 import { useNavigate } from 'react-router-dom';
-import { FlexAlignCSS } from '../CSS/common';
+import { FlexAlignCSS } from '../../../../../CSS/common';
 
 import { useRecoilState } from 'recoil';
-import { isAlertModalAtom, alertMessageAtom } from '../Atoms/modal.atom';
-import AlertModal from '../Components/Modal';
+import { isAlertModalAtom, alertMessageAtom } from '../../../../../Atoms/modal.atom';
+import AlertModal from '../../../../../Components/Modal';
 
 const URL = process.env.REACT_APP_URL;
 

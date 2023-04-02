@@ -2,19 +2,19 @@ import { useNavigate } from 'react-router-dom';
 import { useState, useEffect, useCallback, useRef } from 'react';
 
 import { AiOutlineSearch } from 'react-icons/ai';
-import S from '../CSS/Home-style';
-import Slick from '../Components/Slider';
+import S from '../../CSS/Home-style';
+import Slick from '../../Components/Slider';
 
-import { ChallengeList, Challenge, BadgeInfoINTERFACE } from '../Interfaces';
-import TodayChallenge from '../Components/Home/TodayChallenge';
-import Icons from '../Components/Home/Icons';
-import AuthApi from '../Apis/authApi';
-import ChallengeApi from '../Apis/challengeApi';
-import AchieveModal from '../Components/Achievement/Modal';
-import AlertModal from '../Components/Modal';
+import { ChallengeList, Challenge, BadgeInfoINTERFACE } from '../../Interfaces';
+import TodayChallenge from './Components/TodayChallenge';
+import Icons from './Components/Icons';
+import AuthApi from '../../Apis/authApi';
+import ChallengeApi from '../../Apis/challengeApi';
+import AchieveModal from '../Achievement/Components/Modal';
+import AlertModal from '../../Components/Modal';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { alertMessageAtom, isAlertModalAtom } from '../Atoms/modal.atom';
-import { isLoggedInAtom } from '../Atoms/user.atom';
+import { alertMessageAtom, isAlertModalAtom } from '../../Atoms/modal.atom';
+import { isLoggedInAtom } from '../../Atoms/user.atom';
 
 const URL = process.env.REACT_APP_URL;
 

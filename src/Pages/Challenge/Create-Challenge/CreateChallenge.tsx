@@ -1,21 +1,21 @@
-import '../CSS/CreateChallenge.css';
+import '../../../CSS/CreateChallenge.css';
 import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
-import URL from '../Url';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { BadgeInfoINTERFACE, CreatedChallengeResponseINTERFACE } from '../Interfaces';
-import AchieveModal from '../Components/Achievement/Modal';
+import { BadgeInfoINTERFACE, CreatedChallengeResponseINTERFACE } from '../../../Interfaces';
+import AchieveModal from '../../Achievement/Components/Modal';
 
 import { useRecoilState } from 'recoil';
-import { isAlertModalAtom, alertMessageAtom } from '../Atoms/modal.atom';
-import AlertModal from '../Components/Modal';
+import { isAlertModalAtom, alertMessageAtom } from '../../../Atoms/modal.atom';
+import AlertModal from '../../../Components/Modal';
 
 const SelectBox = styled.select`
   width: 100px;
   margin: 0 10px;
   font-size: 13px;
 `;
+
 export default function CreateChallenge() {
   const navigate = useNavigate();
   const [imgFile, setImgFile] = useState<any>();

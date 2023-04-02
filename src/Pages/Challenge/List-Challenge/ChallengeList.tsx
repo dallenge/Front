@@ -1,12 +1,11 @@
-import '../CSS/PostList.css';
+import '../../../CSS/PostList.css';
 import styled from 'styled-components';
-// import URL from '../Url';
 import { useCallback, useState, useEffect } from 'react';
 import axios from 'axios';
 import Pagination from 'react-bootstrap/Pagination';
 import { useParams } from 'react-router-dom';
-import CONSTANT_INFO from '../Constant/Constant';
-import { FlexCenterCSS } from '../CSS/common';
+import CONSTANT_INFO from '../../../Constant/Constant';
+import { FlexCenterCSS } from '../../../CSS/common';
 
 export default function ChallengeList() {
   const URL = process.env.REACT_APP_URL;

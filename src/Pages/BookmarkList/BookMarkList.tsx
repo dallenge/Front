@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useState } from 'react';
 import { GiCancel } from 'react-icons/gi';
-import AuthApi from '../Apis/authApi';
+import AuthApi from '../../Apis/authApi';
 import styled from 'styled-components';
-import { ChallengeOwnerUser } from '../Interfaces';
-import ChallengeApi from '../Apis/challengeApi';
+import { ChallengeOwnerUser } from '../../Interfaces';
+import ChallengeApi from '../../Apis/challengeApi';
 
 import { useRecoilState } from 'recoil';
-import { isAlertModalAtom, alertMessageAtom } from '../Atoms/modal.atom';
-import AlertModal from '../Components/Modal';
+import { isAlertModalAtom, alertMessageAtom } from '../../Atoms/modal.atom';
+import AlertModal from '../../Components/Modal';
 
 interface Challenge {
   challengeId: number;

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import AchievementApi from '../../Apis/achievement';
-import AccessModal from '../../Components/Home/Modal';
+import AccessModal from '../Home/Components/Modal';
 import AlertModal from '../../Components/Modal';
 import { FlexAlignCSS, FlexCenterCSS, FlexColumnCenterCSS } from '../../CSS/common';
 

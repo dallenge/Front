@@ -1,11 +1,11 @@
 import { useRef, useState } from 'react';
 import styled from 'styled-components';
-import CommentApi from '../../Apis/commentApi';
-import { BadgeInfoINTERFACE } from '../../Interfaces';
-import CommentArea from './Components/CommentArea';
+import CommentApi from '../../../../../Apis/commentApi';
+import { BadgeInfoINTERFACE } from '../../../../../Interfaces';
+import CommentArea from './CommentArea';
 
 import { useSetRecoilState } from 'recoil';
-import { alertMessageAtom, isAlertModalAtom } from '../../Atoms/modal.atom';
+import { alertMessageAtom, isAlertModalAtom } from '../../../../../Atoms/modal.atom';
 
 interface Props {
   postId: number;

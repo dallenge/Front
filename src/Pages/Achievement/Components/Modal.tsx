@@ -1,6 +1,6 @@
 import { AiOutlineClose } from 'react-icons/ai';
 import styled from 'styled-components';
-import { FlexCenterCSS, FlexColumnCenterCSS, HoverCSS } from '../../CSS/common';
+import { FlexCenterCSS, FlexColumnCenterCSS, HoverCSS } from '../../../CSS/common';
 
 interface Props {
   onClickToggleModal: () => void;

@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router';
 import styled from 'styled-components';
 import { RxCross1 } from 'react-icons/rx';
-import { ModalBackgroundSetCSS, ModalCSS } from '../../CSS/common';
+import { ModalBackgroundSetCSS, ModalCSS } from '../../../CSS/common';
 
 interface Props {
   setOpen: (isOpen: boolean) => void;

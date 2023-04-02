@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import S from '../../CSS/Home-style';
+import S from '../../../CSS/Home-style';
 
 import { BsCardHeading } from 'react-icons/bs';
 import { BiLogIn } from 'react-icons/bi';

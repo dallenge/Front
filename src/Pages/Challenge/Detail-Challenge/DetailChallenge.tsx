@@ -4,24 +4,24 @@ import { BsBookmark, BsBookmarkFill } from 'react-icons/bs';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import GetBadRoot from '../Components/GetBadRoot';
-import CommentInput from '../Components/Comment/CommentInput';
-import Comment from '../Components/Comment/Comment';
-import AccessModal from '../Components/Home/Modal';
+import GetBadRoot from '../../../Components/GetBadRoot';
+import CommentInput from './Components/Comment/CommentInput';
+import Comment from './Components/Comment/Comment';
+import AccessModal from '../../Home/Components/Modal';
 
-import { pageLoop } from '../Utils/pagination';
+import { pageLoop } from '../../../Utils/pagination';
 import { Pagination } from 'react-bootstrap';
-import ChallengeApi from '../Apis/challengeApi';
-import Loading from './Recommendation/Components/Loading';
-import AuthApi from '../Apis/authApi';
-import { DetailChallengeINTERFACE, CommentINTERFACE, BadgeInfoINTERFACE } from '../Interfaces';
-import { FlexAlignCSS, FlexCenterCSS, FlexRowCenterCSS } from '../CSS/common';
-import AchieveModal from '../Components/Achievement/Modal';
+import ChallengeApi from '../../../Apis/challengeApi';
+import Loading from '../../Recommendation/Components/Loading';
+import AuthApi from '../../../Apis/authApi';
+import { DetailChallengeINTERFACE, CommentINTERFACE, BadgeInfoINTERFACE } from '../../../Interfaces';
+import { FlexAlignCSS, FlexCenterCSS, FlexRowCenterCSS } from '../../../CSS/common';
+import AchieveModal from '../../Achievement/Components/Modal';
 
 import { useRecoilState, useRecoilValue } from 'recoil';
-import AlertModal from '../Components/Modal';
-import { alertMessageAtom, isAlertModalAtom } from '../Atoms/modal.atom';
-import { isLoggedInAtom } from '../Atoms/user.atom';
+import AlertModal from '../../../Components/Modal';
+import { alertMessageAtom, isAlertModalAtom } from '../../../Atoms/modal.atom';
+import { isLoggedInAtom } from '../../../Atoms/user.atom';
 
 let bookmarkId: number;
 

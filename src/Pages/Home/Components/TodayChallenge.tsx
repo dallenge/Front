@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
-import CONSTANT_INFO from '../../Constant/Constant';
-import S from '../../CSS/Home-style';
-import { ChallengeList } from '../../Interfaces';
+import CONSTANT_INFO from '../../../Constant/Constant';
+import S from '../../../CSS/Home-style';
+import { ChallengeList } from '../../../Interfaces';
 
 const IMAGE_URL = CONSTANT_INFO.IMAGE_URL;
 

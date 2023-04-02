@@ -4,13 +4,13 @@ import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
 
 import { useEffect, useRef, useState } from 'react';
 
-import Modal from './Modal';
-import CommentArea from './Components/CommentArea';
-import CommentApi from '../../Apis/commentApi';
-import { UserInfoINTERFACE } from '../../Interfaces';
-import { FlexAlignCSS } from '../../CSS/common';
+import Modal from '../Modal';
+import CommentArea from './CommentArea';
+import CommentApi from '../../../../../Apis/commentApi';
+import { UserInfoINTERFACE } from '../../../../../Interfaces';
+import { FlexAlignCSS } from '../../../../../CSS/common';
 import { useSetRecoilState } from 'recoil';
-import { alertMessageAtom, isAlertModalAtom } from '../../Atoms/modal.atom';
+import { alertMessageAtom, isAlertModalAtom } from '../../../../../Atoms/modal.atom';
 
 interface Props {
   challengeId: string;
