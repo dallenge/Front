@@ -89,7 +89,7 @@ function Home() {
   const onClickCheck = async (status: string, id: number) => {
     if (status === 'SUCCESS') {
       try {
-        await ChallengeApi.pauseChallenge(id);
+        await ChallengeApi.pauseChallenge(String(id));
       } catch (err: any) {
         if (err.response.status === 500) {
           setAlertMessage(err.response.data.message || '토큰');
@@ -98,7 +98,7 @@ function Home() {
       }
     } else {
       try {
-        const { data } = await ChallengeApi.successChallenge(id);
+        const { data } = await ChallengeApi.successChallenge(String(id));
         if (data.badgeInfo) {
           setResBadgeInfo(data.badgeInfo);
           setIsOpenModal(true);

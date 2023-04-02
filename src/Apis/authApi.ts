@@ -4,23 +4,23 @@ const PATH = '/user';
 const JSON_TYPE = 'application/json';
 
 const AuthApi = {
-  login(email, password) {
+  login(email: string, password: string) {
     return Axios(JSON_TYPE).post(PATH + '/login', JSON.stringify({ email, password }));
   },
 
-  resetPassword(email) {
+  resetPassword(email: string) {
     return Axios(JSON_TYPE).post(PATH + `/resetPassword?email=${email}`);
   },
 
-  signup({ email, password, userName }) {
+  signup({ email, password, userName }: { email: string; password: string; userName: string }) {
     return Axios(JSON_TYPE).post(PATH + '/new', JSON.stringify({ email, password, userName }));
   },
 
-  duplicatedEmailConfirm(email) {
+  duplicatedEmailConfirm(email: string) {
     return Axios(JSON_TYPE).post(PATH + `/check?email=${email}`);
   },
 
-  changePassword(oldPassword, newPassword) {
+  changePassword(oldPassword: string, newPassword: string) {
     const USER_ID = localStorage.getItem('userId');
     return Axios(JSON_TYPE).post(PATH + `/${USER_ID}/change`, { oldPassword, newPassword });
   },

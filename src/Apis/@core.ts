@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const Axios = (type) =>
+export const Axios = (type?: string) =>
   axios.create({
     baseURL: process.env.REACT_APP_URL,
     headers: {

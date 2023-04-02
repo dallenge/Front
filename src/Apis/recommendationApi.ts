@@ -1,11 +1,13 @@
 import { Axios } from './@core';
 
 const PATH = '/challenge';
-const JSON_TYPE = 'application/json';
 
 const RecommendationApi = {
-  getTestResult(answer) {
-    console.log('axios--> ', { ...answer });
+  getTestResult(answer: {
+    challengeCategoryIndex: number;
+    challengeDurationIndex: number;
+    challengeLocationIndex: number;
+  }) {
     return Axios().get(PATH + '/question', { params: { ...answer } });
   },
 

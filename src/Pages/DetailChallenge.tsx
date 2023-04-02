@@ -50,23 +50,27 @@ function DetailChallenge() {
   const isLoggedIn = useRecoilValue<boolean>(isLoggedInAtom);
 
   const getChallengeInfo = useCallback(async () => {
-    try {
-      const res = await ChallengeApi.getChallengeData(id);
-      setChallengeInfo(res.data);
-    } catch (err) {
-      setIsBadRoot(true);
+    if (id) {
+      try {
+        const res = await ChallengeApi.getChallengeData(id);
+        setChallengeInfo(res.data);
+      } catch (err) {
+        setIsBadRoot(true);
+      }
     }
   }, [isParticipatedChallenge]);
 
   const getComments = useCallback(async () => {
     const size = 10;
-    try {
-      const res = await ChallengeApi.getComments(id, size, page);
-      setCommentList(res.data.content);
-      setTotalPage(Math.ceil(res.data.totalElements / 10));
-      window.scrollTo(0, 0);
-    } catch (err) {
-      console.trace(err);
+    if (id) {
+      try {
+        const res = await ChallengeApi.getComments(id, size, page);
+        setCommentList(res.data.content);
+        setTotalPage(Math.ceil(res.data.totalElements / 10));
+        window.scrollTo(0, 0);
+      } catch (err) {
+        console.trace(err);
+      }
     }
   }, [page]);
 
@@ -118,56 +122,60 @@ function DetailChallenge() {
   }, [getChallengeInfo]);
 
   const onClickBookmark = async () => {
-    if (!isBookmark) {
-      // 북마크 생성
-      try {
-        const { data } = await ChallengeApi.addBookmark(id);
-        bookmarkId = data.id;
-        setIsBookmark(true);
-      } catch (err: any) {
-        if (!isLoggedIn) {
-          // 아예 로그인 X
-          setIsOpenAccessModal(true);
-          return;
+    if (id) {
+      if (!isBookmark) {
+        // 북마크 생성
+        try {
+          const { data } = await ChallengeApi.addBookmark(id);
+          bookmarkId = data.id;
+          setIsBookmark(true);
+        } catch (err: any) {
+          if (!isLoggedIn) {
+            // 아예 로그인 X
+            setIsOpenAccessModal(true);
+            return;
+          }
+          if (err.response.status === 500) {
+            setAlertMessage('토큰');
+            setIsAlertModal(true);
+          }
         }
-        if (err.response.status === 500) {
-          setAlertMessage('토큰');
-          setIsAlertModal(true);
-        }
-      }
-    } else {
-      // 북마크 삭제
-      try {
-        await ChallengeApi.deleteBookmark(bookmarkId);
-        setIsBookmark(false);
-      } catch (err: any) {
-        if (!isLoggedIn) {
-          // 아예 로그인 X
-          setIsOpenAccessModal(true);
-          return;
-        }
-        if (err.response.status === 500) {
-          setAlertMessage('토큰');
-          setIsAlertModal(true);
+      } else {
+        // 북마크 삭제
+        try {
+          await ChallengeApi.deleteBookmark(bookmarkId);
+          setIsBookmark(false);
+        } catch (err: any) {
+          if (!isLoggedIn) {
+            // 아예 로그인 X
+            setIsOpenAccessModal(true);
+            return;
+          }
+          if (err.response.status === 500) {
+            setAlertMessage('토큰');
+            setIsAlertModal(true);
+          }
         }
       }
     }
   };
 
   const onClickParticipate = async () => {
-    try {
-      await ChallengeApi.participateChallenge(id);
-      alert('참여하기가 완료되었습니다');
-      setIsParticipatedChallenge(true);
-    } catch (err: any) {
-      if (!isLoggedIn) {
-        // 아예 로그인 X
-        setIsOpenAccessModal(true);
-        return;
-      }
-      if (err.response.status === 401) {
-        setAlertMessage(err.response.data.message);
-        setIsAlertModal(true);
+    if (id) {
+      try {
+        await ChallengeApi.participateChallenge(id);
+        alert('참여하기가 완료되었습니다');
+        setIsParticipatedChallenge(true);
+      } catch (err: any) {
+        if (!isLoggedIn) {
+          // 아예 로그인 X
+          setIsOpenAccessModal(true);
+          return;
+        }
+        if (err.response.status === 401) {
+          setAlertMessage(err.response.data.message);
+          setIsAlertModal(true);
+        }
       }
     }
   };
