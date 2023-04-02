@@ -11,6 +11,8 @@ import Regex from '../../Constant/Regex';
 import axios from 'axios';
 
 const URL = process.env.REACT_APP_URL;
+const KAKAO_URL = process.env.REACT_APP_KAKAO_LOGIN_URL;
+const GOOGLE_URL = process.env.REACT_APP_GOOGLE_LOGIN_URL;
 
 function Login() {
   const [alertMessage, setAlertMessage] = useState<boolean>(false);
@@ -55,6 +57,10 @@ function Login() {
     }
   };
 
+  const socialLogin = (type: string) => {
+    if (KAKAO_URL) window.location.href = KAKAO_URL;
+  };
+
   return (
     <S.Container>
       <S.Title>로그인</S.Title>
@@ -93,11 +99,17 @@ function Login() {
       <S.BtnsWrapper>
         <S.BtnBox background="#F7E600" border={false}>
           <RiKakaoTalkFill style={{ marginLeft: '10px', width: '36px', height: '36px' }} />
-          <S.BtnInnerText>카카오로 로그인</S.BtnInnerText>
+          <S.BtnInnerText onClick={() => socialLogin('kakao')}>카카오로 로그인</S.BtnInnerText>
         </S.BtnBox>
         <S.BtnBox background="#ffffff" border={true}>
           <FcGoogle style={{ marginLeft: '10px', width: '36px', height: '36px' }} />
-          <S.BtnInnerText>구글로 로그인</S.BtnInnerText>
+          <S.BtnInnerText
+            onClick={() => {
+              if (GOOGLE_URL) window.location.replace(GOOGLE_URL);
+            }}
+          >
+            구글로 로그인
+          </S.BtnInnerText>
         </S.BtnBox>
       </S.BtnsWrapper>
       <S.Line />
