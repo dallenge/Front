@@ -3,14 +3,14 @@ import { Axios } from './@core';
 const PATH = '/challenge';
 
 const ChallengeApi = {
-  getChallengeData(challengeId: string) {
+  getChallengeData(challengeId: number) {
     return Axios().get(PATH + `/${challengeId}`);
   },
 
-  getComments(challengeId: string, size: number, page: number) {
+  getComments(challengeId: number, size: number, page: number) {
     return Axios().get(`/${challengeId}/comment?size=${size}&page=${page}&sort=time`);
   },
-  addBookmark(challengeId: string) {
+  addBookmark(challengeId: number) {
     return Axios().post(`${challengeId}/bookmark/new`);
   },
 
@@ -19,15 +19,15 @@ const ChallengeApi = {
     return Axios().delete(`/user/${USER_ID}/bookmark/${bookmarkId}`);
   },
 
-  participateChallenge(challengeId: string) {
+  participateChallenge(challengeId: number) {
     return Axios().post(PATH + `/${challengeId}/participate`);
   },
 
-  pauseChallenge(challengeId: string) {
+  pauseChallenge(challengeId: number) {
     return Axios().post(PATH + `/${challengeId}/pause`);
   },
 
-  successChallenge(challengeId: string) {
+  successChallenge(challengeId: number) {
     return Axios().post(PATH + `/${challengeId}/success`);
   },
 

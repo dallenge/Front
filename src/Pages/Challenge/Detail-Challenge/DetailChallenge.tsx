@@ -52,7 +52,7 @@ function DetailChallenge() {
   const getChallengeInfo = useCallback(async () => {
     if (id) {
       try {
-        const res = await ChallengeApi.getChallengeData(id);
+        const res = await ChallengeApi.getChallengeData(parseInt(id));
         setChallengeInfo(res.data);
       } catch (err) {
         setIsBadRoot(true);
@@ -64,7 +64,7 @@ function DetailChallenge() {
     const size = 10;
     if (id) {
       try {
-        const res = await ChallengeApi.getComments(id, size, page);
+        const res = await ChallengeApi.getComments(parseInt(id), size, page);
         setCommentList(res.data.content);
         setTotalPage(Math.ceil(res.data.totalElements / 10));
         window.scrollTo(0, 0);
@@ -126,7 +126,7 @@ function DetailChallenge() {
       if (!isBookmark) {
         // 북마크 생성
         try {
-          const { data } = await ChallengeApi.addBookmark(id);
+          const { data } = await ChallengeApi.addBookmark(parseInt(id));
           bookmarkId = data.id;
           setIsBookmark(true);
         } catch (err: any) {
@@ -163,7 +163,7 @@ function DetailChallenge() {
   const onClickParticipate = async () => {
     if (id) {
       try {
-        await ChallengeApi.participateChallenge(id);
+        await ChallengeApi.participateChallenge(parseInt(id));
         alert('참여하기가 완료되었습니다');
         setIsParticipatedChallenge(true);
       } catch (err: any) {
