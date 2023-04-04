@@ -15,7 +15,7 @@ const LoginAuthHandle = () => {
     const getUser = async () => {
       const config = {
         method: 'get',
-        url: `${URL}/user/${localStorage.getItem('userId')}`,
+        url: `${process.env.REACT_APP_URL}/user/${userId}`,
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
