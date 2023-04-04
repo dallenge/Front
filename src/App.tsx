@@ -24,7 +24,7 @@ import BookMarkList from './Pages/BookMarkList';
 import FindPw from './Pages/Login/FindPw';
 import CommentList from './Pages/CommentList';
 import FindPwDone from './Pages/Login/FindPw-done';
-import KakaoAuthHandle from './Pages/Login/AuthHandler/KakaoAuthHandle';
+import LoginAuthHandle from './Pages/Login/AuthHandler/LoginAuthHandle';
 import { RecoilRoot } from 'recoil';
 
 function App() {
@@ -58,7 +58,7 @@ function App() {
             <Route path="/achievement" element={<Achievement />} />
             <Route path="/login/find-password" element={<FindPw />} />
             <Route path="/login/find-password-done" element={<FindPwDone />} />
-            <Route path="/user/kakao/callback" element={<KakaoAuthHandle />} />
+            <Route path="/login/callback" element={<LoginAuthHandle />} />
             <Route path="*" element={<GetBadRoot />} />
           </Routes>
         </div>
