@@ -11,6 +11,7 @@ const LoginAuthHandle = () => {
     const userName = params.get('userName');
     const userId = params.get('userId');
     const token = params.get('accessToken');
+    const errMessage = params.get('message');
 
     const getUser = async () => {
       const config = {
@@ -20,7 +21,7 @@ const LoginAuthHandle = () => {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
       };
-      axios(config)
+      await axios(config)
         .then((res) => {
           localStorage.setItem('email', res.data.email);
           localStorage.setItem('info', res.data.info);
@@ -28,7 +29,8 @@ const LoginAuthHandle = () => {
           window.location.replace('/');
         })
         .catch((err) => {
-          console.log(err);
+          alert(err.message);
+          window.location.replace('/login');
         });
     };
 
@@ -40,7 +42,12 @@ const LoginAuthHandle = () => {
       localStorage.setItem('expire', (Date.now() + 7200000).toString());
       getUser();
     };
+
     if (userName && userId && token) doLogin();
+    else if (errMessage) {
+      alert(errMessage);
+      window.location.replace('/login');
+    }
   }, [setIsLoggedIn]);
 
   return (

@@ -62,7 +62,8 @@ function Login() {
   };
 
   const socialLogin = (type: string) => {
-    if (KAKAO_URL) window.location.href = KAKAO_URL;
+    if (type === 'kakao' && KAKAO_URL) window.location.href = KAKAO_URL;
+    else if (type === 'google' && GOOGLE_URL) window.location.href = GOOGLE_URL;
   };
 
   return (
@@ -107,13 +108,7 @@ function Login() {
         </S.BtnBox>
         <S.BtnBox background="#ffffff" border={true}>
           <FcGoogle style={{ marginLeft: '10px', width: '36px', height: '36px' }} />
-          <S.BtnInnerText
-            onClick={() => {
-              if (GOOGLE_URL) window.location.replace(GOOGLE_URL);
-            }}
-          >
-            구글로 로그인
-          </S.BtnInnerText>
+          <S.BtnInnerText onClick={() => socialLogin('google')}>구글로 로그인</S.BtnInnerText>
         </S.BtnBox>
       </S.BtnsWrapper>
       <S.Line />

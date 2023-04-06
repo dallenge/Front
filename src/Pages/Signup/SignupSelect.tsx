@@ -44,6 +44,13 @@ const SingupDiv = styled.div`
 
 export default function SignupSelect() {
   const navigate = useNavigate();
+  const KAKAO_URL = process.env.REACT_APP_KAKAO_LOGIN_URL;
+  const GOOGLE_URL = process.env.REACT_APP_GOOGLE_LOGIN_URL;
+
+  const socialLogin = (type: string) => {
+    if (type === 'kakao' && KAKAO_URL) window.location.href = KAKAO_URL;
+    else if (type === 'google' && GOOGLE_URL) window.location.href = GOOGLE_URL;
+  };
 
   return (
     <div>
@@ -70,8 +77,9 @@ export default function SignupSelect() {
                   fontWeight: '600',
                   fontSize: '15px',
                 }}
+                onClick={() => socialLogin('kakao')}
               >
-                카카오로 가입하기
+                카카오로 로그인하기
               </div>
             </div>
           </DivHover>
@@ -97,8 +105,9 @@ export default function SignupSelect() {
                   fontWeight: '600',
                   fontSize: '15px',
                 }}
+                onClick={() => socialLogin('google')}
               >
-                구글로 가입하기
+                구글로 로그인하기
               </div>
             </div>
           </DivHover>
