@@ -8,11 +8,9 @@ import { FcGoogle } from 'react-icons/fc';
 
 import AuthApi from '../../Apis/authApi';
 import Regex from '../../Constant/Regex';
-import axios from 'axios';
 import { useRecoilState } from 'recoil';
 import { isLoggedInAtom } from '../../Atoms/user.atom';
 
-const URL = process.env.REACT_APP_URL;
 const KAKAO_URL = process.env.REACT_APP_KAKAO_LOGIN_URL;
 const GOOGLE_URL = process.env.REACT_APP_GOOGLE_LOGIN_URL;
 
@@ -40,29 +38,22 @@ function Login() {
     } catch (err: any) {
       setAlertMessage(true);
     } finally {
-      const config = {
-        method: 'get',
-        url: `${URL}/user/${localStorage.getItem('userId')}`,
-        headers: {
-          Authorization: 'Bearer ' + localStorage.getItem('token'),
-        },
-      };
-      axios(config)
-        .then((res) => {
-          localStorage.setItem('userName', res.data.userName);
-          localStorage.setItem('email', res.data.email);
-          localStorage.setItem('info', res.data.info);
-          localStorage.setItem('imageUrl', res.data.imageUrl);
-          window.location.replace('/');
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      try {
+        const res = await AuthApi.getUser(localStorage.getItem('userId') ?? '');
+        localStorage.setItem('userName', res.data.userName);
+        localStorage.setItem('email', res.data.email);
+        localStorage.setItem('info', res.data.info);
+        localStorage.setItem('imageUrl', res.data.imageUrl);
+        window.location.replace('/');
+      } catch (err) {
+        alert(err);
+      }
     }
   };
 
   const socialLogin = (type: string) => {
-    if (KAKAO_URL) window.location.href = KAKAO_URL;
+    if (type === 'kakao' && KAKAO_URL) window.location.href = KAKAO_URL;
+    else if (type === 'google' && GOOGLE_URL) window.location.href = GOOGLE_URL;
   };
 
   return (
@@ -107,13 +98,7 @@ function Login() {
         </S.BtnBox>
         <S.BtnBox background="#ffffff" border={true}>
           <FcGoogle style={{ marginLeft: '10px', width: '36px', height: '36px' }} />
-          <S.BtnInnerText
-            onClick={() => {
-              if (GOOGLE_URL) window.location.replace(GOOGLE_URL);
-            }}
-          >
-            구글로 로그인
-          </S.BtnInnerText>
+          <S.BtnInnerText onClick={() => socialLogin('google')}>구글로 로그인</S.BtnInnerText>
         </S.BtnBox>
       </S.BtnsWrapper>
       <S.Line />
