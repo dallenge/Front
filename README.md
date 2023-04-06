@@ -44,7 +44,7 @@
 <br>
 
 ## 🏘️ 인프라 구조
-<img src="https://user-images.githubusercontent.com/112946860/229331337-19fd3e62-3aab-4747-9f37-70a012086395.png" />
+<img src="https://user-images.githubusercontent.com/112946860/230353601-7cbbd96e-0ba0-4999-a692-c2177555967d.png" />
 
 <br>
 
