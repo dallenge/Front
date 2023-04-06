@@ -29,6 +29,10 @@ const AuthApi = {
     return Axios().get(PATH + `/inProgress`);
   },
 
+  getUser(userid: string) {
+    return Axios().get(PATH + `/${userid}`);
+  },
+
   getMyBookmarkedChallenge() {
     const USER_ID = localStorage.getItem('userId');
     return Axios().get(PATH + `/${USER_ID}/bookmark`);

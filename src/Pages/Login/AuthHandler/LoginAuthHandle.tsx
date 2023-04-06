@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 import { isLoggedInAtom } from '../../../Atoms/user.atom';
-import axios from 'axios';
+import AuthApi from '../../../Apis/authApi';
 
 const LoginAuthHandle = () => {
   const [, setIsLoggedIn] = useRecoilState<boolean>(isLoggedInAtom);
@@ -14,24 +14,17 @@ const LoginAuthHandle = () => {
     const errMessage = params.get('message');
 
     const getUser = async () => {
-      const config = {
-        method: 'get',
-        url: `${process.env.REACT_APP_URL}/user/${userId}`,
-        headers: {
-          Authorization: 'Bearer ' + localStorage.getItem('token'),
-        },
-      };
-      await axios(config)
-        .then((res) => {
-          localStorage.setItem('email', res.data.email);
-          localStorage.setItem('info', res.data.info);
-          localStorage.setItem('imageUrl', res.data.imageUrl);
-          window.location.replace('/');
-        })
-        .catch((err) => {
-          alert(err.message);
-          window.location.replace('/login');
-        });
+      try {
+        const res = await AuthApi.getUser(userId ?? '');
+        localStorage.setItem('userName', res.data.userName);
+        localStorage.setItem('email', res.data.email);
+        localStorage.setItem('info', res.data.info);
+        localStorage.setItem('imageUrl', res.data.imageUrl);
+        window.location.replace('/');
+      } catch (err) {
+        alert(err);
+        window.location.replace('/login');
+      }
     };
 
     const doLogin = async () => {
