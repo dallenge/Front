@@ -76,34 +76,38 @@ function DetailChallenge() {
 
   useEffect(() => {
     const getMyParticipate = async () => {
-      try {
-        const { data } = await AuthApi.getMyParticipatedChallenge();
-        if (
-          data.filter((challenge: { challengeId: number | undefined }) => challenge.challengeId === Number(id)).length >
-          0
-        ) {
-          setIsParticipatedChallenge(true);
+      if (isLoggedIn) {
+        try {
+          const { data } = await AuthApi.getMyParticipatedChallenge();
+          if (
+            data.filter((challenge: { challengeId: number | undefined }) => challenge.challengeId === Number(id))
+              .length > 0
+          ) {
+            setIsParticipatedChallenge(true);
+          }
+        } catch (err) {
+          console.trace(err);
         }
-      } catch (err) {
-        console.trace(err);
       }
     };
 
     const getMyBookmark = async () => {
-      try {
-        const { data } = await AuthApi.getMyBookmarkedChallenge();
-        const myBookmark = data.content;
-        const thisChallengeBookmark = myBookmark.filter(
-          (challenge: { challengeId: number | undefined }) => challenge.challengeId === Number(id),
-        );
-        if (thisChallengeBookmark.length > 0) {
-          bookmarkId = thisChallengeBookmark[0].id;
-          console.log(bookmarkId);
-          setIsBookmark(true);
+      if (isLoggedIn) {
+        try {
+          const { data } = await AuthApi.getMyBookmarkedChallenge();
+          const myBookmark = data.content;
+          const thisChallengeBookmark = myBookmark.filter(
+            (challenge: { challengeId: number | undefined }) => challenge.challengeId === Number(id),
+          );
+          if (thisChallengeBookmark.length > 0) {
+            bookmarkId = thisChallengeBookmark[0].id;
+            console.log(bookmarkId);
+            setIsBookmark(true);
+          }
+        } catch (err: any) {
+          setAlertMessage(err.response.data.message || '다시 시도해주세요');
+          setIsAlertModal(true);
         }
-      } catch (err: any) {
-        setAlertMessage(err.response.data.message || '다시 시도해주세요');
-        setIsAlertModal(true);
       }
     };
 
