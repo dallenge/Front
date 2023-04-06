@@ -1,46 +1,56 @@
-# Getting Started with Create React App
+<p align="middle"><img src="https://user-images.githubusercontent.com/112946860/229160334-20990de5-64b9-4142-be11-cfa1d8992bcd.svg" width="50%" /><p>
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<h1 align="middle">Dallenge (Daily☀️ + Challenge📝)</h1>
+<strong><p align="middle">Dallenge(델린지)는 Daily + Challenge의 합성어로, <br>일일 챌린지 및 루틴 관리 웹 사이트입니다</p></strong>
 
-## Available Scripts
+<br>
 
-In the project directory, you can run:
+## 🚀 프로젝트 설명
+ - 나만의 일일 챌린지들을 **수행 및 기록**할 수 있습니다.<br>
+ - 자신이 **직접 챌린지를 추가**하거나, **다른 이용자들의 챌린지를 참여**하여 매일 수행을 시작할 수 있습니다.<br>
+ - 완료한 챌린지에 대한 기록을 **다른 이용자들과 함께 공유**할 수 있습니다.<br>
+  
+<br>
 
-### `npm start`
+## ⭐ 배포 주소
+- http://dallenge.s3-website.ap-northeast-2.amazonaws.com/
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+<br>
+  
+## 💻 실행 화면 및 구현 사항
+- [NOTION](https://bony-centipede-4f0.notion.site/40f0a3c77db44994b4698e63834b3913)
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+<br>
 
-### `npm test`
+## 🪄 기대효과
+- 나만의 일일 챌린지 목록을 쉽게 작성할 수 있다.
+- 원하는 챌린지를 생성 또는 참여하여 나만의 습관을 만들 수 있다.
+- 하루하루의 챌린지 달성률을 가시화하여 달성에 대한 성취감을 높여준다.
+- 다른 사람의 챌린지에 참여해서 함께 챌린지에 도전하거나 후기를 남기면서 다른 사람과 관계를 형성한다.
+- 챌린지 생성과 달성, 후기 작성 개수를 통해 뱃지를 부여하여, 지속적인 활동을 독려한다. 
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+<br>
 
-### `npm run build`
+## ⚒️ 사용한 기술 스택
+**프론트엔드**<br>
+<img src="https://user-images.githubusercontent.com/112946860/229330268-67a55d2e-95ec-44e8-8e37-b3251e67e088.png" width="50%"/>
+<br>
+**백엔드**<br>
+<img src="https://user-images.githubusercontent.com/112946860/229330146-656430df-e8ec-4e89-849f-a6e1a958978f.png" width="55%"/>
+<br>
+**인프라**<br>
+<img src="https://user-images.githubusercontent.com/112946860/229330201-fa060418-528d-4499-b173-9aa60d56130d.png" width="13%"/>
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+<br>
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## 🏘️ 인프라 구조
+<img src="https://user-images.githubusercontent.com/112946860/229331337-19fd3e62-3aab-4747-9f37-70a012086395.png" />
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+<br>
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+## 👨‍👩‍👧‍👦 팀 소개
+Frontend | Frontend | Backend | Backend
+|:--:|:--:|:--:|:--:|
+<img src="https://avatars.githubusercontent.com/u/112946860?v=4" width="90px"/> | <img src="https://avatars.githubusercontent.com/u/73461032?v=4" width="90px"/> | <img src="https://avatars.githubusercontent.com/u/84639009?v=4" width="90px"/> | <img src="https://avatars.githubusercontent.com/u/79985588?v=4" width="90px"/>
+김도은 | 강성욱 | 김승원 | 임나정
+[Doeunnkimm](https://github.com/Doeunnkimm) | [Sungwk](https://github.com/Sungwk) | [hesjs5](https://github.com/hesjs5) | [dlask913](https://github.com/dlask913)
